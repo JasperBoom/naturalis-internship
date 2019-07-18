@@ -18,12 +18,9 @@ These tools were made for the Naturalis Galaxy instance with a main focus on met
 * __McMurdie PJ, Holmes S__, Phyloseq: An R Package for Reproducible Interactive Analysis and Graphics of Microbiome Census Data.  
   PLOS One. 2013; 8(4). __doi: 10.1371/journal.pone.0061217__  
   [Phyloseq](https://joey711.github.io/phyloseq/)
-* Naturalis website at http://docs.biodiversitydata.nl/en/latest/introduction/
-* Nederlands Soortenregister website at https://www.nederlandsesoorten.nl/
 * __Ratnasingham S, Hebert PDN__, BOLD: The Barcode of Life Data System.  
   Molecular Ecology Notes. 2007; 7(3). __doi: 10.1111/j.1471-8286.2007.01678.x__  
   [BOLD](http://www.boldsystems.org/index.php/resources/api)
-* Atlas of Living Australia website at https://api.ala.org.au/
 * __Pyle RL__, Towards a Global Names Architecture: The future of indexing scientific names.  
   ZooKeys. 2016; 550: 261-281. __doi: 10.3897/zookeys.550.10009__  
   [Global Names](https://resolver.globalnames.org/api)
@@ -31,6 +28,9 @@ These tools were made for the Naturalis Galaxy instance with a main focus on met
   The taxonomic name resolution service: an online tool for automated standardization of plant names.  
   BMC Bioinformatics. 2013; 14(16). __doi: 10.1186/1471-2105-14-16__  
   [TNRS](http://tnrs.iplantcollaborative.org/api.html)
+* Naturalis website at http://docs.biodiversitydata.nl/en/latest/introduction/
+* Nederlands Soortenregister website at https://www.nederlandsesoorten.nl/
+* Atlas of Living Australia website at https://api.ala.org.au/
 
 ## Author(s)
 * [Jasper Boom](https://github.com/JasperBoom)
