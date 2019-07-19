@@ -7,17 +7,19 @@ The newest version of the Naturalis Galaxy instance can be found [here](https://
 ## Table of contents:
 * [Prerequisites](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#prerequisites)
 * [Galaxy configuration](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#galaxy-configuration)
-* [UMI isolation]()
-* [Taxonomic accumulator]()
-* [Accepted taxonomic name]()
-* [Metadata]()
-* [Phyloseq visual reporter]()
-* [FastQC analysis]()
-* [PRINSEQ analysis]()
-* [PRINSEQ trimmer]()
-* [CutAdapt trimmer]()
-* [Read counter]()
-* [FastQ to fastA]()
+* [Source(s)](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#sources)
+
+1. [UMI isolation](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#umi-isolation)
+2. [Taxonomic accumulator](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#taxonomic-accumulator)
+3. [Accepted taxonomic name](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#accepted-taxonomic-name)
+4. [Metadata](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#metadata)
+5. [Phyloseq visual reporter](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#phyloseq-visual-reporter)
+6. [FastQC analysis](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#fastqc-analysis)
+7. [PRINSEQ analysis](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#prinseq-analysis)
+8. [PRINSEQ trimmer](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#prinseq-trimmer)
+9. [CutAdapt trimmer](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#cutadapt-trimmer)
+10. [Read counter](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#read-counter)
+11. [FastQ to fastA](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#fastq-to-fasta)
 
 ## Getting started
 
@@ -46,6 +48,8 @@ Make sure both PRINSEQ and FastQC are added to the systems PATH. (CutAdapt shoul
 The galaxyXML files and the bashWrapper files should either be copied to the Galaxy tool shed folder or be symbolically linked there.  
 The tool files should be reachable by the bashWrappers, either by being present in the same folder or by adding the tool files to the systems PATH.  
 Edit the Galaxy tool_conf.xml file to add the tools to the Galaxy tool shed.
+
+The read quality analysis tools need a small galaxy.yml adjustion in order to correctly show their HTML output files. This adjustion concerns the "sanitize_all_html" option, which should be set to FALSE.
 
 ## Tool descriptions
 
