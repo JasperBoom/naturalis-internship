@@ -7,36 +7,6 @@ The tool will handle either a BLAST file, OTU file with old BLAST output, OTU fi
 Sample names can not start with a "#".  
 All columns in a OTU table should have a header starting with "#".
 
-# Getting started
-
-### Prerequisites
-Download and install the following software according to the following steps.
-```
-sudo apt-get install python3
-sudo apt-get install python3-pip
-sudo pip3 install pandas
-sudo pip3 install xlsxwriter
-sudo pip3 install xlrd
-```
-
-### Installing
-Download and install the tool according to the following steps.
-```
-sudo mkdir -m 755 /path/to/folder/Tools
-cd /path/to/folder/Tools
-sudo git clone https://github.com/JasperBoom/galaxy-tool-taxonomic-accumulator
-sudo chmod -R 755 galaxy-tool-taxonomic-accumulator
-```
-The following file in the galaxy-tool-taxonomic-accumulator folder should be made avaible from any location.
-```
-sudo ln -s /path/to/folder/Tools/galaxy-tool-taxonomic-accumulator/runTaxonomicAccumulator.py /usr/local/bin/runTaxonomicAccumulator.py
-```
-Continue with the tool installation.
-```
-sudo mkdir -m 755 /path/to/folder/galaxy/tools/directoryname
-sudo cp /path/to/folder/Tools/galaxy-tool-taxonomic-accumulator/runTaxonomicAccumulator.sh /path/to/folder/galaxy/tools/directoryname/runTaxonomicAccumulator.sh
-sudo cp /path/to/folder/Tools/galaxy-tool-taxonomic-accumulator/runTaxonomicAccumulator.xml /path/to/folder/galaxy/tools/directoryname/runTaxonomicAccumulator.xml
-```
 Edit the following file in order to make galaxy display the tool.
 ```
 /path/to/folder/galaxy/config/tool_conf.xml
