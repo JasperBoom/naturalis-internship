@@ -1,6 +1,31 @@
 # galaxy-tools-naturalis-internship
 These tools were made for the Naturalis Galaxy instance with a main focus on metabarcoding analysis.
 
+# Getting started
+
+### Prerequisites
+Download and install the following software:
+```
+Python3 (apt-get install python3)
+Python3 pip (apt-get install python3-pip)
+Python3 pandas (pip3 install pandas)
+Python3 xlrd (pip3 install xlrd)
+Python3 xlsxwriter (pip3 install xlsxwriter)
+CutAdapt (pip3 install cutadapt)
+PRINSEQ (https://sourceforge.net/projects/prinseq/files/)
+FastQC (https://www.bioinformatics.babraham.ac.uk/projects/download.html#fastqc)
+R (apt-get install r-base)
+R required libraries (apt-get install libcurl4-gnutls-dev & apt-get install libssl-dev)
+R packages (biocLite("phyloseq") & biocLite("optparse"))
+Java (apt-get install default-jre)
+JSON (cpan JSON)
+```
+Make sure both PRINSEQ and FastQC are added to the systems PATH. (CutAdapt should take care of that automatically)
+
+### Galaxy configuration
+The galaxyXML files and the bashWrappers should either be copied to the Galaxy tool shed folder or be symbolically linked there.
+The tool files should be reachable by the bashWrappers, either by being present in the same folder or by adding the tool files to the systems PATH.
+
 ## Source(s)
 * __Giardine B, Riemer C, Hardison RC, Burhans R, Elnitski L, Shah P__,  
   Galaxy: A platform for interactive large-scale genome analysis.  
@@ -36,5 +61,5 @@ These tools were made for the Naturalis Galaxy instance with a main focus on met
 * [Jasper Boom](https://github.com/JasperBoom)
 
 ## Citation
-* __Boom J__, galaxy-tools-naturalis-internship
+* __Boom J__, galaxy-tools-naturalis-internship. 2019.  
   Github repository: https://github.com/JasperBoom/galaxy-tools-naturalis-internship
