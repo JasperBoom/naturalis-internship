@@ -44,15 +44,3 @@ Edit the following file in order to make galaxy display the tool.
 ```
 <tool file="pathtofolder/runTaxonomicAccumulator.xml"/>
 ```
-## Source(s)
-* __Giardine B, Riemer C, Hardison RC, Burhans R, Elnitski L, Shah P__,  
-  Galaxy: A platform for interactive large-scale genome analysis.  
-  Genome Research. 2005; 15(10) 1451-1455 __doi: 10.1101/gr.4086505__  
-  [GALAXY](https://www.galaxyproject.org/)
-
-## Author(s)
-* [Jasper Boom](https://github.com/JasperBoom)
-
-## Citation
-* __Boom J__, galaxy-tool-taxonomic-accumulator. 2018.  
-  Github repositry: https://github.com/JasperBoom/galaxy-tool-taxonomic-accumulator

@@ -51,19 +51,3 @@ Edit the following file in order to prevent galaxy from blocking html output.
 ```
 sanitize_all_html: false
 ```
-
-## Source(s)
-* __Andrews S__, FastQC: A quality control tool for high throughput sequence data.  
-  Babraham Bioinformatics. 2010.  
-  [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
-* __Giardine B, Riemer C, Hardison RC, Burhans R, Elnitski L, Shah P__,  
-  Galaxy: A platform for interactive large-scale genome analysis.  
-  Genome Research. 2005; 15(10) 1451-1455 __doi: 10.1101/gr.4086505__  
-  [GALAXY](https://www.galaxyproject.org/)
-  
-## Author(s)
-* [Jasper Boom](https://github.com/JasperBoom)
-
-## Citation
-* __Boom J__, galaxy-tool-fastqc-analysis. 2018.  
-  Github repositry: https://github.com/JasperBoom/galaxy-tool-fastqc-analysis

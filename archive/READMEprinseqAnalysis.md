@@ -54,19 +54,3 @@ Edit the following file in order to prevent galaxy from blocking html output.
 ```
 sanitize_all_html: false
 ```
-
-## Source(s)
-* __Schmieder R, Edwards R__, Quality control and preprocessing of metagenomic datasets.  
-  Bioinformatics. 2011; 27(6): 863-864. __doi: 10.1093/bioinformatics/btr026__  
-  [PRINSEQ](http://prinseq.sourceforge.net/)
-* __Giardine B, Riemer C, Hardison RC, Burhans R, Elnitski L, Shah P__,  
-  Galaxy: A platform for interactive large-scale genome analysis.  
-  Genome Research. 2005; 15(10) 1451-1455 __doi: 10.1101/gr.4086505__  
-  [GALAXY](https://www.galaxyproject.org/)
-  
-## Author(s)
-* [Jasper Boom](https://github.com/JasperBoom)
-
-## Citation
-* __Boom J__, galaxy-tool-prinseq-analysis. 2018.  
-  Github repositry: https://github.com/JasperBoom/galaxy-tool-prinseq-analysis

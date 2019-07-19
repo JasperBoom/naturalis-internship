@@ -34,19 +34,3 @@ Edit the following file in order to make galaxy display the tool.
 ```
 <tool file="pathtofolder/runCutAdapt.xml"/>
 ```
-
-## Source(s)
-* __Martin M__, Cutadapt Removes Adapter Sequences From High-throughput Sequencing Reads.  
-  EMBnet.journal. 2011. __doi: 10.14806/ej.17.1.200__  
-  [CutAdapt](http://cutadapt.readthedocs.io/en/stable/guide.html)
-* __Giardine B, Riemer C, Hardison RC, Burhans R, Elnitski L, Shah P__,  
-  Galaxy: A platform for interactive large-scale genome analysis.  
-  Genome Research. 2005; 15(10) 1451-1455 __doi: 10.1101/gr.4086505__  
-  [GALAXY](https://www.galaxyproject.org/)
-  
-## Author(s)
-* [Jasper Boom](https://github.com/JasperBoom)
-
-## Citation
-* __Boom J__, galaxy-tool-cutadapt-trimmer. 2018.  
-  Github repositry: https://github.com/JasperBoom/galaxy-tool-cutadapt-trimmer

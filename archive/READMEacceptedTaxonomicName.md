@@ -43,23 +43,3 @@ Edit the following file in order to make galaxy display the tool.
 ```
 <tool file="pathtofolder/getScientificName.xml"/>
 ```
-
-## Source(s)
-* __Pyle RL__, Towards a Global Names Architecture: The future of indexing scientific names.  
-  ZooKeys. 2016; 550: 261-281. __doi: 10.3897/zookeys.550.10009__  
-  [Global Names](https://resolver.globalnames.org/api)
-* __Boyle B, Hopkins N, Lu Z, Garay JAR, Mozzherin D, Rees T__,  
-  The taxonomic name resolution service: an online tool for automated standardization of plant names.  
-  BMC Bioinformatics. 2013; 14(16). __doi: 10.1186/1471-2105-14-16__  
-  [TNRS](http://tnrs.iplantcollaborative.org/api.html)
-* __Giardine B, Riemer C, Hardison RC, Burhans R, Elnitski L, Shah P__,  
-  Galaxy: A platform for interactive large-scale genome analysis.  
-  Genome Research. 2005; 15(10) 1451-1455 __doi: 10.1101/gr.4086505__  
-  [GALAXY](https://www.galaxyproject.org/)
-
-## Author(s)
-* [Jasper Boom](https://github.com/JasperBoom)
-
-## Citation
-* __Boom J__, galaxy-tool-accepted-taxonomic-name. 2018.  
-  Github repositry: https://github.com/JasperBoom/galaxy-tool-accepted-taxonomic-name
