@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tool id="getReadCount" name="Read(s) Per File Counter:" version="0.1.0">
+    <description>
+        Use a bash script to count the reads of fastQ or fastA files.
+    </description>
+    <command interpreter="bash">
+        getReadCount.sh -f ${fisInput.rbInput}
+        #if $fisInput.rbInput == "single"
+            #if $fisInput.fisSingle.rbSingle == "fasta"
+                -i $fisInput.fisSingle.fisFasta -o $fosTxt -e $fisInput.fisSingle.rbSingle
+            #elif $fisInput.fisSingle.rbSingle == "fastq"
+                -i $fisInput.fisSingle.fisFastq -o $fosTxt -e $fisInput.fisSingle.rbSingle
+            #end if
+        #elif $fisInput.rbInput == "zip"
+            -i $fisInput.fisZip -o $fosTxt -e $fisInput.rbZip
+        #end if
+    </command>
+    <inputs>
+        <!-- Catch the input file. -->
+        <conditional name="fisInput">
+            <param name="rbInput" type="select" label="Single or zip?"
+                   multiple="false">
+                <option value="single" selected="true">Single file</option>
+                <option value="zip">Zip file</option>
+            </param>
+            <when value="single">
+                <!-- Catch the single input file -->
+                <conditional name="fisSingle">
+                    <param name="rbSingle" type="select" label="FastQ or fastA?"
+                           multiple="false">
+                        <option value="fastq"
+                                selected="true">FastQ file</option>
+                        <option value="fasta">FastA file</option>
+                    </param>
+                    <when value="fastq">
+                        <param name="fisFastq" type="data" format="fastq"
+                               label="FastQ file"/>
+                    </when>
+                    <when value="fasta">
+                        <param name="fisFasta" type="data" format="fasta"
+                               label="FastA file"/>
+                    </when>
+                </conditional>
+            </when>
+            <!-- Catch multiple input files -->
+            <when value="zip">
+                <param name="rbZip" type="select" label="FastQ or fastA?"
+                       multiple="false">
+                    <option value="fastq" selected="true">FastQ files(s)</option>
+                    <option value="fasta">FastA files(s)</option>
+                </param>
+                <param name="fisZip" type="data" format="zip" 
+                       label="Zip file"/>
+            </when>
+        </conditional>
+    </inputs>
+    <outputs>
+        <!-- Catch the output file. -->
+        <data format="txt" name="fosTxt" label="Read_Count">
+        </data>
+    </outputs>
+    <tests>
+    </tests>
+    <help>
+        .. class:: infomark
+
+        The ReadCount tool will count the number of reads in a file or
+        multiple [zip] files and output these numbers to a text file.
+
+        .. class:: warningmark
+
+        Files in fastQ format should always have a .fastq extension.
+        Files in fastA format should always have a .fasta extension.
+    </help>
+</tool>
