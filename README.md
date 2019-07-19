@@ -7,6 +7,7 @@ The newest version of the Naturalis Galaxy instance can be found [here](https://
 ## Table of contents:
 * [Prerequisites](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#prerequisites)
 * [Galaxy configuration](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#galaxy-configuration)
+* [Tool descriptions](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#tool-descriptions)
 * [Source(s)](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#sources)
 
 1. [UMI isolation](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#umi-isolation)
@@ -42,13 +43,13 @@ Download and install the following software:
 * VSEARCH required libraries (apt-get install libargtable2-dev)
 * VSEARCH (https://github.com/torognes/vsearch)
 ```
-Make sure both PRINSEQ and FastQC are added to the systems PATH. (CutAdapt should take care of that automatically)
+Make sure both PRINSEQ and FastQC are added to the systems PATH (CutAdapt should take care of that automatically).
 
 ### Galaxy configuration
 The galaxyXML files and the bashWrapper files should either be copied to the Galaxy tool shed folder or be symbolically linked there.  
-The tool files should be reachable by the bashWrappers, either by being present in the same folder or by adding the tool files to the systems PATH.  
-Edit the Galaxy tool_conf.xml file to add the tools to the Galaxy tool shed.
+The tool files should be reachable by the bashWrappers, either by being present in the same folder or by adding the tool files to the systems PATH.
 
+Edit the Galaxy tool_conf.xml file to add the tools to the Galaxy tool shed.  
 The read quality analysis tools need a small galaxy.yml adjustion in order to correctly show their HTML output files. This adjustion concerns the "sanitize_all_html" option, which should be set to FALSE.
 
 ## Tool descriptions
@@ -89,8 +90,7 @@ All columns in a OTU table should have a header starting with "#".
 Use a python script to utilize the Naturalis, BOLD and ALA api's to collect meta data.  
 The MetaData tool will utilize the Naturalis, BOLD and ALA api's to collect meta data such as occurrence status and images based on BLAST identifications or accepted taxonomic names.
 
-Definitions for all occurrence status codes can be found on this page:  
-https://www.nederlandsesoorten.nl/content/occurrence-status
+Definitions for all occurrence status codes can be found on this [page](https://www.nederlandsesoorten.nl/content/occurrence-status).
 
 Sample names can not start with a "#".  
 All columns in a OTU table should have a header starting with "#".
@@ -177,13 +177,13 @@ Files in fastQ format should always have a .fastq extension.
   FastQC: A quality control tool for high throughput sequence data.  
   Babraham Bioinformatics. 2010.  
   [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
-* Naturalis API website at http://docs.biodiversitydata.nl/en/latest/introduction/
-* Nederlands Soortenregister website at https://www.nederlandsesoorten.nl/
-* Atlas of Living Australia API website at https://api.ala.org.au/
+* Naturalis API [website](http://docs.biodiversitydata.nl/en/latest/introduction/)
+* Nederlands Soortenregister [website](https://www.nederlandsesoorten.nl/)
+* Atlas of Living Australia API [website](https://api.ala.org.au/)
 
 ## Author(s)
 * [Jasper Boom](https://github.com/JasperBoom)
 
 ## Citation
-* __Boom J__, galaxy-tools-naturalis-internship. 2019.  
+* __Boom J__, galaxy-tools-naturalis-internship. 2018-2019.  
   Github repository: https://github.com/JasperBoom/galaxy-tools-naturalis-internship
