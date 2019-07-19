@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tool id="getFastqToFasta" name="Fastq To Fasta Converter:" version="0.1.0">
+    <description>
+        Use a bash script to convert fastQ files to fastA files.
+    </description>
+    <!-- Call the getFastqToFasta script, set input parameters according to user
+         choices. -->
+    <command interpreter="bash">
+        getFastqToFasta.sh -f ${fisInput.rbInput}
+        #if $fisInput.rbInput == "fastq"
+            -i $fisInput.fisFastq -o $fosFasta
+        #elif $fisInput.rbInput == "zip"
+            -i $fisInput.fisZip -o $fosZip
+        #end if
+    </command>
+    <inputs>
+        <!-- Catch the input file. -->
+        <conditional name="fisInput">
+            <param name="rbInput" type="select" label="FastQ or zip?"
+                   multiple="false">
+                <option value="fastq" selected="true">FastQ file</option>
+                <option value="zip">Zip file</option>
+            </param>
+            <!-- Catch the single input file -->
+            <when value="fastq">
+                <param name="fisFastq" type="data" format="fastq"
+                       label="FastQ file."/>
+            </when>
+            <!-- Catch multiple input files -->
+            <when value="zip">
+                <param name="fisZip" type="data" format="zip"
+                       label="Zip file."/>
+            </when>
+        </conditional>
+    </inputs>
+    <outputs>
+        <!-- Catch the output file. -->
+        <data format="fasta" name="fosFasta" label="Converted_FastA">
+            <filter>fisInput["rbInput"] == "fastq"</filter>
+        </data>
+        <data format="zip" name="fosZip" label="Converted_Zip">
+            <filter>fisInput["rbInput"] == "zip"</filter>
+        </data>
+    </outputs>
+    <tests>
+    </tests>
+    <help>
+        .. class:: infomark
+
+        The FastqToFasta tool will convert one or multiple [zip] fastQ files
+        to fastA files using sed.
+
+        .. class:: warningmark
+
+        Files in fastQ format should always have a .fastq extension.
+
+--------
+
+        Source(s):
+            - **Stackoverflow user Owen.**
+              https://stackoverflow.com/questions/1542306/converting-fastq-to-fasta-with-sed-awk
+    </help>
+</tool>
