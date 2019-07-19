@@ -1,7 +1,11 @@
 # galaxy-tools-naturalis-internship
 These tools were made for the Naturalis Galaxy instance with a main focus on metabarcoding analysis.
 
-# Getting started
+## Tool descriptions
+
+### Accepted Taxonomic Name
+
+## Getting started
 
 ### Prerequisites
 Download and install the following software:
@@ -19,12 +23,15 @@ R required libraries (apt-get install libcurl4-gnutls-dev & apt-get install libs
 R packages (biocLite("phyloseq") & biocLite("optparse"))
 Java (apt-get install default-jre)
 JSON (cpan JSON)
+VSEARCH required libraries (apt-get install libargtable2-dev)
+VSEARCH (https://github.com/torognes/vsearch)
 ```
 Make sure both PRINSEQ and FastQC are added to the systems PATH. (CutAdapt should take care of that automatically)
 
 ### Galaxy configuration
 The galaxyXML files and the bashWrapper files should either be copied to the Galaxy tool shed folder or be symbolically linked there.  
-The tool files should be reachable by the bashWrappers, either by being present in the same folder or by adding the tool files to the systems PATH.
+The tool files should be reachable by the bashWrappers, either by being present in the same folder or by adding the tool files to the systems PATH.  
+Edit the Galaxy tool_conf.xml file to add the tools to the Galaxy tool shed.
 
 ## Source(s)
 * __Giardine B, Riemer C, Hardison RC, Burhans R, Elnitski L, Shah P__,  
@@ -43,6 +50,9 @@ The tool files should be reachable by the bashWrappers, either by being present 
 * __McMurdie PJ, Holmes S__, Phyloseq: An R Package for Reproducible Interactive Analysis and Graphics of Microbiome Census Data.  
   PLOS One. 2013; 8(4). __doi: 10.1371/journal.pone.0061217__  
   [Phyloseq](https://joey711.github.io/phyloseq/)
+* __Rognes T, Flouri T, Nichols B, Quince C, Mahe F__, VSEARCH: a versatile open source tool for metagenomics.  
+  Peerj. 2016. __doi: 10.7717/peerj.2584__  
+  [VSEARCH](https://github.com/torognes/vsearch)
 * __Ratnasingham S, Hebert PDN__, BOLD: The Barcode of Life Data System.  
   Molecular Ecology Notes. 2007; 7(3). __doi: 10.1111/j.1471-8286.2007.01678.x__  
   [BOLD](http://www.boldsystems.org/index.php/resources/api)
