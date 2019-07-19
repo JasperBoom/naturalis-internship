@@ -23,7 +23,7 @@ JSON (cpan JSON)
 Make sure both PRINSEQ and FastQC are added to the systems PATH. (CutAdapt should take care of that automatically)
 
 ### Galaxy configuration
-The galaxyXML files and the bashWrappers should either be copied to the Galaxy tool shed folder or be symbolically linked there.
+The galaxyXML files and the bashWrapper files should either be copied to the Galaxy tool shed folder or be symbolically linked there.  
 The tool files should be reachable by the bashWrappers, either by being present in the same folder or by adding the tool files to the systems PATH.
 
 ## Source(s)
