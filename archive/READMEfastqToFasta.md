@@ -26,17 +26,3 @@ Edit the following file in order to make galaxy display the tool.
 ```
 <tool file="pathtofolder/getFastqToFasta.xml"/>
 ```
-
-## Source(s)
-* Stackoverflow user Owen - [Page](https://stackoverflow.com/questions/1542306/converting-fastq-to-fasta-with-sed-awk)
-* __Giardine B, Riemer C, Hardison RC, Burhans R, Elnitski L, Shah P__,  
-  Galaxy: A platform for interactive large-scale genome analysis.  
-  Genome Research. 2005; 15(10) 1451-1455 __doi: 10.1101/gr.4086505__  
-  [GALAXY](https://www.galaxyproject.org/)
-
-## Author(s)
-* [Jasper Boom](https://github.com/JasperBoom)
-
-## Citation
-* __Boom J__, galaxy-tool-fastq-to-fasta. 2018.  
-  Github repositry: https://github.com/JasperBoom/galaxy-tool-fastq-to-fasta
