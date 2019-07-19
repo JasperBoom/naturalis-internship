@@ -4,27 +4,41 @@ These tools were made for the Naturalis Galaxy instance with a main focus on met
 ## Tool descriptions
 
 ### Accepted Taxonomic Name
+Use a python script to utilize either the Global Names api or the TNRS api to collect accepted taxonomic names.  
+The AcceptedTaxonomicName tool will utilize either the Global Names api or the Taxonomic Name Resolution Service api to collect accepted taxonomic names based on BLAST identifications.
+
+Global Names is for every kingdom.  
+TNRS is for plants only.
+
+Sample names can not start with a "#".  
+All columns in a OTU table should have a header starting with "#".
+
+### CutAdapt Trimmer
+Use CutAdapt to trim and discard reads and read sections.  
+The CutAdapt tool will trim and discard reads and read sections based on user input and quality thresholds.
+
+Files in fastQ format should always have a .fastq extension.
 
 ## Getting started
 
 ### Prerequisites
 Download and install the following software:
 ```
-Python3 (apt-get install python3)
-Python3 pip (apt-get install python3-pip)
-Python3 pandas (pip3 install pandas)
-Python3 xlrd (pip3 install xlrd)
-Python3 xlsxwriter (pip3 install xlsxwriter)
-CutAdapt (pip3 install cutadapt)
-PRINSEQ (https://sourceforge.net/projects/prinseq/files/)
-FastQC (https://www.bioinformatics.babraham.ac.uk/projects/download.html#fastqc)
-R (apt-get install r-base)
-R required libraries (apt-get install libcurl4-gnutls-dev & apt-get install libssl-dev)
-R packages (biocLite("phyloseq") & biocLite("optparse"))
-Java (apt-get install default-jre)
-JSON (cpan JSON)
-VSEARCH required libraries (apt-get install libargtable2-dev)
-VSEARCH (https://github.com/torognes/vsearch)
+* Python3 (apt-get install python3)
+* Python3 pip (apt-get install python3-pip)
+* Python3 pandas (pip3 install pandas)
+* Python3 xlrd (pip3 install xlrd)
+* Python3 xlsxwriter (pip3 install xlsxwriter)
+* CutAdapt (pip3 install cutadapt)
+* PRINSEQ (https://sourceforge.net/projects/prinseq/files/)
+* FastQC (https://www.bioinformatics.babraham.ac.uk/projects/download.html#fastqc)
+* R (apt-get install r-base)
+* R required libraries (apt-get install libcurl4-gnutls-dev & apt-get install libssl-dev)
+* R packages (biocLite("phyloseq") & biocLite("optparse"))
+* Java (apt-get install default-jre)
+* JSON (cpan JSON)
+* VSEARCH required libraries (apt-get install libargtable2-dev)
+* VSEARCH (https://github.com/torognes/vsearch)
 ```
 Make sure both PRINSEQ and FastQC are added to the systems PATH. (CutAdapt should take care of that automatically)
 
@@ -38,9 +52,6 @@ Edit the Galaxy tool_conf.xml file to add the tools to the Galaxy tool shed.
   Galaxy: A platform for interactive large-scale genome analysis.  
   Genome Research. 2005; 15(10) 1451-1455 __doi: 10.1101/gr.4086505__  
   [GALAXY](https://www.galaxyproject.org/)
-* __Andrews S__, FastQC: A quality control tool for high throughput sequence data.  
-  Babraham Bioinformatics. 2010.  
-  [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 * __Schmieder R, Edwards R__, Quality control and preprocessing of metagenomic datasets.  
   Bioinformatics. 2011; 27(6): 863-864. __doi: 10.1093/bioinformatics/btr026__  
   [PRINSEQ](http://prinseq.sourceforge.net/)
@@ -63,6 +74,9 @@ Edit the Galaxy tool_conf.xml file to add the tools to the Galaxy tool shed.
   The taxonomic name resolution service: an online tool for automated standardization of plant names.  
   BMC Bioinformatics. 2013; 14(16). __doi: 10.1186/1471-2105-14-16__  
   [TNRS](http://tnrs.iplantcollaborative.org/api.html)
+* __Andrews S__, FastQC: A quality control tool for high throughput sequence data.  
+  Babraham Bioinformatics. 2010.  
+  [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 * Naturalis API website at http://docs.biodiversitydata.nl/en/latest/introduction/
 * Nederlands Soortenregister website at https://www.nederlandsesoorten.nl/
 * Atlas of Living Australia API website at https://api.ala.org.au/
