@@ -28,9 +28,9 @@ These tools were made for the Naturalis Galaxy instance with a main focus on met
   The taxonomic name resolution service: an online tool for automated standardization of plant names.  
   BMC Bioinformatics. 2013; 14(16). __doi: 10.1186/1471-2105-14-16__  
   [TNRS](http://tnrs.iplantcollaborative.org/api.html)
-* Naturalis website at http://docs.biodiversitydata.nl/en/latest/introduction/
+* Naturalis API website at http://docs.biodiversitydata.nl/en/latest/introduction/
 * Nederlands Soortenregister website at https://www.nederlandsesoorten.nl/
-* Atlas of Living Australia website at https://api.ala.org.au/
+* Atlas of Living Australia API website at https://api.ala.org.au/
 
 ## Author(s)
 * [Jasper Boom](https://github.com/JasperBoom)

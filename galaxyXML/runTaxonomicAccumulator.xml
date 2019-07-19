@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tool id="runTaxonomicAccumulator" name="Taxonomic Accumulator:" 
+      version="0.1.0">
+    <description>
+        Use a python script to accumulate all identifications based on
+        taxonomy.
+    </description>
+    <!-- Call the runTaxonomicAccumulator script, set input parameters
+         according to user choices. -->
+    <command interpreter="bash">
+        runTaxonomicAccumulator.sh -f ${fisInput.rbInput} -o ${fosOutput}
+        #if $fisInput.rbInput == "otu_old"
+            -i $fisInput.fisOtuOld
+        #elif $fisInput.rbInput == "otu_new"
+            -i $fisInput.fisOtuNew
+        #elif $fisInput.rbInput == "blast"
+            -i $fisInput.fisBlast
+        #elif $fisInput.rbInput == "zip"
+            -i $fisInput.fisZip
+        #elif $fisInput.rbInput == "lca"
+            -i $fisInput.fisLca
+        #end if
+    </command>
+    <inputs>
+        <!-- Catch the input file. -->
+        <conditional name="fisInput">
+            <param name="rbInput" type="select" label="BLAST, OTU, zip or LCA?"
+                   multiple="false">
+                <option value="otu_old">OTU file + old BLAST</option>
+                <option value="otu_new">OTU file + new BLAST</option>
+                <option value="blast" selected="true">BLAST file</option>
+                <option value="zip">Zip file</option>
+                <option value="lca">OTU file + LCA</option>
+            </param>
+            <!-- Catch the single input file -->
+            <when value="otu_old">
+                <param name="fisOtuOld" type="data" format="tabular"
+                       label="OTU file + old BLAST."/>
+            </when>
+            <!-- Catch the single input file -->
+            <when value="otu_new">
+                <param name="fisOtuNew" type="data" format="tabular"
+                       label="OTU file + new BLAST."/>
+            </when>
+            <!-- Catch the single input file -->
+            <when value="blast">
+                <param name="fisBlast" type="data" format="tabular"
+                       label="BLAST file."/>
+            </when>
+            <!-- Catch multiple input files -->
+            <when value="zip">
+                <param name="fisZip" type="data" format="zip"
+                       label="Zip file."/>
+            </when>
+            <!-- Catch the single input file -->
+            <when value="lca">
+                <param name="fisLca" type="data" format="tabular"
+                       label="OTU file + LCA."/>
+            </when>
+        </conditional>
+    </inputs>
+    <outputs>
+        <!-- Catch the output file. -->
+        <data format="xlsx" name="fosOutput" label="Accumulated">
+        </data>
+    </outputs>
+    <tests>
+    </tests>
+    <help>
+        .. class:: infomark
+
+        The TaxonomicAccumulator tool will count all occurrences of the
+        identifications for every taxonomic level, for every file used as
+        input.
+
+        .. class:: warningmark
+
+        The tool will handle either a BLAST file, OTU file with old BLAST
+        output, OTU file with new BLAST output, a zip file containing multiple
+        BLAST files or a OTU file with LCA processing added to it.
+
+        .. class:: warningmark
+
+        Sample names can not start with a "#".
+        All columns in a OTU table should have a header starting with "#".
+    </help>
+</tool>
