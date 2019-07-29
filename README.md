@@ -1,6 +1,6 @@
 # galaxy-tools-naturalis-internship
 These tools were made for the Naturalis Galaxy instance with a main focus on metabarcoding analysis.  
-Either a existing software package is used or new scripts were written for desired functionalities.  
+Either an existing software package is used or new scripts were written for desired functionalities.  
 Some inputs for these tools are Naturalis Galaxy specific and depend on various other software packages used by Naturalis.  
 The newest version of the Naturalis Galaxy instance can be found [here](https://github.com/naturalis/Galaxy-Installation).
 
@@ -50,7 +50,7 @@ The galaxyXML files and the bashWrapper files should either be copied to the Gal
 The tool files should be reachable by the bashWrappers, either by being present in the same folder or by adding the tool files to the systems PATH.
 
 Edit the Galaxy tool_conf.xml file to add the tools to the Galaxy tool shed.  
-The read quality analysis tools need a small galaxy.yml adjustion in order to correctly show their HTML output files. This adjustion concerns the "sanitize_all_html" option, which should be set to FALSE.
+The read quality analysis tools need a small galaxy.yml adjustment to correctly show their HTML output files. This adjustment concerns the "sanitize_all_html" option, which should be set to FALSE.
 
 ## Tool descriptions
 
@@ -58,7 +58,7 @@ The read quality analysis tools need a small galaxy.yml adjustion in order to co
 Use a python script to cluster all UMIs and output a tabular file, a BLAST file and a zip file.  
 Use a python script to accumulate all UMIs and output a tabular file, a BLAST file and a zip file.
 
-The tabular file will contain all unique UMI nucleotides, a count of the number of reads that are associated with that umi and a unique identifier for every UMI.
+The tabular file will contain all unique UMI nucleotides, a count of the number of reads that are associated with that UMI and a unique identifier for every UMI.
 
 The BLAST file can be used to identify all UMI clusters.
 
@@ -77,8 +77,8 @@ Sample names can not start with a "#".
 All columns in a OTU table should have a header starting with "#".
 
 ### Accepted taxonomic name
-Use a python script to utilize either the Global Names api or the TNRS api to collect accepted taxonomic names.  
-The AcceptedTaxonomicName tool will utilize either the Global Names api or the Taxonomic Name Resolution Service api to collect accepted taxonomic names based on BLAST identifications.
+Use a python script to utilize either the Global Names API or the TNRS api to collect accepted taxonomic names.  
+The AcceptedTaxonomicName tool will utilize either the Global Names API or the Taxonomic Name Resolution Service API to collect accepted taxonomic names based on BLAST identifications.
 
 Global Names is for every kingdom.  
 TNRS is for plants only.
@@ -87,8 +87,8 @@ Sample names can not start with a "#".
 All columns in a OTU table should have a header starting with "#".
 
 ### Metadata
-Use a python script to utilize the Naturalis, BOLD and ALA api's to collect meta data.  
-The MetaData tool will utilize the Naturalis, BOLD and ALA api's to collect meta data such as occurrence status and images based on BLAST identifications or accepted taxonomic names.
+Use a python script to utilize the Naturalis, BOLD and ALA API's to collect meta data.  
+The MetaData tool will utilize the Naturalis, BOLD and ALA API's to collect meta data such as occurrence status and images based on BLAST identifications or accepted taxonomic names.
 
 Definitions for all occurrence status codes can be found on this [page](https://www.nederlandsesoorten.nl/content/occurrence-status).
 
@@ -186,4 +186,4 @@ Files in fastQ format should always have a .fastq extension.
 
 ## Citation
 * __Boom J__, galaxy-tools-naturalis-internship. 2018-2019.  
-  Github repository: https://github.com/JasperBoom/galaxy-tools-naturalis-internship
+  GitHub repository: https://github.com/JasperBoom/galaxy-tools-naturalis-internship
