@@ -1,8 +1,7 @@
 # galaxy-tools-naturalis-internship
 These tools were made for the Naturalis Galaxy instance with a main focus on metabarcoding analysis.  
 Either an existing software package is used or new scripts were written for desired functionalities.  
-Some inputs for these tools are Naturalis Galaxy specific and depend on various other software packages used by Naturalis.  
-The newest version of the Naturalis Galaxy instance can be found [here](https://github.com/naturalis/Galaxy-Installation).
+Some inputs for these tools are Naturalis Galaxy specific and depend on various other software packages used by Naturalis.
 
 ## Table of contents:
 * [Prerequisites](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#prerequisites)
