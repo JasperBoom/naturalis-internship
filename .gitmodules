@@ -1,4 +1,0 @@
-[submodule "galaxy-tools-umi-isolation"]
-	path = galaxy-tools-umi-isolation
-	url = https://github.com/JasperBoom/galaxy-tools-umi-isolation
-	branch = master

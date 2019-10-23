@@ -9,17 +9,16 @@ Some inputs for these tools are Naturalis Galaxy specific and depend on various 
 * [Tool descriptions](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#tool-descriptions)
 * [Source(s)](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#sources)
 
-1. [UMI isolation](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#umi-isolation)
-2. [Taxonomic accumulator](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#taxonomic-accumulator)
-3. [Accepted taxonomic name](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#accepted-taxonomic-name)
-4. [Metadata](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#metadata)
-5. [Phyloseq visual reporter](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#phyloseq-visual-reporter)
-6. [FastQC analysis](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#fastqc-analysis)
-7. [PRINSEQ analysis](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#prinseq-analysis)
-8. [PRINSEQ trimmer](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#prinseq-trimmer)
-9. [CutAdapt trimmer](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#cutadapt-trimmer)
-10. [Read counter](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#read-counter)
-11. [FastQ to fastA](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#fastq-to-fasta)
+1. [Taxonomic accumulator](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#taxonomic-accumulator)
+2. [Accepted taxonomic name](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#accepted-taxonomic-name)
+3. [Metadata](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#metadata)
+4. [Phyloseq visual reporter](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#phyloseq-visual-reporter)
+5. [FastQC analysis](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#fastqc-analysis)
+6. [PRINSEQ analysis](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#prinseq-analysis)
+7. [PRINSEQ trimmer](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#prinseq-trimmer)
+8. [CutAdapt trimmer](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#cutadapt-trimmer)
+9. [Read counter](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#read-counter)
+10. [FastQ to fastA](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#fastq-to-fasta)
 
 ## Getting started
 
@@ -39,8 +38,6 @@ Download and install the following software:
 * R packages (biocLite("phyloseq") & biocLite("optparse"))
 * Java (apt-get install default-jre)
 * JSON (cpan JSON)
-* VSEARCH required libraries (apt-get install libargtable2-dev)
-* VSEARCH (https://github.com/torognes/vsearch)
 ```
 Make sure both PRINSEQ and FastQC are added to the systems PATH (CutAdapt should take care of that automatically).
 
@@ -52,18 +49,6 @@ Edit the Galaxy tool_conf.xml file to add the tools to the Galaxy tool shed.
 The read quality analysis tools need a small galaxy.yml adjustment to correctly show their HTML output files. This adjustment concerns the "sanitize_all_html" option, which should be set to FALSE.
 
 ## Tool descriptions
-
-### UMI isolation
-Use a python script to accumulate all UMIs and output a tabular file, a BLAST file and a zip file.
-
-The tabular file will contain all unique UMI nucleotides, a count of the number of reads that are associated with that UMI and a unique identifier for every UMI.
-
-The BLAST file can be used to identify all UMI clusters.
-
-The zip file will contain fastA files for every unique UMI and contain reads associated with that UMI, this zip file is created before VSEARCH is used for a final check.
-
-Files in fastA format should always have a .fasta extension.  
-Files in fastQ format should always have a .fastq extension.
 
 ### Taxonomic accumulator
 The TaxonomicAccumulator tool will count all occurrences of the identifications for every taxonomic level, for every file used as input.
@@ -145,10 +130,6 @@ Files in fastQ format should always have a .fastq extension.
   Phyloseq: An R Package for Reproducible Interactive Analysis and Graphics of Microbiome Census Data.  
   PLOS One. 2013; 8(4). __doi: 10.1371/journal.pone.0061217__  
   [Phyloseq](https://joey711.github.io/phyloseq/)
-* __Rognes T, Flouri T, Nichols B, Quince C, Mahe F__,  
-  VSEARCH: a versatile open source tool for metagenomics.  
-  Peerj. 2016. __doi: 10.7717/peerj.2584__  
-  [VSEARCH](https://github.com/torognes/vsearch)
 * __Ratnasingham S, Hebert PDN__,  
   BOLD: The Barcode of Life Data System.  
   Molecular Ecology Notes. 2007; 7(3). __doi: 10.1111/j.1471-8286.2007.01678.x__  
