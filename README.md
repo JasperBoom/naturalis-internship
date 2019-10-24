@@ -84,34 +84,34 @@ All columns in a OTU table should have a header starting with "#".
 ### FastQC analysis
 The FastQC tool will do quality control checks on raw sequence data. These checks include summary graphs and tables.
 
-Files in fastQ format should always have a .fastq extension.
+Files in fastq format should always have a .fastq extension.
 
 ### PRINSEQ analysis
 The PRINSEQ tool will do quality control checks on raw sequence data. These checks include summary graphs and tables.
 
-Files in fastA format should always have a .fasta extension.  
-Files in fastQ format should always have a .fastq extension.
+Files in fasta format should always have a .fasta extension.  
+Files in fastq format should always have a .fastq extension.
 
 ### PRINSEQ trimmer
 The PRINSEQ tool will trim and discard reads and read sections based on user input and quality thresholds.
 
-Files in fastQ format should always have a .fastq extension.
+Files in fastq format should always have a .fastq extension.
 
 ### CutAdapt trimmer
 The CutAdapt tool will trim and discard reads and read sections based on user input and quality thresholds.
 
-Files in fastQ format should always have a .fastq extension.
+Files in fastq format should always have a .fastq extension.
 
 ### Read counter
 The ReadCount tool will count the number of reads in a file or multiple [zip] files and output these numbers to a text file.
 
-Files in fastA format should always have a .fasta extension.  
-Files in fastQ format should always have a .fastq extension.
+Files in fasta format should always have a .fasta extension.  
+Files in fastq format should always have a .fastq extension.
 
 ### FastQ to fastA
-The FastqToFasta tool will convert one or multiple [zip] fastQ files to fastA files using sed.
+The FastqToFasta tool will convert one or multiple [zip] fastq files to fasta files using sed.
 
-Files in fastQ format should always have a .fastq extension.
+Files in fastq format should always have a .fastq extension.
 
 ## Source(s)
 * __Giardine B, Riemer C, Hardison RC, Burhans R, Elnitski L, Shah P__,  
