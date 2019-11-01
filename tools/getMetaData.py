@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
-# Copyright ©2001-2019 Python Software Foundation
-
 # Author: Jasper Boom
 
 # Prequisites:
-# - sudo apt-get install python3
-# - sudo apt-get install python3-pip
-# - sudo pip3 install pandas
+# - Conda environment python >= 3.7
+# - conda install -c anaconda pandas
 
 # Imports
 import os

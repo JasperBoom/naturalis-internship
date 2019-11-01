@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
-# Copyright ©2007 Free Software Foundation, Inc.
-
 # Author: Jasper Boom
 
 # Prequisites:
-# - sudo apt-get install python3
-# - sudo apt-get install python3-pip
-# - sudo pip3 install pandas
+# - Conda environment python >= 3.7
+# - conda install -c anaconda pandas
 
 # The getFormatFlow function.
 # This function creates a temporary storage directory in the output directory.

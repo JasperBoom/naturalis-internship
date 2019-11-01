@@ -21,7 +21,6 @@ Some inputs for these tools are Naturalis Galaxy specific and depend on various 
 10. [FastQ to fastA](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#fastq-to-fasta)
 
 ## Getting started
-
 ### Prerequisites
 Download and install the following software:
 ```
@@ -49,7 +48,6 @@ Edit the Galaxy tool_conf.xml file to add the tools to the Galaxy tool shed.
 The read quality analysis tools need a small galaxy.yml adjustment to correctly show their HTML output files. This adjustment concerns the "sanitize_all_html" option, which should be set to FALSE.
 
 ## Tool descriptions
-
 ### Taxonomic accumulator
 The TaxonomicAccumulator tool will count all occurrences of the identifications for every taxonomic level, for every file used as input.
 
@@ -149,6 +147,10 @@ Files in fastq format should always have a .fastq extension.
 * Naturalis API [website](http://docs.biodiversitydata.nl/en/latest/introduction/)
 * Nederlands Soortenregister [website](https://www.nederlandsesoorten.nl/)
 * Atlas of Living Australia API [website](https://api.ala.org.au/)
+* __McKinney W__,  
+  Data Structures for Statistical Computing in Python.  
+  Proceedings of the 9th Python in Science Conference. 2010.  
+  [Pandas](https://pandas.pydata.org/)
 
 ## Author(s)
 * [Jasper Boom](https://github.com/JasperBoom)
