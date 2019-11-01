@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# Copyright ©2007 Free Software Foundation, Inc.
-
 # Author: Jasper Boom
 
 # Prequisites:

@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
-# Copyright ©2007 Free Software Foundation, Inc.
-
 # Author: Jasper Boom
 
 # Prequisites:
-# - sudo apt-get install python3
-# - sudo apt-get install python3-pip
-# - sudo pip3 install pandas
-# - sudo pip3 install xlsxwriter
-# - sudo pip3 install xlrd
+# - Conda environment python >= 3.7
+# - conda install -c anaconda pandas
+# - conda install -c anaconda xlsxwriter
+# - conda install -c anaconda xlrd
 
 # The getZipOutput function.
 # This function copies the input file to the temporary storage directory. The

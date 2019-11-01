@@ -1,12 +1,8 @@
 #!/usr/bin/env Rscript
-# Copyright ©2019 The R Foundation
-
 # Author: Jasper Boom
 
 # Prequisites:
 # - sudo apt-get install r-base
-# - sudo chmod -R 777 usr/lib/R
-# - sudo chmod -R 777 usr/share/R
 # - sudo apt-get install libcurl4-gnutls-dev
 # - sudo apt-get install libssl-dev
 # - source("http://bioconductor.org/biocLite.R")
