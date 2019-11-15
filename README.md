@@ -147,9 +147,8 @@ Files in fastq format should always have a .fastq extension.
 * Naturalis API [website](http://docs.biodiversitydata.nl/en/latest/introduction/)
 * Nederlands Soortenregister [website](https://www.nederlandsesoorten.nl/)
 * Atlas of Living Australia API [website](https://api.ala.org.au/)
-* __McKinney W__,  
-  Data Structures for Statistical Computing in Python.  
-  Proceedings of the 9th Python in Science Conference. 2010.  
+* __Augspurger T, Ayd W, Bartak C, Battiston P, Cloud P, Garcia M__,  
+  Python Data Analysis Library.  
   [Pandas](https://pandas.pydata.org/)
 
 ## Author(s)
