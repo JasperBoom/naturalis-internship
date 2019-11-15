@@ -144,12 +144,12 @@ Files in fastq format should always have a .fastq extension.
   FastQC: A quality control tool for high throughput sequence data.  
   Babraham Bioinformatics. 2010.  
   [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
-* Naturalis API [website](http://docs.biodiversitydata.nl/en/latest/introduction/)
-* Nederlands Soortenregister [website](https://www.nederlandsesoorten.nl/)
-* Atlas of Living Australia API [website](https://api.ala.org.au/)
 * __Augspurger T, Ayd W, Bartak C, Battiston P, Cloud P, Garcia M__,  
   Python Data Analysis Library.  
   [Pandas](https://pandas.pydata.org/)
+* Naturalis API [website](http://docs.biodiversitydata.nl/en/latest/introduction/)
+* Nederlands Soortenregister [website](https://www.nederlandsesoorten.nl/)
+* Atlas of Living Australia API [website](https://api.ala.org.au/)
 
 ## Author(s)
 * [Jasper Boom](https://github.com/JasperBoom)
