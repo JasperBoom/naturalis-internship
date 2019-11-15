@@ -114,7 +114,7 @@ Files in fastq format should always have a .fastq extension.
 ## Source(s)
 * __Giardine B, Riemer C, Hardison RC, Burhans R, Elnitski L, Shah P__,  
   Galaxy: A platform for interactive large-scale genome analysis.  
-  Genome Research. 2005; 15(10) 1451-1455 __doi: 10.1101/gr.4086505__  
+  Genome Research. 2005; 15(10) 1451-1455. __doi: 10.1101/gr.4086505__  
   [GALAXY](https://www.galaxyproject.org/)
 * __Schmieder R, Edwards R__,  
   Quality control and preprocessing of metagenomic datasets.  
