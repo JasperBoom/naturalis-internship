@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Author: Jasper Boom
 
 # Copyright (C) 2018 Jasper Boom
 
