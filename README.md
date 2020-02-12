@@ -115,7 +115,10 @@ Files in fastq format should always have a .fastq extension.
 * __Giardine B, Riemer C, Hardison RC, Burhans R, Elnitski L, Shah P__,  
   Galaxy: A platform for interactive large-scale genome analysis.  
   Genome Research. 2005; 15(10) 1451-1455. __doi: 10.1101/gr.4086505__  
-  [GALAXY](https://www.galaxyproject.org/)
+  [Galaxy](https://www.galaxyproject.org/)
+* __Python Software Foundation__,  
+  Python 3.7+. 2019.  
+  [Python](https://www.python.org/)
 * __Schmieder R, Edwards R__,  
   Quality control and preprocessing of metagenomic datasets.  
   Bioinformatics. 2011; 27(6): 863-864. __doi: 10.1093/bioinformatics/btr026__  
@@ -155,5 +158,22 @@ Files in fastq format should always have a .fastq extension.
 * [Jasper Boom](https://github.com/JasperBoom)
 
 ## Citation
-* __Boom J__, galaxy-tools-naturalis-internship. 2018-2019.  
+* __Boom J__, galaxy-tools-naturalis-internship.  
   GitHub repository: https://github.com/JasperBoom/galaxy-tools-naturalis-internship
+
+```
+Copyright (C) 2018 Jasper Boom
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+```
