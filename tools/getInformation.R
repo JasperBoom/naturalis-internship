@@ -1,5 +1,4 @@
 #!/usr/bin/env Rscript
-# Author: Jasper Boom
 
 # Copyright (C) 2018 Jasper Boom
 
