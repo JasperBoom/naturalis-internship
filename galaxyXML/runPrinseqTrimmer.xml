@@ -80,14 +80,5 @@
         .. class:: warningmark
 
         Files in fastQ format should always have a .fastq extension.
-
---------
-
-        Source(s):
-            - **Schmieder R, Edwards R**, Quality control and preprocessing of
-              metagenomic datasets.
-              Bioinformatics. 2011; 27(6): 863-864.
-              **doi: 10.1093/bioinformatics/btr026**
-              http://prinseq.sourceforge.net/
     </help>
 </tool>

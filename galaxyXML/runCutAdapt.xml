@@ -70,13 +70,5 @@
         .. class:: warningmark
 
         Files in fastQ format should always have a .fastq extension.
-
---------
-
-        Source(s):
-            - **Martin M**, Cutadapt Removes Adapter Sequences From
-              High-throughput Sequencing Reads.
-              EMBnet.journal. 2011. **doi: 10.14806/ej.17.1.200**
-              http://cutadapt.readthedocs.io/en/stable/guide.html
     </help>
 </tool>
