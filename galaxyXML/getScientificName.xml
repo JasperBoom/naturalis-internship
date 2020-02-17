@@ -80,18 +80,5 @@
 
         Sample names can not start with a "#".
         All columns in a OTU table should have a header starting with "#".
-
---------
-
-        Source(s):
-            - **Pyle RL**, Towards a Global Names Architecture: The future of
-              indexing scientific names.
-              ZooKeys. 2016; 550: 261-281. **doi: 10.3897/zookeys.550.10009**
-              https://resolver.globalnames.org/api
-            - **Boyle B, Hopkins N, Lu Z, Garay JAR, Mozzherin D, Rees T**, The
-              taxonomic name resolution service: an online tool for automated
-              standardization of plant names.
-              BMC Bioinformatics. 2013; 14(16). **doi: 10.1186/1471-2105-14-16**
-              http://tnrs.iplantcollaborative.org/api.html
     </help>
 </tool>

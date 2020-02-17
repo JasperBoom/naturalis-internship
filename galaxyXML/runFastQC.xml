@@ -53,13 +53,5 @@
         .. class:: warningmark
 
         Files in fastQ format should always have a .fastq extension.
-
---------
-
-        Source(s):
-            - **Andrews S**, FastQC: A quality control tool for high throughput
-              sequence data.
-              Babraham Bioinformatics. 2010.
-              https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
     </help>
 </tool>
