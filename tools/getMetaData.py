@@ -20,7 +20,6 @@
 
 # Imports
 import os
-import sys
 import argparse
 import re
 import math
@@ -28,33 +27,45 @@ import itertools
 import pandas as pd
 import subprocess as sp
 
+
 # The getDownload function.
 # This function downloads a image based on the getPictureUrl function output.
 # The name of such a image consists of [OTU_ID]-[species_name]-[database].
 def getDownload(strUrl):
-    rafDownload = sp.Popen(["wget", "-O", strUrl[1], strUrl[0]], stdout=sp.PIPE, 
-                           stderr=sp.PIPE)
+    rafDownload = sp.Popen(
+        ["wget", "-O", strUrl[1], strUrl[0]], stdout=sp.PIPE, stderr=sp.PIPE
+    )
     strOut, strError = rafDownload.communicate()
+
 
 # The getPictureUrl function.
 # This function calls a database api [Naturalis/BOLD/ALA] and searches through
 # the output for a specific string. This string differs depending on what
 # database is being searched. After finding this string, the image link is
 # isolated. In the case of the BOLD database, a small edit needs to be applied
-# in order to create a correct http format. This http link, along with a species
-# name linked by _ is returned as output.
-def getPictureUrl(strCommand, strStart, strOutputPath, strOtu, lstSpecies,
-                  strDatabase):
-    rafApi = sp.Popen(["curl", "-X", "GET", strCommand], stdout=sp.PIPE, 
-                      stderr=sp.PIPE)
+# in order to create a correct http format. This http link, along with a
+# species name linked by _ is returned as output.
+def getPictureUrl(
+    strCommand, strStart, strOutputPath, strOtu, lstSpecies, strDatabase
+):
+    rafApi = sp.Popen(
+        ["curl", "-X", "GET", strCommand], stdout=sp.PIPE, stderr=sp.PIPE
+    )
     strOut, strError = rafApi.communicate()
     try:
         intUrlStart = re.search(strStart, strOut).end()
-        intUrlEnd = re.search('"', strOut[intUrlStart+3:]).start()
-        strDownload = strOut[intUrlStart+3:][:intUrlEnd]
+        intUrlEnd = re.search('"', strOut[intUrlStart + 3:]).start()
+        strDownload = strOut[intUrlStart + 3:][:intUrlEnd]
         strSpeciesName = "_".join(lstSpecies)
-        strPictureFile = strOutputPath + strOtu + "-" + strSpeciesName + "-" +\
-                         strDatabase + ".jpg"
+        strPictureFile = (
+            strOutputPath
+            + strOtu
+            + "-"
+            + strSpeciesName
+            + "-"
+            + strDatabase
+            + ".jpg"
+        )
         if strDatabase == "BOLD":
             strDownload = strDownload.replace("\\", "")
         else:
@@ -63,66 +74,90 @@ def getPictureUrl(strCommand, strStart, strOutputPath, strOtu, lstSpecies,
     except AttributeError:
         pass
 
+
 # The getBoldApi function.
 # This function creates a api string with the provided name. This api string is
-# based on the BOLD api backbone. The created api string is included in the call
-# of the getPictureUrl function.
+# based on the BOLD api backbone. The created api string is included in the
+# call of the getPictureUrl function.
 def getBoldApi(strSpeciesCommand, strOutputPath, strOtu, lstSpecies):
-    strBoldCommand = "http://www.boldsystems.org/index.php/API_Public/" +\
-                     "specimen?taxon=" + strSpeciesCommand + "&format=json"
-    strBoldUrl = getPictureUrl(strBoldCommand, "image_file", strOutputPath,
-                               strOtu, lstSpecies, "BOLD")
+    strBoldCommand = (
+        "http://www.boldsystems.org/index.php/API_Public/"
+        + "specimen?taxon="
+        + strSpeciesCommand
+        + "&format=json"
+    )
+    strBoldUrl = getPictureUrl(
+        strBoldCommand, "image_file", strOutputPath, strOtu, lstSpecies, "BOLD"
+    )
     return strBoldUrl
+
 
 # The getAlaApi function.
 # This function creates a api string with the provided name. This api string is
 # based on the ALA api backbone. The created api string is included in the call
 # of the getPictureUrl function.
 def getAlaApi(strSpeciesCommand, strOutputPath, strOtu, lstSpecies):
-    strAlaCommand = "http://bie.ala.org.au/ws/search.json?q=" +\
-                    strSpeciesCommand + "&facets=imageAvailable"
-    strAlaUrl = getPictureUrl(strAlaCommand, "imageUrl", strOutputPath,
-                                strOtu, lstSpecies, "ALA")
+    strAlaCommand = (
+        "http://bie.ala.org.au/ws/search.json?q="
+        + strSpeciesCommand
+        + "&facets=imageAvailable"
+    )
+    strAlaUrl = getPictureUrl(
+        strAlaCommand, "imageUrl", strOutputPath, strOtu, lstSpecies, "ALA"
+    )
     return strAlaUrl
 
+
 # The getPicture function.
-# This function loops through the names column and OTU column. Every name is 
+# This function loops through the names column and OTU column. Every name is
 # transformed into a correct format in order to support the database api's. The
-# first database called in this function is the Naturalis database. If that call
-# does not provide a image, the BOLD database is called. If the call does
+# first database called in this function is the Naturalis database. If that
+# call does not provide a image, the BOLD database is called. If the call does
 # provide a file, but its a empty one, the BOLD database is also called. These
 # same rules apply to the BOLD calls. Which means the ALA database is called.
 # No result after the ALA call, means no image.
 def getPicture(tblReadInput, strOutputPath, tblSpecies):
-    tblOtu = tblReadInput.iloc[:,0]
+    tblOtu = tblReadInput.iloc[:, 0]
     for strOtu, strSpecies in itertools.izip(tblOtu, tblSpecies):
         try:
             lstSpecies = strSpecies.split()
             strSpeciesCommand = "%20".join(lstSpecies).lower()
             # Naturalis database.
-            strNaturalisCommand = "http://api.biodiversitydata.nl/v2/multi" +\
-                                  "media/query?identifications.scientific" +\
-                                  "Name.scientificNameGroup=" +\
-                                  strSpeciesCommand + "&_fields=service" +\
-                                  "AccessPoints"
-            strNaturalisUrl = getPictureUrl(strNaturalisCommand, "accessUri",
-                                            strOutputPath, strOtu, lstSpecies,
-                                            "NATURALIS")
+            strNaturalisCommand = (
+                "http://api.biodiversitydata.nl/v2/multi"
+                + "media/query?identifications.scientific"
+                + "Name.scientificNameGroup="
+                + strSpeciesCommand
+                + "&_fields=service"
+                + "AccessPoints"
+            )
+            strNaturalisUrl = getPictureUrl(
+                strNaturalisCommand,
+                "accessUri",
+                strOutputPath,
+                strOtu,
+                lstSpecies,
+                "NATURALIS",
+            )
             if strNaturalisUrl:
                 getDownload(strNaturalisUrl)
                 if os.stat(strNaturalisUrl[1]).st_size == 0:
                     rafRemove = sp.call(["rm", strNaturalisUrl[1]])
                     # BOLD database.
-                    strBoldUrl = getBoldApi(strSpeciesCommand, strOutputPath,
-                                            strOtu, lstSpecies)
+                    strBoldUrl = getBoldApi(
+                        strSpeciesCommand, strOutputPath, strOtu, lstSpecies
+                    )
                     if strBoldUrl:
                         getDownload(strBoldUrl)
                         if os.stat(strBoldUrl[1]).st_size == 0:
                             rafRemove = sp.call(["rm", strBoldUrl[1]])
                             # ALA database.
-                            strAlaUrl = getAlaApi(strSpeciesCommand, 
-                                                  strOutputPath, strOtu,
-                                                  lstSpecies)
+                            strAlaUrl = getAlaApi(
+                                strSpeciesCommand,
+                                strOutputPath,
+                                strOtu,
+                                lstSpecies,
+                            )
                             if strAlaUrl:
                                 getDownload(strAlaUrl)
                                 if os.stat(strAlaUrl[1]).st_size == 0:
@@ -135,8 +170,12 @@ def getPicture(tblReadInput, strOutputPath, tblSpecies):
                             pass
                     else:
                         # ALA database.
-                        strAlaUrl = getAlaApi(strSpeciesCommand, strOutputPath,
-                                              strOtu, lstSpecies)
+                        strAlaUrl = getAlaApi(
+                            strSpeciesCommand,
+                            strOutputPath,
+                            strOtu,
+                            lstSpecies,
+                        )
                         if strAlaUrl:
                             getDownload(strAlaUrl)
                             if os.stat(strAlaUrl[1]).st_size == 0:
@@ -149,15 +188,20 @@ def getPicture(tblReadInput, strOutputPath, tblSpecies):
                     pass
             else:
                 # BOLD database.
-                strBoldUrl = getBoldApi(strSpeciesCommand, strOutputPath,
-                                        strOtu, lstSpecies)
+                strBoldUrl = getBoldApi(
+                    strSpeciesCommand, strOutputPath, strOtu, lstSpecies
+                )
                 if strBoldUrl:
                     getDownload(strBoldUrl)
                     if os.stat(strBoldUrl[1]).st_size == 0:
                         rafRemove = sp.call(["rm", strBoldUrl[1]])
                         # ALA database.
-                        strAlaUrl = getAlaApi(strSpeciesCommand, strOutputPath, 
-                                              strOtu, lstSpecies)
+                        strAlaUrl = getAlaApi(
+                            strSpeciesCommand,
+                            strOutputPath,
+                            strOtu,
+                            lstSpecies,
+                        )
                         if strAlaUrl:
                             getDownload(strAlaUrl)
                             if os.stat(strAlaUrl[1]).st_size == 0:
@@ -170,8 +214,9 @@ def getPicture(tblReadInput, strOutputPath, tblSpecies):
                         pass
                 else:
                     # ALA database.
-                    strAlaUrl = getAlaApi(strSpeciesCommand, strOutputPath,
-                                              strOtu, lstSpecies)
+                    strAlaUrl = getAlaApi(
+                        strSpeciesCommand, strOutputPath, strOtu, lstSpecies
+                    )
                     if strAlaUrl:
                         getDownload(strAlaUrl)
                         if os.stat(strAlaUrl[1]).st_size == 0:
@@ -183,6 +228,7 @@ def getPicture(tblReadInput, strOutputPath, tblSpecies):
         except AttributeError:
             pass
 
+
 # The getOccurrenceStatus function.
 # This function loops through the names column generated by the
 # getNameColumn function. Every name is transformed into a correct format in
@@ -191,43 +237,61 @@ def getPicture(tblReadInput, strOutputPath, tblSpecies):
 # the api. The value after the word occurrenceStatusVerbatim is isolated and
 # this value is added to the list lstStatus. If no value can be found, a empty
 # string is added to the list lstStatus. After every species name is processed,
-# the list lstStatus is added to the input file as a new column and outputted as
-# a new file.
+# the list lstStatus is added to the input file as a new column and outputted
+# as a new file.
 def getOccurrenceStatus(tblReadInput, strOutputPath, tblSpecies):
-    dicOccurrence = {"0": "Reported", "0a": "Reported correctly, to be refined",
-                     "1": "Indigenous (undetermined)",
-                     "1a": "Indigenous: native species",
-                     "1b": "Indigenous: incidental/periodical species",
-                     "2": "Introduced (undetermined)",
-                     "2a": "Introduced: at least 100 years independent survival",
-                     "2b": "Introduced: 10-100 years independent survival",
-                     "2c": "Introduced: less than 10 years independent survival",
-                     "2d": "Introduced: incidental import", "3a": "Data deficient",
-                     "3b": "Incorrectly reported", "3c": "To be expected",
-                     "3d": "Incorrectly used name (auct.)", "4": "Miscellaneous"}
+    dicOccurrence = {
+        "0": "Reported",
+        "0a": "Reported correctly, to be refined",
+        "1": "Indigenous (undetermined)",
+        "1a": "Indigenous: native species",
+        "1b": "Indigenous: incidental/periodical species",
+        "2": "Introduced (undetermined)",
+        "2a": "Introduced: at least 100 years independent survival",
+        "2b": "Introduced: 10-100 years independent survival",
+        "2c": "Introduced: less than 10 years independent survival",
+        "2d": "Introduced: incidental import",
+        "3a": "Data deficient",
+        "3b": "Incorrectly reported",
+        "3c": "To be expected",
+        "3d": "Incorrectly used name (auct.)",
+        "4": "Miscellaneous",
+    }
     lstStatus = []
     for strRow in tblSpecies:
         try:
             lstSpecies = strRow.split()
             strSpeciesCommand = "%20".join(lstSpecies).lower()
-            strCommand = "http://api.biodiversitydata.nl/v2/taxon/query?" +\
-                         "acceptedName.scientificNameGroup=" +\
-                         strSpeciesCommand +\
-                         "&_fields=occurrenceStatusVerbatim"
-            rafNaturalisApi = sp.Popen(["curl", "-X", "GET", strCommand],
-                                       stdout=sp.PIPE, stderr=sp.PIPE)
+            strCommand = (
+                "http://api.biodiversitydata.nl/v2/taxon/query?"
+                + "acceptedName.scientificNameGroup="
+                + strSpeciesCommand
+                + "&_fields=occurrenceStatusVerbatim"
+            )
+            rafNaturalisApi = sp.Popen(
+                ["curl", "-X", "GET", strCommand],
+                stdout=sp.PIPE,
+                stderr=sp.PIPE,
+            )
             strOut, strError = rafNaturalisApi.communicate()
-            intOccurrenceStart = re.search("occurrenceStatusVerbatim", 
-                                           strOut).end()
-            strOccurrence = strOut[intOccurrenceStart+3:intOccurrenceStart+5]
-            strOccurrenceTotal = strOccurrence.strip(" ") + " " +\
-                                 dicOccurrence[str(strOccurrence)]
+            intOccurrenceStart = re.search(
+                "occurrenceStatusVerbatim", strOut
+            ).end()
+            strOccurrence = strOut[
+                intOccurrenceStart + 3: intOccurrenceStart + 5
+            ]
+            strOccurrenceTotal = (
+                strOccurrence.strip(" ")
+                + " "
+                + dicOccurrence[str(strOccurrence)]
+            )
             lstStatus.append(strOccurrenceTotal)
         except AttributeError:
             lstStatus.append("")
     tblReadInput["OccurrenceStatus"] = lstStatus
     strOutputPath = strOutputPath + "flNewOutput.tabular"
     tblReadInput.to_csv(strOutputPath, sep="\t", encoding="utf-8", index=False)
+
 
 # The getNameColumn function.
 # This function isolates a list of names used for the metadata processes. When
@@ -251,10 +315,10 @@ def getNameColumn(flInput, flOutput, strProcess, strFormat):
     if strFormat == "accepted":
         intCounter = 0
         lstSpecies = []
-        for strRow in tblReadInput.iloc[:,2]:
+        for strRow in tblReadInput.iloc[:, 2]:
             try:
-                if math.isnan(strRow) == True:
-                    lstSpecies.append(tblReadInput.iloc[:,1][intCounter])
+                if math.isnan(strRow) is True:
+                    lstSpecies.append(tblReadInput.iloc[:, 1][intCounter])
             except TypeError:
                 lstSpecies.append(strRow)
             intCounter += 1
@@ -262,22 +326,27 @@ def getNameColumn(flInput, flOutput, strProcess, strFormat):
         lstSpecies = []
         intFiles = 0
         for strHeader in list(tblReadInput):
-            if strHeader[:1] != "#" and strHeader[:7] != "Unnamed"\
-               and strHeader[:16] != "OccurrenceStatus":
+            if (
+                strHeader[:1] != "#"
+                and strHeader[:7] != "Unnamed"
+                and strHeader[:16] != "OccurrenceStatus"
+            ):
                 intFiles += 1
-        tblTaxonomyColumn = tblReadInput.iloc[:,intFiles+intColumnLength]
+        tblTaxonomyColumn = tblReadInput.iloc[:, intFiles + intColumnLength]
         for strRow in tblTaxonomyColumn:
             strTaxonLine = str(strRow).split("/")
             strTaxonLine = [strName.strip(" ") for strName in strTaxonLine]
             lstSpecies.append(strTaxonLine[-1])
     elif strFormat == "lca":
-        lstOtuNames = tblReadInput.ix[:,0]
         intFiles = 0
         for strHeader in list(tblReadInput):
-            if strHeader[:1] != "#" and strHeader[:7] != "Unnamed"\
-               and strHeader[:16] != "OccurrenceStatus":
+            if (
+                strHeader[:1] != "#"
+                and strHeader[:7] != "Unnamed"
+                and strHeader[:16] != "OccurrenceStatus"
+            ):
                 intFiles += 1
-        lstSpecies = tblReadInput.iloc[:,intFiles+3]
+        lstSpecies = tblReadInput.iloc[:, intFiles + 3]
     elif strFormat == "blast":
         lstSpecies = []
         for strRow in tblReadInput["Taxonomy"]:
@@ -293,29 +362,52 @@ def getNameColumn(flInput, flOutput, strProcess, strFormat):
     else:
         pass
 
+
 # The argvs function.
 def parseArgvs():
-    parser = argparse.ArgumentParser(description="Use a python script to\
+    parser = argparse.ArgumentParser(
+        description="Use a python script to\
                                                   utilize the Naturalis, BOLD\
                                                   and ALA api's to collect\
-                                                  meta data.")
+                                                  meta data."
+    )
     parser.add_argument("-v", action="version", version="%(prog)s [0.1.0]")
-    parser.add_argument("-i", action="store", dest="fisInput",
-                        help="The location of the input file(s)")
-    parser.add_argument("-o", action="store", dest="fosOutput",
-                        help="The location of the output file(s)")
-    parser.add_argument("-p", action="store", dest="disProcess",
-                        help="The metadata process type [occurrences/pictures]")
-    parser.add_argument("-f", action="store", dest="disFormat",
-                        help="The format of the input file(s) [otu_old/otu_new/lca/accepted/blast]")
+    parser.add_argument(
+        "-i",
+        action="store",
+        dest="fisInput",
+        help="The location of the input file(s)",
+    )
+    parser.add_argument(
+        "-o",
+        action="store",
+        dest="fosOutput",
+        help="The location of the output file(s)",
+    )
+    parser.add_argument(
+        "-p",
+        action="store",
+        dest="disProcess",
+        help="The metadata process type [occurrences/pictures]",
+    )
+    parser.add_argument(
+        "-f",
+        action="store",
+        dest="disFormat",
+        help="The format of the input file(s)\
+              [otu_old/otu_new/lca/accepted/blast]",
+    )
     argvs = parser.parse_args()
     return argvs
+
 
 # The main function.
 def main():
     argvs = parseArgvs()
-    getNameColumn(argvs.fisInput, argvs.fosOutput, argvs.disProcess,
-                  argvs.disFormat)
+    getNameColumn(
+        argvs.fisInput, argvs.fosOutput, argvs.disProcess, argvs.disFormat
+    )
+
 
 if __name__ == "__main__":
     main()

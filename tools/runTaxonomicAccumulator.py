@@ -23,10 +23,9 @@
 # Imports
 import argparse
 import os
-import sys
-import xlsxwriter
 import numpy as np
 import pandas as pd
+
 
 # The getListTaxonDics function.
 # This function creates 7 lists containing a number of emptry dictionaries
@@ -41,8 +40,16 @@ def getListTaxonDics(intFiles):
     lstFamily = [{} for intNumberOfDics in range(intFiles)]
     lstGenus = [{} for intNumberOfDics in range(intFiles)]
     lstSpecies = [{} for intNumberOfDics in range(intFiles)]
-    return lstKingdom, lstPhylum, lstClass, lstOrder, lstFamily, lstGenus,\
-           lstSpecies
+    return (
+        lstKingdom,
+        lstPhylum,
+        lstClass,
+        lstOrder,
+        lstFamily,
+        lstGenus,
+        lstSpecies,
+    )
+
 
 # The getZipOutput function.
 # This function creates a .xlsx file based on the number of files in the input
@@ -63,11 +70,13 @@ def getZipOutput(flOutput, lstFileNames, lstTaxonDics, lstTaxonRanks):
         dfTemporary.to_excel(fosExcelWriter, sheet_name=lstTaxonRanks[taxonID])
     fosExcelWriter.save()
 
+
 # The getAccumulationZip function.
 # This function creates a list containing all file names extracted from the
 # input zip file. It then creates a list with empty dictionaries based on the
-# number of files. Every file is opened, the "Taxonomy" column is looped through
-# and used to count based on taxon ranks. The getZipOutput function is called.
+# number of files. Every file is opened, the "Taxonomy" column is looped
+# through and used to count based on taxon ranks. The getZipOutput function
+# is called.
 def getAccumulationZip(dirTemporary, flOutput, lstTaxonRanks):
     lstFileNames = []
     for strFile in os.listdir(dirTemporary):
@@ -85,17 +94,22 @@ def getAccumulationZip(dirTemporary, flOutput, lstTaxonRanks):
                 strTaxonLine = [strName.strip(" ") for strName in strTaxonLine]
                 for intTaxonPosition in range(7):
                     try:
-                        if strTaxonLine[intTaxonPosition] in lstTaxonDics[
-                           intTaxonPosition][intFileCounter]:
+                        if (
+                            strTaxonLine[intTaxonPosition]
+                            in lstTaxonDics[intTaxonPosition][intFileCounter]
+                        ):
                             lstTaxonDics[intTaxonPosition][intFileCounter][
-                                         strTaxonLine[intTaxonPosition]] += 1
+                                strTaxonLine[intTaxonPosition]
+                            ] += 1
                         else:
                             lstTaxonDics[intTaxonPosition][intFileCounter][
-                                         strTaxonLine[intTaxonPosition]] = 1
+                                strTaxonLine[intTaxonPosition]
+                            ] = 1
                     except IndexError:
-                        pass                            
+                        pass
             intFileCounter += 1
     getZipOutput(flOutput, lstFileNames, lstTaxonDics, lstTaxonRanks)
+
 
 # The getOtuOutputTemporary function.
 # This function creates dataframes for the taxonomy ranks it recieves. It also
@@ -110,26 +124,30 @@ def getOtuOutputTemporary(lstTaxonDic, dicIndex, lstUnknownRow, strFormat):
     dfTemporary.rename(index=dicIndex, inplace=True)
     dfTemporary = dfTemporary.T
     if strFormat == "lca":
-        dfTemporary.index = pd.Series(dfTemporary.index).replace(np.nan, "No hit")
+        dfTemporary.index = pd.Series(dfTemporary.index).replace(
+            np.nan, "No hit"
+        )
     else:
         pass
     return dfTemporary
 
+
 # The getOtuOutput function.
 # This function creates a .xlsx file based on the counting done in the
 # getAccumulationOtu function. It formats in such a way that it can handle
-# the multiple samples that could have been used. If the format of the OTU table
-# is with standard BLAST identifications it also isolates the row which contains
-# a count of unidentified OTU's, this row will be used to add that count to
-# every sheet. If the format is with a LCA process file, the no hit
+# the multiple samples that could have been used. If the format of the OTU
+# table is with standard BLAST identifications it also isolates the row which
+# contains a count of unidentified OTU's, this row will be used to add that
+# count to every sheet. If the format is with a LCA process file, the no hit
 # row is automatically added through the dictionaries.
 # The first sheet created is the kingdom sheet, when that has been created the
 # getOtuOutputTemporary function is called to create dataframes for the
 # remaining taxonomy ranks. These dataframes are written to the same file as
 # the kingdom dataframe was. The getOtuOutputTemporary handles those remaining
 # dataframes.
-def getOtuOutput(flOutput, lstTaxonDics, lstHeaders, intFiles, lstTaxonRanks,
-                 strFormat):
+def getOtuOutput(
+    flOutput, lstTaxonDics, lstHeaders, intFiles, lstTaxonRanks, strFormat
+):
     dfKingdom = pd.DataFrame(lstTaxonDics[0])
     dicIndex = {}
     for intNumber in range(intFiles):
@@ -144,19 +162,21 @@ def getOtuOutput(flOutput, lstTaxonDics, lstHeaders, intFiles, lstTaxonRanks,
             lstUnknownRow = 0
             dfKingdom.loc["No hit"] = 0
     elif strFormat == "lca":
-        dfKingdom.index = pd.Series(dfKingdom.index).replace(
-                          np.nan, "No hit")
+        dfKingdom.index = pd.Series(dfKingdom.index).replace(np.nan, "No hit")
         lstUnknownRow = 0
     else:
         pass
     fosExcelWriter = pd.ExcelWriter(flOutput, engine="xlsxwriter")
     dfKingdom.to_excel(fosExcelWriter, sheet_name=lstTaxonRanks[0])
     for intTaxonRank in range(1, 7):
-        dfTemporary = getOtuOutputTemporary(lstTaxonDics[intTaxonRank],
-                                            dicIndex, lstUnknownRow, strFormat)
-        dfTemporary.to_excel(fosExcelWriter, sheet_name=lstTaxonRanks[
-                             intTaxonRank])
+        dfTemporary = getOtuOutputTemporary(
+            lstTaxonDics[intTaxonRank], dicIndex, lstUnknownRow, strFormat
+        )
+        dfTemporary.to_excel(
+            fosExcelWriter, sheet_name=lstTaxonRanks[intTaxonRank]
+        )
     fosExcelWriter.save()
+
 
 # The getAccumulationOtu function.
 # This function opens the input file and creates a list containing all file
@@ -168,14 +188,18 @@ def getOtuOutput(flOutput, lstTaxonDics, lstHeaders, intFiles, lstTaxonRanks,
 # file, the taxonomy is retrieved. It will use the read count in every OTU for
 # for every file for every taxon rank to accumulate. The function then calls
 # the getOtuOutput function.
-def getAccumulationOtu(flInput, flOutput, lstTaxonRanks, intColumnLength,
-                       strFormat):
+def getAccumulationOtu(
+    flInput, flOutput, lstTaxonRanks, intColumnLength, strFormat
+):
     tblReadInput = pd.read_table(flInput)
     intFiles = 0
     lstHeaders = []
     for strHeader in list(tblReadInput):
-        if strHeader[:1] != "#" and strHeader[:7] != "Unnamed"\
-           and strHeader[:16] != "OccurrenceStatus":
+        if (
+            strHeader[:1] != "#"
+            and strHeader[:7] != "Unnamed"
+            and strHeader[:16] != "OccurrenceStatus"
+        ):
             intFiles += 1
             lstHeaders.append(strHeader)
         else:
@@ -185,30 +209,42 @@ def getAccumulationOtu(flInput, flOutput, lstTaxonRanks, intColumnLength,
         intRowCounter = 0
         for intRow in tblReadInput[lstHeaders[intColumns]]:
             if strFormat == "otu_old" or strFormat == "otu_new":
-                strTaxonLine = str(tblReadInput.iloc[:,intFiles+\
-                                   intColumnLength][intRowCounter]).split("/")
+                strTaxonLine = str(
+                    tblReadInput.iloc[:, intFiles + intColumnLength][
+                        intRowCounter
+                    ]
+                ).split("/")
                 strTaxonLine = [strName.strip(" ") for strName in strTaxonLine]
             elif strFormat == "lca":
                 strTaxonLine = []
                 for intTaxonColumn in range(4, 11):
-                    strTaxonLine.append(tblReadInput.iloc[:,
-                                        intFiles+intTaxonColumn][intRowCounter])
+                    strTaxonLine.append(
+                        tblReadInput.iloc[:, intFiles + intTaxonColumn][
+                            intRowCounter
+                        ]
+                    )
             else:
                 pass
             intRowCounter += 1
             for intTaxonPosition in range(7):
                 try:
-                    if strTaxonLine[intTaxonPosition] in \
-                       lstTaxonDics[intTaxonPosition][intColumns]:
+                    if (
+                        strTaxonLine[intTaxonPosition]
+                        in lstTaxonDics[intTaxonPosition][intColumns]
+                    ):
                         lstTaxonDics[intTaxonPosition][intColumns][
-                                    strTaxonLine[intTaxonPosition]] += intRow
+                            strTaxonLine[intTaxonPosition]
+                        ] += intRow
                     else:
                         lstTaxonDics[intTaxonPosition][intColumns][
-                                     strTaxonLine[intTaxonPosition]] = intRow
+                            strTaxonLine[intTaxonPosition]
+                        ] = intRow
                 except IndexError:
                     pass
-    getOtuOutput(flOutput, lstTaxonDics, lstHeaders, intFiles, lstTaxonRanks,
-                 strFormat)
+    getOtuOutput(
+        flOutput, lstTaxonDics, lstHeaders, intFiles, lstTaxonRanks, strFormat
+    )
+
 
 # The getBlastOutput function.
 # This function creates a .xlsx file based on the counting done in the
@@ -218,12 +254,15 @@ def getAccumulationOtu(flInput, flOutput, lstTaxonRanks, intColumnLength,
 def getBlastOutput(flOutput, lstTaxonDics, lstTaxonRanks):
     fosExcelWriter = pd.ExcelWriter(flOutput, engine="xlsxwriter")
     for intTaxonPosition in range(7):
-        dfTemporary = pd.DataFrame.from_dict(lstTaxonDics[intTaxonPosition],
-                                             orient="index")
+        dfTemporary = pd.DataFrame.from_dict(
+            lstTaxonDics[intTaxonPosition], orient="index"
+        )
         dfTemporary.columns = ["Number of identifications"]
-        dfTemporary.to_excel(fosExcelWriter, sheet_name=lstTaxonRanks[
-                             intTaxonPosition])
+        dfTemporary.to_excel(
+            fosExcelWriter, sheet_name=lstTaxonRanks[intTaxonPosition]
+        )
     fosExcelWriter.save()
+
 
 # The getAccumulationBlast function.
 # This function opens the input file and creates a list containing 7 empty
@@ -241,58 +280,101 @@ def getAccumulationBlast(flInput, flOutput, lstTaxonRanks):
         strTaxonLine = [strName.strip(" ") for strName in strTaxonLine]
         for intTaxonPosition in range(7):
             try:
-                if strTaxonLine[intTaxonPosition] in \
-                   lstTaxonDics[intTaxonPosition]:
-                    lstTaxonDics[intTaxonPosition][strTaxonLine[
-                    intTaxonPosition]] += 1
+                if (
+                    strTaxonLine[intTaxonPosition]
+                    in lstTaxonDics[intTaxonPosition]
+                ):
+                    lstTaxonDics[intTaxonPosition][
+                        strTaxonLine[intTaxonPosition]
+                    ] += 1
                 else:
-                    lstTaxonDics[intTaxonPosition][strTaxonLine[
-                    intTaxonPosition]] = 1
+                    lstTaxonDics[intTaxonPosition][
+                        strTaxonLine[intTaxonPosition]
+                    ] = 1
             except IndexError:
                 pass
     getBlastOutput(flOutput, lstTaxonDics, lstTaxonRanks)
 
+
 # The argvs function.
 def parseArgvs():
-    parser = argparse.ArgumentParser(description="Use a python script to\
+    parser = argparse.ArgumentParser(
+        description="Use a python script to\
                                                   accumulate all\
                                                   identifications based on\
-                                                  taxonomy.")
+                                                  taxonomy."
+    )
     parser.add_argument("-v", action="version", version="%(prog)s [0.1.0]")
-    parser.add_argument("-i", action="store", dest="fisInput",
-                        help="The location of the input file(s)")
-    parser.add_argument("-o", action="store", dest="fosOutput",
-                        help="The location of the output file(s)")
-    parser.add_argument("-t", action="store", dest="fosOutputTemp",
-                        help="The location of the temporary output directory")
-    parser.add_argument("-f", action="store", dest="disFormat",
-                        help="The format of the input file(s)\
-                              [otu_old/otu_new/blast/zip/lca]")
+    parser.add_argument(
+        "-i",
+        action="store",
+        dest="fisInput",
+        help="The location of the input file(s)",
+    )
+    parser.add_argument(
+        "-o",
+        action="store",
+        dest="fosOutput",
+        help="The location of the output file(s)",
+    )
+    parser.add_argument(
+        "-t",
+        action="store",
+        dest="fosOutputTemp",
+        help="The location of the temporary output directory",
+    )
+    parser.add_argument(
+        "-f",
+        action="store",
+        dest="disFormat",
+        help="The format of the input file(s)\
+                              [otu_old/otu_new/blast/zip/lca]",
+    )
     argvs = parser.parse_args()
     return argvs
+
 
 # The main function.
 def main():
     argvs = parseArgvs()
-    lstTaxonRanks = ["Kingdom", "Phylum", "Class", "Order", "Family", "Genus",
-                     "Species"]
+    lstTaxonRanks = [
+        "Kingdom",
+        "Phylum",
+        "Class",
+        "Order",
+        "Family",
+        "Genus",
+        "Species",
+    ]
     if argvs.disFormat == "blast":
         getAccumulationBlast(argvs.fisInput, argvs.fosOutput, lstTaxonRanks)
     elif argvs.disFormat == "otu_old":
         intColumnLength = 11
-        getAccumulationOtu(argvs.fisInput, argvs.fosOutput, lstTaxonRanks,
-                           intColumnLength, argvs.disFormat)
+        getAccumulationOtu(
+            argvs.fisInput,
+            argvs.fosOutput,
+            lstTaxonRanks,
+            intColumnLength,
+            argvs.disFormat,
+        )
     elif argvs.disFormat == "otu_new":
         intColumnLength = 10
-        getAccumulationOtu(argvs.fisInput, argvs.fosOutput, lstTaxonRanks,
-                           intColumnLength, argvs.disFormat)
+        getAccumulationOtu(
+            argvs.fisInput,
+            argvs.fosOutput,
+            lstTaxonRanks,
+            intColumnLength,
+            argvs.disFormat,
+        )
     elif argvs.disFormat == "zip":
         getAccumulationZip(argvs.fosOutputTemp, argvs.fosOutput, lstTaxonRanks)
     elif argvs.disFormat == "lca":
-        getAccumulationOtu(argvs.fisInput, argvs.fosOutput, lstTaxonRanks,
-                           0, argvs.disFormat)
+        getAccumulationOtu(
+            argvs.fisInput, argvs.fosOutput, lstTaxonRanks, 0, argvs.disFormat
+        )
     else:
         pass
+
 
 if __name__ == "__main__":
     main()
