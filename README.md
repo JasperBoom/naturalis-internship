@@ -1,7 +1,10 @@
 # galaxy-tools-naturalis-internship
-These tools were made for the Naturalis Galaxy instance with a main focus on metabarcoding analysis.  
-Either an existing software package is used or new scripts were written for desired functionalities.  
-Some inputs for these tools are Naturalis Galaxy specific and depend on various other software packages used by Naturalis.
+These tools were made for the Naturalis Galaxy instance with a main focus on
+metabarcoding analysis.  
+Either an existing software package is used or new scripts were written for
+desired functionalities.  
+Some inputs for these tools are Naturalis Galaxy specific and depend on
+various other software packages used by Naturalis.
 
 ## Table of contents:
 * [Prerequisites](https://github.com/JasperBoom/galaxy-tools-naturalis-internship#prerequisites)
@@ -38,26 +41,36 @@ Download and install the following software:
 * Java (apt-get install default-jre)
 * JSON (cpan JSON)
 ```
-Make sure both PRINSEQ and FastQC are added to the systems PATH (CutAdapt should take care of that automatically).
+Make sure both PRINSEQ and FastQC are added to the systems PATH (CutAdapt
+should take care of that automatically).
 
 ### Galaxy configuration
-The galaxyXML files and the bashWrapper files should either be copied to the Galaxy tool shed folder or be symbolically linked there.  
-The tool files should be reachable by the bashWrappers, either by being present in the same folder or by adding the tool files to the systems PATH.
+The galaxyXML files and the bashWrapper files should either be copied to the
+Galaxy tool shed folder or be symbolically linked there.  
+The tool files should be reachable by the bashWrappers, either by being present
+in the same folder or by adding the tool files to the systems PATH.
 
 Edit the Galaxy tool_conf.xml file to add the tools to the Galaxy tool shed.  
-The read quality analysis tools need a small galaxy.yml adjustment to correctly show their HTML output files. This adjustment concerns the "sanitize_all_html" option, which should be set to FALSE.
+The read quality analysis tools need a small galaxy.yml adjustment to correctly
+show their HTML output files. This adjustment concerns the "sanitize_all_html"
+option, which should be set to FALSE.
 
 ## Tool descriptions
 ### Taxonomic accumulator
-The TaxonomicAccumulator tool will count all occurrences of the identifications for every taxonomic level, for every file used as input.
+The TaxonomicAccumulator tool will count all occurrences of the identifications
+for every taxonomic level, for every file used as input.
 
-The tool will handle either a BLAST file, OTU file with old BLAST output, OTU file with new BLAST output, a zip file containing multiple BLAST files or a OTU file with LCA processing added to it.
+The tool will handle either a BLAST file, OTU file with old BLAST output, OTU
+file with new BLAST output, a zip file containing multiple BLAST files or a
+OTU file with LCA processing added to it.
 
 Sample names can not start with a "#".  
 All columns in a OTU table should have a header starting with "#".
 
 ### Accepted taxonomic name
-The AcceptedTaxonomicName tool will utilize either the Global Names API or the Taxonomic Name Resolution Service API to collect accepted taxonomic names based on BLAST identifications.
+The AcceptedTaxonomicName tool will utilize either the Global Names API or
+the Taxonomic Name Resolution Service API to collect accepted taxonomic names
+based on BLAST identifications.
 
 Global Names is for every kingdom.  
 TNRS is for plants only.
@@ -66,7 +79,9 @@ Sample names can not start with a "#".
 All columns in a OTU table should have a header starting with "#".
 
 ### Metadata
-The MetaData tool will utilize the Naturalis, BOLD and ALA API's to collect meta data such as occurrence status and images based on BLAST identifications or accepted taxonomic names.
+The MetaData tool will utilize the Naturalis, BOLD and ALA API's to collect
+meta data such as occurrence status and images based on BLAST identifications
+or accepted taxonomic names.
 
 Definitions for all occurrence status codes can be found on this [page](https://www.nederlandsesoorten.nl/content/occurrence-status).
 
@@ -74,40 +89,47 @@ Sample names can not start with a "#".
 All columns in a OTU table should have a header starting with "#".
 
 ### Phyloseq visual reporter
-The Statistical Analysis tool will utilize the Phyloseq R package to create multiple plots based on a OTU table.
+The Statistical Analysis tool will utilize the Phyloseq R package to create
+multiple plots based on a OTU table.
 
 Sample names can not start with a "#".  
 All columns in a OTU table should have a header starting with "#".
 
 ### FastQC analysis
-The FastQC tool will do quality control checks on raw sequence data. These checks include summary graphs and tables.
+The FastQC tool will do quality control checks on raw sequence data. These
+checks include summary graphs and tables.
 
 Files in fastq format should always have a .fastq extension.
 
 ### PRINSEQ analysis
-The PRINSEQ tool will do quality control checks on raw sequence data. These checks include summary graphs and tables.
+The PRINSEQ tool will do quality control checks on raw sequence data. These
+checks include summary graphs and tables.
 
 Files in fasta format should always have a .fasta extension.  
 Files in fastq format should always have a .fastq extension.
 
 ### PRINSEQ trimmer
-The PRINSEQ tool will trim and discard reads and read sections based on user input and quality thresholds.
+The PRINSEQ tool will trim and discard reads and read sections based on user
+input and quality thresholds.
 
 Files in fastq format should always have a .fastq extension.
 
 ### CutAdapt trimmer
-The CutAdapt tool will trim and discard reads and read sections based on user input and quality thresholds.
+The CutAdapt tool will trim and discard reads and read sections based on user
+input and quality thresholds.
 
 Files in fastq format should always have a .fastq extension.
 
 ### Read counter
-The ReadCount tool will count the number of reads in a file or multiple [zip] files and output these numbers to a text file.
+The ReadCount tool will count the number of reads in a file or multiple [zip]
+files and output these numbers to a text file.
 
 Files in fasta format should always have a .fasta extension.  
 Files in fastq format should always have a .fastq extension.
 
 ### FastQ to fastA
-The FastqToFasta tool will convert one or multiple [zip] fastq files to fasta files using sed.
+The FastqToFasta tool will convert one or multiple [zip] fastq files to fasta
+files using sed.
 
 Files in fastq format should always have a .fastq extension.
 
@@ -128,7 +150,8 @@ Files in fastq format should always have a .fastq extension.
   EMBnet.journal. 2011. __doi: 10.14806/ej.17.1.200__  
   [CutAdapt](http://cutadapt.readthedocs.io/en/stable/guide.html)
 * __McMurdie PJ, Holmes S__,  
-  Phyloseq: An R Package for Reproducible Interactive Analysis and Graphics of Microbiome Census Data.  
+  Phyloseq: An R Package for Reproducible Interactive Analysis and Graphics of
+  Microbiome Census Data.  
   PLOS One. 2013; 8(4). __doi: 10.1371/journal.pone.0061217__  
   [Phyloseq](https://joey711.github.io/phyloseq/)
 * __Ratnasingham S, Hebert PDN__,  
@@ -140,7 +163,8 @@ Files in fastq format should always have a .fastq extension.
   ZooKeys. 2016; 550: 261-281. __doi: 10.3897/zookeys.550.10009__  
   [Global Names](https://resolver.globalnames.org/api)
 * __Boyle B, Hopkins N, Lu Z, Garay JAR, Mozzherin D, Rees T__,  
-  The taxonomic name resolution service: an online tool for automated standardization of plant names.  
+  The taxonomic name resolution service: an online tool for automated
+  standardization of plant names.  
   BMC Bioinformatics. 2013; 14(16). __doi: 10.1186/1471-2105-14-16__  
   [TNRS](http://tnrs.iplantcollaborative.org/api.html)
 * __Andrews S__,  
