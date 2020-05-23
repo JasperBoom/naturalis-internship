@@ -89,7 +89,7 @@ def getAccumulationZip(dirTemporary, flOutput, lstTaxonRanks):
     for strFiles in os.listdir(dirTemporary):
         if strFiles.endswith(".tabular"):
             tblReadInput = pd.read_table(dirTemporary + strFiles)
-            for strRow in tblReadInput["Taxonomy"]:
+            for strRow in tblReadInput["#Taxonomy"]:
                 strTaxonLine = strRow.split("/")
                 strTaxonLine = [strName.strip(" ") for strName in strTaxonLine]
                 for intTaxonPosition in range(7):
@@ -299,10 +299,8 @@ def getAccumulationBlast(flInput, flOutput, lstTaxonRanks):
 # The argvs function.
 def parseArgvs():
     parser = argparse.ArgumentParser(
-        description="Use a python script to\
-                                                  accumulate all\
-                                                  identifications based on\
-                                                  taxonomy."
+        description="Use a python script to accumulate all identifications\
+                     based on taxonomy."
     )
     parser.add_argument("-v", action="version", version="%(prog)s [0.1.0]")
     parser.add_argument(
