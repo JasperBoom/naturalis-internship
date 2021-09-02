@@ -18,7 +18,9 @@
 # - Conda environment python >= 3.7
 # - conda install -c anaconda pandas
 
-# Imports
+"""
+Imports:
+"""
 import os
 import argparse
 import re
@@ -27,27 +29,31 @@ import itertools
 import pandas as pd
 import subprocess as sp
 
-
-# The getDownload function.
-# This function downloads a image based on the getPictureUrl function output.
-# The name of such a image consists of [OTU_ID]-[species_name]-[database].
 def getDownload(strUrl):
+    """
+    The getDownload function:
+        This function downloads a image based on the getPictureUrl function
+        output. The name of such a image consists
+        of [OTU_ID]-[species_name]-[database].
+    """
     rafDownload = sp.Popen(
         ["wget", "-O", strUrl[1], strUrl[0]], stdout=sp.PIPE, stderr=sp.PIPE
     )
     strOut, strError = rafDownload.communicate()
 
-
-# The getPictureUrl function.
-# This function calls a database api [Naturalis/BOLD/ALA] and searches through
-# the output for a specific string. This string differs depending on what
-# database is being searched. After finding this string, the image link is
-# isolated. In the case of the BOLD database, a small edit needs to be applied
-# in order to create a correct http format. This http link, along with a
-# species name linked by _ is returned as output.
 def getPictureUrl(
     strCommand, strStart, strOutputPath, strOtu, lstSpecies, strDatabase
 ):
+    """
+    The getPictureUrl function:
+        This function calls a database api [Naturalis/BOLD/ALA] and searches
+        through the output for a specific string. This string differs
+        depending on what database is being searched. After finding this string,
+        the image link is isolated. In the case of the BOLD database, a small
+        edit needs to be applied in order to create a correct http format.
+        This http link, along with a species name linked by _ is returned
+        as output.
+    """
     rafApi = sp.Popen(
         ["curl", "-X", "GET", strCommand], stdout=sp.PIPE, stderr=sp.PIPE
     )
@@ -74,12 +80,13 @@ def getPictureUrl(
     except AttributeError:
         pass
 
-
-# The getBoldApi function.
-# This function creates a api string with the provided name. This api string is
-# based on the BOLD api backbone. The created api string is included in the
-# call of the getPictureUrl function.
 def getBoldApi(strSpeciesCommand, strOutputPath, strOtu, lstSpecies):
+    """
+    The getBoldApi function:
+        This function creates a api string with the provided name. This api
+        string is based on the BOLD api backbone. The created api string is
+        included in the call of the getPictureUrl function.
+    """
     strBoldCommand = (
         "http://www.boldsystems.org/index.php/API_Public/"
         + "specimen?taxon="
@@ -91,12 +98,13 @@ def getBoldApi(strSpeciesCommand, strOutputPath, strOtu, lstSpecies):
     )
     return strBoldUrl
 
-
-# The getAlaApi function.
-# This function creates a api string with the provided name. This api string is
-# based on the ALA api backbone. The created api string is included in the call
-# of the getPictureUrl function.
 def getAlaApi(strSpeciesCommand, strOutputPath, strOtu, lstSpecies):
+    """
+    The getAlaApi function:
+        This function creates a api string with the provided name. This api
+        string is based on the ALA api backbone. The created api string is
+        included in the call of the getPictureUrl function.
+    """
     strAlaCommand = (
         "http://bie.ala.org.au/ws/search.json?q="
         + strSpeciesCommand

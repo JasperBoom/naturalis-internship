@@ -227,8 +227,8 @@ main <- function(){
 
 main()
 
+#########################
 # Additional information:
-# =======================
-#
-# File names can not start with a "#".
-# All columns in a OTU table should have a header starting with "#".
+#     File names can not start with a "#".
+#     All columns in a OTU table should have a header starting with "#".
+#########################
