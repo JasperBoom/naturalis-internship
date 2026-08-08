@@ -1,4 +1,4 @@
-# NATURALIS-INTERNSHIP
+# NATURALIS-INTERNSHIP docs
 These tools were made for the Naturalis Galaxy instance with a main focus on
 metabarcoding analysis. Either an existing software package is used or new
 scripts were written for desired functionalities. Some inputs for these tools
