@@ -1,0 +1,340 @@
+<tool
+  id="umi-isolation"
+  name="UMI isolation"
+  version="0.1.0"
+  profile="25.0"
+>
+<!-- Copyright (C) 2025 Jasper Boom. All rights reserved.
+  Proprietary and confidential. Unauthorized use, copying, modification,
+  distribution, reverse engineering, disclosure, or creation of derivative
+  works is strictly prohibited without prior written permission from
+  Jasper Boom. -->
+
+  <!-- General description of the tool. -->
+  <description>
+    Use a python script to cluster all umis and output a tabular file, a blast
+    file and a zip file.
+  </description>
+
+  <!-- Creator and maintainer of this tool XML file. -->
+  <creator>
+    <person
+      givenName="Jasper"
+      familyName="Boom"
+      jobTitle="Bioinformatics Engineer"
+      email="jasper@jboom.org"
+    />
+    <organization
+      url="https://www.naturalis.nl"
+      name="Naturalis Biodiversity Center"
+    />
+  </creator>
+
+  <!-- EDAM (EMBRACE Data and Methods) is a standardized ontology of
+    bioinformatics operations, data types, formats, and topics used to
+    categorize the tool by its scientific domain or topic using standardized
+    identifiers from the EDAM ontology
+    https://bioportal.bioontology.org/ontologies/EDAM/?p=classes. -->
+  <edam_topics>
+    <!-- Informatics -->
+    <edam_topic>topic_0605</edam_topic>
+    <!-- Bioinformatics -->
+    <edam_topic>topic_0091</edam_topic>
+    <!-- Genomics -->
+    <edam_topic>topic_0622</edam_topic>
+    <!-- Primers -->
+    <edam_topic>topic_0922</edam_topic>
+  </edam_topics>
+
+  <!-- Instead of describing what the tool is about, it describes what the
+    tool does. -->
+  <edam_operations>
+    <!-- Clustering -->
+    <edam_operation>operation_3432</edam_operation>
+  </edam_operations>
+
+  <!-- Tells Galaxy what software or environment the tool needs to run.
+    Also allows defining defaults for resources that are used if the user
+    doesn't touch anything. -->
+  <requirements>
+    <requirement
+      type="package"
+      version="3.14.6"
+    >
+      python
+    </requirement>
+    <requirement
+      type="package"
+      version="3.0.5"
+    >
+      pandas
+    </requirement>
+    <requirement
+      type="package"
+      version="3.0"
+    >
+      zip
+    </requirement>
+    <requirement
+      type="package"
+      version="2.31.0"
+    >
+      vsearch
+    </requirement>
+  </requirements>
+
+  <!-- Specifies how Galaxy should determine the version of your tool at
+    runtime. -->
+  <version_command>
+    $__tool_directory__/umi-isolation.py --version
+  </version_command>
+
+  <!-- Specifies how Galaxy should invoke the tool’s executable, passing
+    its required input parameter values (the command line specification
+    links the parameters supplied in the form with the actual tool
+    executable). -->
+  <command detect_errors="aggressive" interpreter="bash"><![CDATA[
+    set -euo pipefail &&
+
+    WORK_DIR="$(mktemp -d umi_isolation_work.XXXXXX)"
+    CLUSTER_DIR="$(mktemp -d umi_isolation_cluster.XXXXXX)"
+
+    python3 $__tool_directory__/umi-isolation.py
+      -o $output_tabular
+      -z "${WORK_DIR}/"
+      -c "${CLUSTER_DIR}/"
+      -q $output_fasta
+      -p $search_approach_options.process
+      -f $input_files.input.single
+      -l $additional_options.umi_length
+      -s $search_method_options.search_method
+      -a $additional_options.forward
+      -b $additional_options.reverse
+      -d $additional_options.identity_score
+      -u $additional_options.abundance_score
+      #if $input_files.input.single == "fastq"
+        -i $input_files.input.single_fastq
+      #elif $input_files.input.single == "fasta"
+        -i $input_files.input.single_fasta
+      #end if
+      &&
+
+    find "${WORK_DIR}/" -name "derep*" -delete &&
+    find "${WORK_DIR}/" -name "sorted*" -delete &&
+    find "${WORK_DIR}/" -name "UMI#*" -print |
+      zip -jqr $output_zip -@ &&
+    rm -rf "${WORK_DIR}" "${CLUSTER_DIR}"
+  ]]></command>
+
+  <!-- Specifies which inputs Galaxy should allow users to specify. -->
+  <inputs>
+    <!-- Input Files -->
+    <section
+      name="input_files"
+      title="Input Files"
+      expanded="true"
+    >
+      <conditional name="input">
+        <param
+          name="single"
+          type="select"
+          label="Input type"
+          help="Select the type of input data you are providing"
+        >
+          <option
+            value="fastq"
+            selected="true"
+          >
+            fastq
+          </option>
+          <option
+            value="fasta"
+          >
+            fasta
+          </option>
+        </param>
+        <when
+          value="fastq"
+        >
+          <param
+            name="single_fastq"
+            type="data"
+            format="fastq"
+            label="Fastq file"
+          />
+        </when>
+        <when
+          value="fasta"
+        >
+          <param
+            name="single_fasta"
+            type="data"
+            format="fasta"
+            label="Fasta file"
+          />
+        </when>
+      </conditional>
+    </section>
+    <!-- Parameters: Search Approach Options -->
+    <section
+      name="search_approach_options"
+      title="Search Approach Options"
+      expanded="true"
+    >
+      <param
+        name="process"
+        type="select"
+        label="Primer, scaffold(adapter) or first position?"
+        help="The tool will use the following format: [Forward_Scaffold(Adapter)]-[Forward_UMI]-[Forward_Primer]--READ--[Reverse_Primer]-[Reverse_UMI]-[Reverse_Scaffold(Adapter)]"
+      >
+        <option
+          value="primer"
+          selected="true"
+        >
+          primer search
+        </option>
+        <option
+          value="scaffold"
+        >
+          scaffold (adapter) search
+        </option>
+        <option
+          value="zero"
+        >
+          first position search
+        </option>
+      </param>
+    </section>
+    <!-- Parameters: Search Method Options -->
+    <section
+      name="search_method_options"
+      title="Search Method Options"
+      expanded="true"
+    >
+      <param
+        name="search_method"
+        type="select"
+        label="Search umis at 5'-end [umi5], 3'-end [umi3] or at 5'-end and 3'-end [umidouble]"
+        help="Searching with umi5 instructs the tool to only search for umis at the start of every read, searching with umi3 instructs the tool to only search for umis at the end of every read, while umidouble will instruct the tool to collect umis on both the start and end of every read"
+      >
+        <option
+          value="umi5"
+          selected="true"
+        >
+          5'-end UMI
+        </option>
+        <option
+          value="umi3"
+        >
+          3'-end UMI
+        </option>
+        <option
+          value="umidouble"
+        >
+          both end UMIs
+        </option>
+        </param>
+    </section>
+    <!-- Parameters: Additional Options -->
+    <section
+      name="additional_options"
+      title="Additional Options"
+      expanded="true"
+    >
+      <param
+        name="forward"
+        size="50"
+        type="text"
+        value="NNNNNNNNNNNNNNN"
+        label="The 5'-end search nucleotides (UPPERCASE)"
+        help=""
+      />
+      <param
+        name="reverse"
+        size="50"
+        type="text"
+        value="NNNNNNNNNNNNNNN"
+        label="The 3'-end search nucleotides (UPPERCASE)"
+        help=""
+      />
+      <param
+        name="umi_length"
+        type="integer"
+        min="0"
+        label="The length of the umi sequences (INTEGER)"
+        help="Enter a integer that represents the length of a single umi"
+        value="0"
+      />
+      <param
+        name="abundance_score"
+        type="integer"
+        min="1"
+        label="The minimum abundance"
+        help="Enter the minimum abundance with which a read needs to be present in order to not be discarded"
+        value="1"
+      />
+      <param
+        name="identity_score"
+        type="float"
+        min="0.1"
+        max="1"
+        label="The identity percentage"
+        help="The identity percentage with which vsearch will cluster isolated reads within a single umi fasta file"
+        value="0.97"
+      />
+    </section>
+  </inputs>
+
+  <!-- Defines what outputs the software will produce. -->
+  <outputs>
+    <data
+      name="output_tabular"
+      format="tabular"
+      label="${tool.name} ${on_string} (tabular)"
+    />
+    <data
+      format="fasta"
+      name="output_fasta"
+      label="${tool.name} ${on_string} (fasta)"
+    />
+    <data
+      format="zip"
+      name="output_zip"
+      label="${tool.name} ${on_string} (zip)"
+    />
+  </outputs>
+
+  <!-- Includes additional informative text for the user. -->
+  <help>
+    .. class:: infomark
+    This tool uses the output from Primer3 generic/check_primers or Primer3-py,
+    look there in order to find out how to generate output to use as input
+    for this tool.
+
+    Use a python script to accumulate all umis and output a tabular file,
+    a blast file and a zip file.
+
+    The tabular file will contain all unique umi nucleotides, a count of
+    the number of reads that are associated with that umi and a unique
+    identifier for every umi.
+
+    The blast file can be used to identify all umi clusters.
+
+    The zip file will contain fasta files for every unique umi and contain
+    reads associated with that umi, this zip file is created before vsearch
+    is used for a final check.
+
+    .. class:: warningmark
+    Every read in a fasta file should have a header starting with >.
+    Every read in a fastq file should have a header starting with @.
+    Every read in a fasta/fastq file should be on one line. For instance
+    they can not be "human readable" and have a "\\n" after every 80
+    characters.
+  </help>
+
+  <!-- Allows for citing the published article or reference of the software
+    being used. -->
+  <citations>
+    <citation type="doi">10.7717/peerj.2584</citation>
+  </citations>
+</tool>

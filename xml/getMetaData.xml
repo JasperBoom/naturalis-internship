@@ -1,21 +1,9 @@
-<!--
-Copyright (C) 2018 Jasper Boom
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3 as
-published by the Free Software Foundation.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
--->
-
-<?xml version="1.0" encoding="utf-8"?>
 <tool id="getMetaData" name="Harvest Meta Data:" version="0.1.0">
+<!-- Copyright (C) 2025 Jasper Boom. All rights reserved.
+  Proprietary and confidential. Unauthorized use, copying, modification,
+  distribution, reverse engineering, disclosure, or creation of derivative
+  works is strictly prohibited without prior written permission from
+  Jasper Boom. -->
     <description>
         Use a python script to utilize the Naturalis, BOLD and ALA api's to
         collect meta data.
