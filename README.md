@@ -1,18 +1,24 @@
 <img src="./img/naturalis.jpg" alt="Naturalis logo" width="300">
 
 # NATURALIS-INTERNSHIP
-These tools were made for the Naturalis Galaxy instance with a main focus on
-metabarcoding analysis. Either an existing software package is used or new
-scripts were written for desired functionalities. Some inputs for these tools
-are Naturalis Galaxy specific and depend on various other software packages
-used by Naturalis.
+This repository contains tools, wrappers, and documentation created during my
+internship at Naturalis Biodiversity Center in Leiden, The Netherlands.
 
-This was part of my internship at Naturalis Biodiversity Center in Leiden,
-The Netherlands. The internship focused on developing and integrating
-bioinformatics tools within the Galaxy platform. Whilst doing research on
-hayfever and pollen in collaboration with the Leiden University Medical Center.
+The internship ran from February 2018 to December 2018 and focused on
+developing and integrating bioinformatics tools for the Naturalis Galaxy
+environment, with a primary focus on metabarcoding analysis. The work included
+both adapting existing software and developing new scripts for
+project-specific functionality.
 
-The internship started in February 2018 and ended in December 2018.
+This project reflects a learning-driven internship period in which I gained
+practical experience in bioinformatics tooling, workflow integration, and
+command-line development.
+
+The internship was carried out in collaboration with Leiden University Medical
+Center (LUMC), in the context of research related to hay fever and pollen.
+
+It was an enjoyable and valuable experience in which I learned a great deal,
+both technically and professionally.
 
 ```text
 Copyright (C) 2025 Jasper Boom. All rights reserved.
