@@ -8,6 +8,7 @@
 - A changelog file.
 - A Makefile with useful targets.
 - An env file.
+- A nice logo for the repository. Found in `img/`.
 
 #### Changed
 - umi-isolation.xml and umi-isolation.py had a large overhaul to improve the
