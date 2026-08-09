@@ -1,18 +1,10 @@
 #!/usr/bin/env bash
-
-# Copyright (C) 2018 Jasper Boom
-
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License version 3 as
-# published by the Free Software Foundation.
-
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU Affero General Public License for more details.
-
-# You should have received a copy of the GNU Affero General Public License
-# along with this program. If not, see <https://www.gnu.org/licenses/>.
+# Copyright (C) 2025 Jasper Boom. All rights reserved.
+#
+# Proprietary and confidential. Unauthorized use, copying, modification,
+# distribution, reverse engineering, disclosure, or creation of derivative
+# works is strictly prohibited without prior written permission from
+# Jasper Boom.
 
 # The getZipOutput function.
 # This function loops through all fastQ files extracted from the input file.
@@ -142,8 +134,3 @@ while getopts ":i:o:f:vh" opt; do
 done
 
 main
-
-# Additional information:
-# =======================
-#
-# Files in fastQ format should always have a .fastq extension.
