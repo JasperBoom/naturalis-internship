@@ -1,3 +1,5 @@
+<img src="./img/naturalis.jpg" alt="Naturalis logo" width="300">
+
 # NATURALIS-INTERNSHIP
 These tools were made for the Naturalis Galaxy instance with a main focus on
 metabarcoding analysis. Either an existing software package is used or new
