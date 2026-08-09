@@ -62,9 +62,9 @@ def getScientificName(
                 strOut, strError = rafTrnsApi.communicate()
                 intScientificNameStart = re.search(strSearch, strOut).end()
                 intScinetificNameEnd = re.search(
-                    '"', strOut[intScientificNameStart + 3:]
+                    '"', strOut[intScientificNameStart + 3 :]
                 ).start()
-                strName = strOut[intScientificNameStart + 3:][
+                strName = strOut[intScientificNameStart + 3 :][
                     :intScinetificNameEnd
                 ]
                 lstScientificNames.append(strName.strip(" "))
@@ -138,13 +138,11 @@ def getNameColumn(flInput, flOutput, strProcess, strFormat):
 
 # The argvs function.
 def parseArgvs():
-    parser = argparse.ArgumentParser(
-        description="Use a python script to\
+    parser = argparse.ArgumentParser(description="Use a python script to\
                                                   utilize either the Global\
                                                   Names api or the TNRS api to\
                                                   collect accepted taxonomic\
-                                                  names."
-    )
+                                                  names.")
     parser.add_argument("-v", action="version", version="%(prog)s [0.1.0]")
     parser.add_argument(
         "-i",

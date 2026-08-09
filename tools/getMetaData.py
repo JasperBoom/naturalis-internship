@@ -13,6 +13,7 @@
 """
 Imports:
 """
+
 import os
 import argparse
 import re
@@ -20,6 +21,7 @@ import math
 import itertools
 import pandas as pd
 import subprocess as sp
+
 
 def getDownload(strUrl):
     """
@@ -32,6 +34,7 @@ def getDownload(strUrl):
         ["wget", "-O", strUrl[1], strUrl[0]], stdout=sp.PIPE, stderr=sp.PIPE
     )
     strOut, strError = rafDownload.communicate()
+
 
 def getPictureUrl(
     strCommand, strStart, strOutputPath, strOtu, lstSpecies, strDatabase
@@ -52,8 +55,8 @@ def getPictureUrl(
     strOut, strError = rafApi.communicate()
     try:
         intUrlStart = re.search(strStart, strOut).end()
-        intUrlEnd = re.search('"', strOut[intUrlStart + 3:]).start()
-        strDownload = strOut[intUrlStart + 3:][:intUrlEnd]
+        intUrlEnd = re.search('"', strOut[intUrlStart + 3 :]).start()
+        strDownload = strOut[intUrlStart + 3 :][:intUrlEnd]
         strSpeciesName = "_".join(lstSpecies)
         strPictureFile = (
             strOutputPath
@@ -72,6 +75,7 @@ def getPictureUrl(
     except AttributeError:
         pass
 
+
 def getBoldApi(strSpeciesCommand, strOutputPath, strOtu, lstSpecies):
     """
     The getBoldApi function:
@@ -89,6 +93,7 @@ def getBoldApi(strSpeciesCommand, strOutputPath, strOtu, lstSpecies):
         strBoldCommand, "image_file", strOutputPath, strOtu, lstSpecies, "BOLD"
     )
     return strBoldUrl
+
 
 def getAlaApi(strSpeciesCommand, strOutputPath, strOtu, lstSpecies):
     """
@@ -278,7 +283,7 @@ def getOccurrenceStatus(tblReadInput, strOutputPath, tblSpecies):
                 "occurrenceStatusVerbatim", strOut
             ).end()
             strOccurrence = strOut[
-                intOccurrenceStart + 3: intOccurrenceStart + 5
+                intOccurrenceStart + 3 : intOccurrenceStart + 5
             ]
             strOccurrenceTotal = (
                 strOccurrence.strip(" ")
@@ -365,12 +370,10 @@ def getNameColumn(flInput, flOutput, strProcess, strFormat):
 
 # The argvs function.
 def parseArgvs():
-    parser = argparse.ArgumentParser(
-        description="Use a python script to\
+    parser = argparse.ArgumentParser(description="Use a python script to\
                                                   utilize the Naturalis, BOLD\
                                                   and ALA api's to collect\
-                                                  meta data."
-    )
+                                                  meta data.")
     parser.add_argument("-v", action="version", version="%(prog)s [0.1.0]")
     parser.add_argument(
         "-i",
