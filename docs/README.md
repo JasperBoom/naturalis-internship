@@ -8,7 +8,8 @@ Naturalis Galaxy and depend on other software packages used by Naturalis.
 - [Description](DESCRIPTION.md)
   - A short description of every tool, including the accepted input formats.
 - [Install](INSTALL.md)
-  - The software that was installed on the Galaxy server to run the tools.
+  - How to add the tools to Galaxy, and the software that was installed on
+    the internship Galaxy server.
 
 --------------------
 

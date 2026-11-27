@@ -6,8 +6,9 @@ Retrieve the accepted taxonomic names for the species names in an input
 file, using either the Global Names API or the TNRS API.
 
 Prerequisites:
-- Conda environment with Python >= 3.7.
-- conda install -c anaconda pandas
+- Python with pandas.
+- curl.
+- scientific-name.xml names a container that provides them.
 """
 
 # Imports
@@ -59,6 +60,7 @@ def getScientificName(
                     ["curl", "-X", "GET", strCommand],
                     stdout=sp.PIPE,
                     stderr=sp.PIPE,
+                    text=True,
                 )
                 strOut, strError = rafTrnsApi.communicate()
                 intScientificNameStart = re.search(strSearch, strOut).end()
@@ -97,7 +99,7 @@ def getNameColumn(flInput, flOutput, strProcess, strFormat):
     getScientificName function.
     """
     tblReadInput = pd.read_table(flInput)
-    lstOtuNames = tblReadInput.ix[:, 0]
+    lstOtuNames = tblReadInput.iloc[:, 0]
     if strFormat == "otu_old":
         intColumnLength = 11
     elif strFormat == "otu_new":

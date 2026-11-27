@@ -7,8 +7,9 @@ status from the Naturalis API, or pictures from the Naturalis, BOLD and ALA
 APIs.
 
 Prerequisites:
-- Conda environment with Python >= 3.7.
-- conda install -c anaconda pandas
+- Python with pandas.
+- curl.
+- metadata.xml names a container that provides them.
 """
 
 # Imports
@@ -16,7 +17,6 @@ import os
 import argparse
 import re
 import math
-import itertools
 import pandas as pd
 import subprocess as sp
 
@@ -27,8 +27,12 @@ def getDownload(strUrl):
     output. The name of such an image consists of
     [OTU_ID]-[species_name]-[database].
     """
+    # Create the file first, so a failed download leaves an empty file.
+    open(strUrl[1], "wb").close()
     rafDownload = sp.Popen(
-        ["wget", "-O", strUrl[1], strUrl[0]], stdout=sp.PIPE, stderr=sp.PIPE
+        ["curl", "-s", "-f", "-L", "-o", strUrl[1], strUrl[0]],
+        stdout=sp.PIPE,
+        stderr=sp.PIPE,
     )
     strOut, strError = rafDownload.communicate()
 
@@ -45,7 +49,10 @@ def getPictureUrl(
     link, along with a species name linked by _, is returned as output.
     """
     rafApi = sp.Popen(
-        ["curl", "-X", "GET", strCommand], stdout=sp.PIPE, stderr=sp.PIPE
+        ["curl", "-L", "-X", "GET", strCommand],
+        stdout=sp.PIPE,
+        stderr=sp.PIPE,
+        text=True,
     )
     strOut, strError = rafApi.communicate()
     try:
@@ -118,7 +125,7 @@ def getPicture(tblReadInput, strOutputPath, tblSpecies):
     call means no image.
     """
     tblOtu = tblReadInput.iloc[:, 0]
-    for strOtu, strSpecies in itertools.izip(tblOtu, tblSpecies):
+    for strOtu, strSpecies in zip(tblOtu, tblSpecies):
         try:
             lstSpecies = strSpecies.split()
             strSpeciesCommand = "%20".join(lstSpecies).lower()
@@ -270,9 +277,10 @@ def getOccurrenceStatus(tblReadInput, strOutputPath, tblSpecies):
                 + "&_fields=occurrenceStatusVerbatim"
             )
             rafNaturalisApi = sp.Popen(
-                ["curl", "-X", "GET", strCommand],
+                ["curl", "-L", "-X", "GET", strCommand],
                 stdout=sp.PIPE,
                 stderr=sp.PIPE,
+                text=True,
             )
             strOut, strError = rafNaturalisApi.communicate()
             intOccurrenceStart = re.search(

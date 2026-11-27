@@ -13,17 +13,17 @@ This script:
 
 Note:
 - ZIP creation is intentionally not handled here.
-- The wrapper can zip UMI files from the -z directory.
+- The Galaxy tool XML zips the UMI files from the -z directory.
 """
 
 # Imports.
 from __future__ import annotations
 
 import argparse
+import csv
 import os
 import re
 import subprocess
-import pandas as pd
 from pathlib import Path
 from typing import Dict, Iterator, Optional, Tuple, Union
 
@@ -38,10 +38,7 @@ def create_output_files(
     """
     Create tabular and blast output files from clustered fasta files.
     """
-    output = pd.DataFrame(
-        columns=["UMI ID", "UMI SEQ", "READ COUNT", "CENTROID READ"]
-    )
-    row_count = 0
+    rows = []
 
     # Truncate blast output before appending.
     output_blast_file.write_text("", encoding="utf-8")
@@ -70,20 +67,16 @@ def create_output_files(
             read_count = extract_read_count(header)
             centroid_read = read.upper()
 
-            output.loc[row_count] = [
-                umi_id,
-                umi_string,
-                read_count,
-                centroid_read,
-            ]
-            row_count += 1
+            rows.append([umi_id, umi_string, read_count, centroid_read])
 
             with output_blast_file.open("a", encoding="utf-8") as blast_out:
                 blast_out.write(f">{umi_id}\n")
                 blast_out.write(f"{centroid_read}\n")
 
-    output = output.set_index("UMI ID")
-    output.to_csv(tabular_file, sep="\t", encoding="utf-8")
+    with tabular_file.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.writer(handle, delimiter="\t", lineterminator="\n")
+        writer.writerow(["UMI ID", "UMI SEQ", "READ COUNT", "CENTROID READ"])
+        writer.writerows(rows)
 
 
 def extract_read_count(header: str) -> str:
@@ -474,7 +467,8 @@ def get_umi_collection(
             if not re.match("[A-Za-z0-9]", line[1:2]):
                 continue
 
-            header = line
+            # The per-UMI files are fasta, so FASTQ headers start with ">".
+            header = f">{line[1:]}"
             try:
                 read = next(input_handle)
             except StopIteration:
@@ -564,7 +558,7 @@ def parse_argvs() -> argparse.Namespace:
     description = (
         "Accumulate all UMIs and output a tabular file and blast file."
     )
-    epilog = "Dependencies: pandas and vsearch."
+    epilog = "Dependency: vsearch."
     parser = argparse.ArgumentParser(
         description=description,
         epilog=epilog,

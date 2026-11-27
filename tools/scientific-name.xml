@@ -1,0 +1,191 @@
+<tool
+  id="scientific-name"
+  name="Scientific Name"
+  version="0.1.0"
+  profile="25.0"
+>
+<!-- Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md. -->
+
+  <!-- General description of the tool. -->
+  <description>
+    Collect accepted taxonomic names for identified species.
+  </description>
+
+  <!-- Creator and maintainer of this tool XML file. -->
+  <creator>
+    <person
+      givenName="Jasper"
+      familyName="Boom"
+      jobTitle="Bioinformatics Engineer"
+      email="contact@boom.frl"
+    />
+    <organization
+      url="https://www.naturalis.nl"
+      name="Naturalis Biodiversity Center"
+    />
+  </creator>
+
+  <!-- EDAM (EMBRACE Data and Methods) is a standardised ontology of
+    bioinformatics operations, data types, formats, and topics used to
+    categorise the tool by its scientific domain or topic using standardised
+    identifiers from the EDAM ontology
+    https://bioportal.bioontology.org/ontologies/EDAM/?p=classes. -->
+  <edam_topics>
+    <!-- Informatics -->
+    <edam_topic>topic_0605</edam_topic>
+    <!-- Bioinformatics -->
+    <edam_topic>topic_0091</edam_topic>
+    <!-- Taxonomy -->
+    <edam_topic>topic_0637</edam_topic>
+    <!-- Biological databases -->
+    <edam_topic>topic_3071</edam_topic>
+  </edam_topics>
+
+  <!-- Instead of describing what the tool is about, it describes what the
+    tool does. -->
+  <edam_operations>
+    <!-- Data retrieval -->
+    <edam_operation>operation_2422</edam_operation>
+  </edam_operations>
+
+  <!-- Tells Galaxy what software or environment the tool needs to run.
+    Also allows defining defaults for resources that are used if the user
+    doesn't touch anything. -->
+  <requirements>
+    <!-- Not built yet: request python=3.12.2,pandas=2.2.0,
+      xlsxwriter=3.1.9,curl=8.5.0 from BioContainers (see TODO.md). -->
+    <container type="docker">
+      quay.io/biocontainers/mulled-v2-4e0a6330dcd5895f3ed842eea1bfaba85346b351:0e31604b1ca2110a1bc751d55e3fb879a80a1ba5-0
+    </container>
+  </requirements>
+
+  <!-- Specifies how Galaxy should determine the version of your tool at
+    runtime. -->
+  <version_command>
+    python3 $__tool_directory__/scientific-name.py -v
+  </version_command>
+
+  <!-- Specifies how Galaxy should invoke the tool’s executable, passing
+    its required input parameter values (the command line specification
+    links the parameters supplied in the form with the actual tool
+    executable). -->
+  <command detect_errors="aggressive" interpreter="bash"><![CDATA[
+    set -euo pipefail &&
+
+    mkdir -p scientific-name-output &&
+    python3 $__tool_directory__/scientific-name.py
+      -i '$input_files.query'
+      -o scientific-name-output/
+      -s $name_options.service
+      -f $input_files.input_format
+  ]]></command>
+
+  <!-- Specifies which inputs Galaxy should allow users to specify. -->
+  <inputs>
+    <!-- Input Files -->
+    <section
+      name="input_files"
+      title="Input Files"
+      expanded="true"
+    >
+      <param
+        name="input_format"
+        type="select"
+        label="Input file format"
+        help="The layout of the input file (default = OTU file + new BLAST)
+          [-f]"
+      >
+        <option
+          value="otu_old"
+        >
+          OTU file + old BLAST
+        </option>
+        <option
+          value="otu_new"
+          selected="true"
+        >
+          OTU file + new BLAST
+        </option>
+        <option
+          value="lca"
+        >
+          OTU file + LCA
+        </option>
+        <option
+          value="blast"
+        >
+          BLAST file
+        </option>
+      </param>
+      <param
+        name="query"
+        type="data"
+        format="tabular"
+        label="Identifications"
+        help="An OTU, LCA or BLAST file [-i]"
+      />
+    </section>
+    <!-- Parameters: Name Options -->
+    <section
+      name="name_options"
+      title="Name Options"
+      expanded="true"
+    >
+      <param
+        name="service"
+        type="select"
+        label="Name resolution service"
+        help="Global Names covers every kingdom, TNRS covers plants only
+          (default = Global Names) [-s]"
+      >
+        <option
+          value="global"
+          selected="true"
+        >
+          Global Names (every kingdom)
+        </option>
+        <option
+          value="tnrs"
+        >
+          TNRS (plants only)
+        </option>
+      </param>
+    </section>
+  </inputs>
+
+  <!-- Defines what outputs the software will produce. -->
+  <outputs>
+    <data
+      name="output"
+      format="tabular"
+      from_work_dir="scientific-name-output/flNewOutput.tabular"
+      label="${tool.name} ${on_string} ${input_files.query.name} (accepted names)"
+    />
+  </outputs>
+
+  <!-- Includes additional informative text for the user. -->
+  <help>
+    .. class:: infomark
+    See Global Names documentation: https://globalnames.org/ and TNRS
+    documentation: https://tnrs.biendata.org/ for full software details.
+
+    **What it does**
+    Looks up the accepted taxonomic name of every identified species in an
+    OTU, LCA or BLAST file, with either the Global Names API (every kingdom)
+    or the Taxonomic Name Resolution Service API (plants only).
+
+    .. class:: warningmark
+    Sample names cannot start with a "#". All other columns in an OTU table
+    should have a header starting with a "#".
+
+    .. class:: warningmark
+    The tool needs internet access to reach the APIs.
+  </help>
+
+  <!-- Allows for citing the published article or reference of the software
+    being used. -->
+  <citations>
+    <citation type="doi">10.3897/zookeys.550.10009</citation>
+    <citation type="doi">10.1186/1471-2105-14-16</citation>
+  </citations>
+</tool>

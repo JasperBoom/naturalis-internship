@@ -1,0 +1,196 @@
+<tool
+  id="read-count"
+  name="Read Count"
+  version="0.1.0"
+  profile="25.0"
+>
+<!-- Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md. -->
+
+  <!-- General description of the tool. -->
+  <description>
+    Count the reads in FASTQ or FASTA files.
+  </description>
+
+  <!-- Creator and maintainer of this tool XML file. -->
+  <creator>
+    <person
+      givenName="Jasper"
+      familyName="Boom"
+      jobTitle="Bioinformatics Engineer"
+      email="contact@boom.frl"
+    />
+    <organization
+      url="https://www.naturalis.nl"
+      name="Naturalis Biodiversity Center"
+    />
+  </creator>
+
+  <!-- EDAM (EMBRACE Data and Methods) is a standardised ontology of
+    bioinformatics operations, data types, formats, and topics used to
+    categorise the tool by its scientific domain or topic using standardised
+    identifiers from the EDAM ontology
+    https://bioportal.bioontology.org/ontologies/EDAM/?p=classes. -->
+  <edam_topics>
+    <!-- Informatics -->
+    <edam_topic>topic_0605</edam_topic>
+    <!-- Bioinformatics -->
+    <edam_topic>topic_0091</edam_topic>
+    <!-- Sequence analysis -->
+    <edam_topic>topic_0080</edam_topic>
+    <!-- Sequencing -->
+    <edam_topic>topic_3168</edam_topic>
+  </edam_topics>
+
+  <!-- Instead of describing what the tool is about, it describes what the
+    tool does. -->
+  <edam_operations>
+    <!-- Read summarisation -->
+    <edam_operation>operation_3793</edam_operation>
+  </edam_operations>
+
+  <!-- Tells Galaxy what software or environment the tool needs to run.
+    Also allows defining defaults for resources that are used if the user
+    doesn't touch anything. -->
+  <requirements>
+    <container type="docker">
+      quay.io/biocontainers/gawk:5.1.0--2
+    </container>
+  </requirements>
+
+  <!-- Specifies how Galaxy should determine the version of your tool at
+    runtime. -->
+  <version_command>
+    gawk -V
+  </version_command>
+
+  <!-- Specifies how Galaxy should invoke the tool’s executable, passing
+    its required input parameter values (the command line specification
+    links the parameters supplied in the form with the actual tool
+    executable). -->
+  <command detect_errors="aggressive" interpreter="bash"><![CDATA[
+    #import re
+    #if $input_files.single_or_collection.input_single_or_collection == "single"
+      #set $files = [$input_files.single_or_collection.query]
+    #elif $input_files.single_or_collection.input_single_or_collection == "collection"
+      #set $files = list($input_files.single_or_collection.query)
+    #end if
+
+    ## Write one line for every file, named after its (sanitised) dataset
+    ## name or collection element identifier.
+    set -e;
+    : > '$output';
+    #for $file in $files
+      #set $safe_id = re.sub('[^A-Za-z0-9._-]', '_', str($file.element_identifier))
+      gawk
+        --sandbox
+        -v name='$safe_id'
+        #if $file.ext.startswith('fasta')
+          '/^>/ {n++} END {printf "%s: %d reads\n", name, n}'
+        #else
+          'END {printf "%s: %d reads\n", name, NR / 4}'
+        #end if
+        '$file'
+        >> '$output';
+    #end for
+
+    ## Add up the counts of a collection on a final line.
+    #if $input_files.single_or_collection.input_single_or_collection == "collection"
+      gawk
+        --sandbox
+        '{total += \$2} END {printf "Total: %d reads\n", total}'
+        '$output'
+        >> '$output';
+    #end if
+  ]]></command>
+
+  <!-- Specifies which inputs Galaxy should allow users to specify. -->
+  <inputs>
+    <!-- Input Files -->
+    <section
+      name="input_files"
+      title="Input Files"
+      expanded="true"
+    >
+      <conditional name="single_or_collection">
+        <param
+          name="input_single_or_collection"
+          type="select"
+          label="Input single file or collection"
+          help="Choose whether to count the reads in a single file or in
+            every file of a collection (default = single)"
+        >
+          <option
+            value="single"
+            selected="true"
+          >
+            single FASTQ or FASTA file
+          </option>
+          <option
+            value="collection"
+          >
+            collection of FASTQ or FASTA files
+          </option>
+        </param>
+        <when
+          value="single"
+        >
+          <param
+            name="query"
+            type="data"
+            format="fastq,fasta"
+            label="FASTQ or FASTA file"
+            help="Reads to count"
+          />
+        </when>
+        <when
+          value="collection"
+        >
+          <param
+            name="query"
+            type="data_collection"
+            collection_type="list"
+            format="fastq,fasta"
+            label="FASTQ or FASTA files"
+            help="A list collection of reads to count. FASTQ and FASTA files
+              can be mixed"
+          />
+        </when>
+      </conditional>
+    </section>
+  </inputs>
+
+  <!-- Defines what outputs the software will produce. -->
+  <outputs>
+    <data
+      name="output"
+      format="txt"
+      label="${tool.name} ${on_string} ${input_files.single_or_collection.query.name} (read counts)"
+    />
+  </outputs>
+
+  <!-- Includes additional informative text for the user. -->
+  <help>
+    .. class:: infomark
+    See GAWK documentation: https://www.gnu.org/software/gawk/manual/ for
+    full software details.
+
+    **What it does**
+    Counts the reads in a FASTQ or FASTA file, or in every file of a list
+    collection, and writes one line for every file: ``name: N reads``.
+    For a collection, a final ``Total: N reads`` line adds them all up.
+
+    FASTA reads are counted by their > header lines. FASTQ reads are
+    counted as four lines per read.
+
+    .. class:: warningmark
+    Names are the dataset names or collection element identifiers. Every
+    character other than a letter, digit, dot, underscore or hyphen is
+    replaced by an underscore.
+  </help>
+
+  <!-- Allows for citing the published article or reference of the software
+    being used. -->
+  <citations>
+    <citation type="doi">10.1002/spe.4380090403</citation>
+  </citations>
+</tool>

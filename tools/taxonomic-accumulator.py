@@ -3,13 +3,12 @@
 
 """
 Count the identifications for every taxonomic rank in a BLAST file, an OTU
-file or a zip file with BLAST files, and write the totals to a .xlsx file.
+file or a folder of BLAST files (the zip format), and write the totals to a
+spreadsheet in XLSX format.
 
 Prerequisites:
-- Conda environment with Python >= 3.7.
-- conda install -c anaconda pandas
-- conda install -c anaconda xlsxwriter
-- conda install -c anaconda xlrd
+- Python with NumPy, pandas and XlsxWriter.
+- taxonomic-accumulator.xml names a container that provides them.
 """
 
 # Imports
@@ -23,7 +22,7 @@ def getListTaxonDics(intFiles):
     """
     This function creates 7 lists containing a number of empty dictionaries
     equal to the number of files used in the creation of the OTU file or the
-    number of BLAST files contained in the input zip file. These lists are
+    number of BLAST files contained in the input folder. These lists are
     then returned by the function.
     """
     lstKingdom = [{} for intNumberOfDics in range(intFiles)]
@@ -46,8 +45,8 @@ def getListTaxonDics(intFiles):
 
 def getZipOutput(flOutput, lstFileNames, lstTaxonDics, lstTaxonRanks):
     """
-    This function creates a .xlsx file based on the number of files in the
-    input zip file. A dictionary is created using the names of these files;
+    This function creates an XLSX file based on the number of files in the
+    input folder. A dictionary is created using the names of these files;
     this will be used to give every column a correct header. It then adds
     sheets to the .xlsx file for every taxon rank based on the dictionary
     list lstTaxonDics.
@@ -63,15 +62,15 @@ def getZipOutput(flOutput, lstFileNames, lstTaxonDics, lstTaxonRanks):
         dfTemporary = dfTemporary.fillna(0)
         pd.options.display.float_format = "{:,.0f}".format
         dfTemporary.to_excel(fosExcelWriter, sheet_name=lstTaxonRanks[taxonID])
-    fosExcelWriter.save()
+    fosExcelWriter.close()
 
 
 def getAccumulationZip(dirTemporary, flOutput, lstTaxonRanks):
     """
-    This function creates a list containing all file names extracted from
-    the input zip file. It then creates a list with empty dictionaries based
-    on the number of files. Every file is opened, and the "Taxonomy" column
-    is looped through and used to count based on taxon ranks. The
+    This function lists the BLAST files in the input folder (the zip
+    format). It then creates a list with empty dictionaries based on the
+    number of files. Every file is opened, and the "#Taxonomy" column is
+    looped through and used to count based on taxon ranks. The
     getZipOutput function is called.
     """
     lstFileNames = []
@@ -133,7 +132,7 @@ def getOtuOutput(
     flOutput, lstTaxonDics, lstHeaders, intFiles, lstTaxonRanks, strFormat
 ):
     """
-    This function creates a .xlsx file based on the counting done in the
+    This function creates an XLSX file based on the counting done in the
     getAccumulationOtu function. It formats the file in such a way that it
     can handle the multiple samples that could have been used. If the OTU
     table uses standard BLAST identifications, it also isolates the row
@@ -156,7 +155,7 @@ def getOtuOutput(
     if strFormat == "otu_old" or strFormat == "otu_new":
         dfKingdom.rename(index={"nan": "No hit"}, inplace=True)
         try:
-            lstUnknownRow = dfKingdom.ix["No hit"].values.tolist()
+            lstUnknownRow = dfKingdom.loc["No hit"].values.tolist()
         except KeyError:
             lstUnknownRow = 0
             dfKingdom.loc["No hit"] = 0
@@ -174,7 +173,7 @@ def getOtuOutput(
         dfTemporary.to_excel(
             fosExcelWriter, sheet_name=lstTaxonRanks[intTaxonRank]
         )
-    fosExcelWriter.save()
+    fosExcelWriter.close()
 
 
 def getAccumulationOtu(
@@ -248,7 +247,7 @@ def getAccumulationOtu(
 
 def getBlastOutput(flOutput, lstTaxonDics, lstTaxonRanks):
     """
-    This function creates a .xlsx file based on the counting done in the
+    This function creates an XLSX file based on the counting done in the
     getAccumulationBlast function. Every taxonomy rank gets its own sheet in
     the .xlsx file and gets the corresponding dictionary from lstTaxonDics
     as input.
@@ -262,14 +261,14 @@ def getBlastOutput(flOutput, lstTaxonDics, lstTaxonRanks):
         dfTemporary.to_excel(
             fosExcelWriter, sheet_name=lstTaxonRanks[intTaxonPosition]
         )
-    fosExcelWriter.save()
+    fosExcelWriter.close()
 
 
 def getAccumulationBlast(flInput, flOutput, lstTaxonRanks):
     """
     This function opens the input file and creates a list containing 7 empty
     dictionaries. The number 7 equals the number of taxon ranks. It then
-    loops through the "Taxonomy" column. Every row in this column is divided
+    loops through the "#Taxonomy" column. Every row in this column is divided
     into a list based on the slash (/) character. Each name in this list is
     then added to its corresponding dictionary or, if it is already present
     in that dictionary, added to the count of that name. The function then

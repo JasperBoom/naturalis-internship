@@ -1,0 +1,257 @@
+<tool
+  id="prinseq-trimmer"
+  name="PRINSEQ Trimmer"
+  version="0.20.4"
+  profile="25.0"
+>
+<!-- Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md. -->
+
+  <!-- General description of the tool. -->
+  <description>
+    Trim and discard reads and read sections.
+  </description>
+
+  <!-- Creator and maintainer of this tool XML file. -->
+  <creator>
+    <person
+      givenName="Jasper"
+      familyName="Boom"
+      jobTitle="Bioinformatics Engineer"
+      email="contact@boom.frl"
+    />
+    <organization
+      url="https://www.naturalis.nl"
+      name="Naturalis Biodiversity Center"
+    />
+  </creator>
+
+  <!-- EDAM (EMBRACE Data and Methods) is a standardised ontology of
+    bioinformatics operations, data types, formats, and topics used to
+    categorise the tool by its scientific domain or topic using standardised
+    identifiers from the EDAM ontology
+    https://bioportal.bioontology.org/ontologies/EDAM/?p=classes. -->
+  <edam_topics>
+    <!-- Informatics -->
+    <edam_topic>topic_0605</edam_topic>
+    <!-- Bioinformatics -->
+    <edam_topic>topic_0091</edam_topic>
+    <!-- Sequence analysis -->
+    <edam_topic>topic_0080</edam_topic>
+    <!-- Sequencing -->
+    <edam_topic>topic_3168</edam_topic>
+  </edam_topics>
+
+  <!-- Instead of describing what the tool is about, it describes what the
+    tool does. -->
+  <edam_operations>
+    <!-- Sequencing quality control -->
+    <edam_operation>operation_3218</edam_operation>
+    <!-- Sequence trimming -->
+    <edam_operation>operation_3192</edam_operation>
+    <!-- Read pre-processing -->
+    <edam_operation>operation_3219</edam_operation>
+    <!-- Filtering -->
+    <edam_operation>operation_3695</edam_operation>
+  </edam_operations>
+
+  <!-- Tells Galaxy what software or environment the tool needs to run.
+    Also allows defining defaults for resources that are used if the user
+    doesn't touch anything. -->
+  <requirements>
+    <container type="docker">
+      quay.io/biocontainers/prinseq:0.20.4--hdfd78af_5
+    </container>
+  </requirements>
+
+  <!-- Specifies how Galaxy should determine the version of your tool at
+    runtime. -->
+  <version_command>
+    prinseq-lite.pl -version
+  </version_command>
+
+  <!-- Specifies how Galaxy should invoke the tool’s executable, passing
+    its required input parameter values (the command line specification
+    links the parameters supplied in the form with the actual tool
+    executable). -->
+  <command detect_errors="aggressive" interpreter="bash"><![CDATA[
+    prinseq-lite.pl
+      -fastq '$input_files.query'
+      #if $trim_options.trim_left
+        -trim_left $trim_options.trim_left
+      #end if
+      #if $trim_options.trim_right
+        -trim_right $trim_options.trim_right
+      #end if
+      #if $trim_options.trim_to_len
+        -trim_to_len $trim_options.trim_to_len
+      #end if
+      #if $filter_options.min_len
+        -min_len $filter_options.min_len
+      #end if
+      #if $filter_options.max_len
+        -max_len $filter_options.max_len
+      #end if
+      #if $filter_options.min_gc
+        -min_gc $filter_options.min_gc
+      #end if
+      #if $filter_options.max_gc
+        -max_gc $filter_options.max_gc
+      #end if
+      #if $filter_options.min_qual_mean
+        -min_qual_mean $filter_options.min_qual_mean
+      #end if
+      #if $filter_options.max_qual_mean
+        -max_qual_mean $filter_options.max_qual_mean
+      #end if
+      -out_good trimmed
+      -out_bad null &&
+
+    ## PRINSEQ writes no file when every read is discarded.
+    touch trimmed.fastq
+  ]]></command>
+
+  <!-- Specifies which inputs Galaxy should allow users to specify. -->
+  <inputs>
+    <!-- Input Files -->
+    <section
+      name="input_files"
+      title="Input Files"
+      expanded="true"
+    >
+      <param
+        name="query"
+        type="data"
+        format="fastq"
+        label="FASTQ file"
+        help="Reads to trim. Select a list collection to trim every file in
+          it"
+      />
+    </section>
+    <!-- Parameters: Trim Options -->
+    <section
+      name="trim_options"
+      title="Trim Options"
+      expanded="true"
+    >
+      <param
+        name="trim_left"
+        type="integer"
+        min="1"
+        label="Trim bases at the 5' end"
+        help="Remove this number of bases from the start of every read
+          [-trim_left]"
+        optional="true"
+      />
+      <param
+        name="trim_right"
+        type="integer"
+        min="1"
+        label="Trim bases at the 3' end"
+        help="Remove this number of bases from the end of every read
+          [-trim_right]"
+        optional="true"
+      />
+      <param
+        name="trim_to_len"
+        type="integer"
+        min="1"
+        label="Trim reads to LENGTH"
+        help="Shorten every read to this length by removing bases from the
+          3' end [-trim_to_len]"
+        optional="true"
+      />
+    </section>
+    <!-- Parameters: Filter Options -->
+    <section
+      name="filter_options"
+      title="Filter Options"
+      expanded="true"
+    >
+      <param
+        name="min_len"
+        type="integer"
+        min="1"
+        label="Minimum length"
+        help="Discard reads shorter than this length [-min_len]"
+        optional="true"
+      />
+      <param
+        name="max_len"
+        type="integer"
+        min="1"
+        label="Maximum length"
+        help="Discard reads longer than this length [-max_len]"
+        optional="true"
+      />
+      <param
+        name="min_gc"
+        type="integer"
+        min="0"
+        max="100"
+        label="Minimum GC content"
+        help="Discard reads with a GC content below this percentage
+          [-min_gc]"
+        optional="true"
+      />
+      <param
+        name="max_gc"
+        type="integer"
+        min="0"
+        max="100"
+        label="Maximum GC content"
+        help="Discard reads with a GC content above this percentage
+          [-max_gc]"
+        optional="true"
+      />
+      <param
+        name="min_qual_mean"
+        type="integer"
+        min="0"
+        label="Minimum mean quality score"
+        help="Discard reads with a mean quality score below this value
+          [-min_qual_mean]"
+        optional="true"
+      />
+      <param
+        name="max_qual_mean"
+        type="integer"
+        min="0"
+        label="Maximum mean quality score"
+        help="Discard reads with a mean quality score above this value
+          [-max_qual_mean]"
+        optional="true"
+      />
+    </section>
+  </inputs>
+
+  <!-- Defines what outputs the software will produce. -->
+  <outputs>
+    <data
+      name="output"
+      format_source="input_files|query"
+      from_work_dir="trimmed.fastq"
+      label="${tool.name} ${on_string} ${input_files.query.name} (trimmed reads)"
+    />
+  </outputs>
+
+  <!-- Includes additional informative text for the user. -->
+  <help>
+    .. class:: infomark
+    See PRINSEQ documentation: https://prinseq.sourceforge.net/manual.html
+    for full software details.
+
+    **What it does**
+    Trims bases from the ends of every read, and discards reads by length,
+    GC content and mean quality score. Leave an option empty or at 0 to
+    skip it. If every read is discarded, the output is empty.
+
+    Select a list collection to trim every file in it. Galaxy runs the tool
+    once for every file and returns a list of trimmed files.
+  </help>
+
+  <!-- Allows for citing the published article or reference of the software
+    being used. -->
+  <citations>
+    <citation type="doi">10.1093/bioinformatics/btr026</citation>
+  </citations>
+</tool>
