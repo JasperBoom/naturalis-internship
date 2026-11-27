@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
-# Copyright (C) 2025 Jasper Boom. All rights reserved.
-#
-# Proprietary and confidential. Unauthorized use, copying, modification,
-# distribution, reverse engineering, disclosure, or creation of derivative
-# works is strictly prohibited without prior written permission from
-# Jasper Boom.
+# Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md.
 
-# Prequisites:
-# - Conda environment python >= 3.7
-# - conda install -c anaconda pandas
+"""
+Retrieve the accepted taxonomic names for the species names in an input
+file, using either the Global Names API or the TNRS API.
+
+Prerequisites:
+- Python with pandas.
+- curl.
+- scientific-name.xml names a container that provides them.
+"""
 
 # Imports
 import argparse
@@ -17,18 +18,19 @@ import pandas as pd
 import subprocess as sp
 
 
-# The getScientificName function.
-# This function loops through the names list. If the name is either "nan" or
-# "unknown species" a empty entry is added to the lstScientificNames list.
-# Otherwise, every species name is transformed into a correct format in order
-# to support either the global names api or the TNRS api. The api is called and
-# the accepted name is isolated. This name is then added to lstScientificNames.
-# When all names have been processed a new tabular file is created with a
-# column containing the original input names, the accepted name and, when
-# using a OTU file, the OTU names.
 def getScientificName(
     lstSpecies, lstOtuNames, strProcess, strFormat, strOutputPath
 ):
+    """
+    This function loops through the names list. If the name is either "nan"
+    or "unknown species", an empty entry is added to the lstScientificNames
+    list. Otherwise, every species name is transformed into a correct format
+    in order to support either the Global Names API or the TNRS API. The API
+    is called and the accepted name is isolated. This name is then added to
+    lstScientificNames. When all names have been processed, a new tabular
+    file is created with a column containing the original input names, the
+    accepted name and, when using an OTU file, the OTU names.
+    """
     lstScientificNames = []
     for strRow in lstSpecies:
         if strRow == "nan" or strRow == "unknown species":
@@ -58,6 +60,7 @@ def getScientificName(
                     ["curl", "-X", "GET", strCommand],
                     stdout=sp.PIPE,
                     stderr=sp.PIPE,
+                    text=True,
                 )
                 strOut, strError = rafTrnsApi.communicate()
                 intScientificNameStart = re.search(strSearch, strOut).end()
@@ -83,17 +86,20 @@ def getScientificName(
     )
 
 
-# The getNameColumn function.
-# This function isolates a list of names used for the metadata processes. When
-# processing a OTU file with standard BLAST identifications the names are
-# isolated based on the taxonomy column at the end of a OTU file. Species names
-# are extracted from the taxonomy column. When processing a OTU file with a LCA
-# process file, the names are extracted from the lowest common ancestor column.
-# Depending on what type of meta data the user wants, the species column is
-# send to the correct functions.
 def getNameColumn(flInput, flOutput, strProcess, strFormat):
+    """
+    This function isolates a list of names used for the name resolution
+    process. When processing an OTU file with standard BLAST
+    identifications, the names are isolated based on the taxonomy column at
+    the end of an OTU file. Species names are extracted from the taxonomy
+    column. When processing an OTU file with an LCA process file, the names
+    are extracted from the lowest common ancestor column. When processing a
+    BLAST file, the names are isolated from the taxonomy column and
+    extracted per row. The species column is then sent to the
+    getScientificName function.
+    """
     tblReadInput = pd.read_table(flInput)
-    lstOtuNames = tblReadInput.ix[:, 0]
+    lstOtuNames = tblReadInput.iloc[:, 0]
     if strFormat == "otu_old":
         intColumnLength = 11
     elif strFormat == "otu_new":
@@ -136,11 +142,13 @@ def getNameColumn(flInput, flOutput, strProcess, strFormat):
     getScientificName(lstSpecies, lstOtuNames, strProcess, strFormat, flOutput)
 
 
-# The argvs function.
 def parseArgvs():
-    parser = argparse.ArgumentParser(description="Use a python script to\
-                                                  utilize either the Global\
-                                                  Names api or the TNRS api to\
+    """
+    Parse command-line arguments.
+    """
+    parser = argparse.ArgumentParser(description="Use a Python script to\
+                                                  utilise either the Global\
+                                                  Names API or the TNRS API to\
                                                   collect accepted taxonomic\
                                                   names.")
     parser.add_argument("-v", action="version", version="%(prog)s [0.1.0]")
@@ -172,8 +180,10 @@ def parseArgvs():
     return argvs
 
 
-# The main function.
 def main():
+    """
+    Run the script with the parsed command-line arguments.
+    """
     argvs = parseArgvs()
     getNameColumn(
         argvs.fisInput, argvs.fosOutput, argvs.disProcess, argvs.disFormat

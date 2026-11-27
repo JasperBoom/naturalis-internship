@@ -1,0 +1,253 @@
+<tool
+  id="phyloseq-analysis"
+  name="Phyloseq Analysis"
+  version="0.1.0"
+  profile="25.0"
+>
+<!-- Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md. -->
+
+  <!-- General description of the tool. -->
+  <description>
+    Plot abundance, alpha diversity and heatmaps of an OTU table.
+  </description>
+
+  <!-- Creator and maintainer of this tool XML file. -->
+  <creator>
+    <person
+      givenName="Jasper"
+      familyName="Boom"
+      jobTitle="Bioinformatics Engineer"
+      email="contact@boom.frl"
+    />
+    <organization
+      url="https://www.naturalis.nl"
+      name="Naturalis Biodiversity Center"
+    />
+  </creator>
+
+  <!-- EDAM (EMBRACE Data and Methods) is a standardised ontology of
+    bioinformatics operations, data types, formats, and topics used to
+    categorise the tool by its scientific domain or topic using standardised
+    identifiers from the EDAM ontology
+    https://bioportal.bioontology.org/ontologies/EDAM/?p=classes. -->
+  <edam_topics>
+    <!-- Informatics -->
+    <edam_topic>topic_0605</edam_topic>
+    <!-- Bioinformatics -->
+    <edam_topic>topic_0091</edam_topic>
+    <!-- Metagenomics -->
+    <edam_topic>topic_3174</edam_topic>
+    <!-- Biodiversity -->
+    <edam_topic>topic_3050</edam_topic>
+    <!-- Statistics and probability -->
+    <edam_topic>topic_2269</edam_topic>
+    <!-- Data visualisation -->
+    <edam_topic>topic_0092</edam_topic>
+  </edam_topics>
+
+  <!-- Instead of describing what the tool is about, it describes what the
+    tool does. -->
+  <edam_operations>
+    <!-- Visualisation -->
+    <edam_operation>operation_0337</edam_operation>
+    <!-- Heat map generation -->
+    <edam_operation>operation_0531</edam_operation>
+    <!-- Statistical calculation -->
+    <edam_operation>operation_2238</edam_operation>
+  </edam_operations>
+
+  <!-- Tells Galaxy what software or environment the tool needs to run.
+    Also allows defining defaults for resources that are used if the user
+    doesn't touch anything. -->
+  <requirements>
+    <!-- bioconductor-phyloseq, r-optparse, r-ggplot2 and r-cluster. -->
+    <container type="docker">
+      quay.io/biocontainers/mulled-v2-c85b516872f711516305474353432f10480f882d:804443fb782efd7af89557ce38fc0886c1cac0da-0
+    </container>
+  </requirements>
+
+  <!-- Specifies how Galaxy should determine the version of your tool at
+    runtime. -->
+  <version_command>
+    Rscript $__tool_directory__/phyloseq-analysis.r -v
+  </version_command>
+
+  <!-- Specifies how Galaxy should invoke the tool’s executable, passing
+    its required input parameter values (the command line specification
+    links the parameters supplied in the form with the actual tool
+    executable). -->
+  <command detect_errors="aggressive" interpreter="bash"><![CDATA[
+    #set $ranks = 'Kingdom Phylum Class Order Family Genus Species'.split()
+    set -euo pipefail &&
+
+    Rscript $__tool_directory__/phyloseq-analysis.r
+      -w .
+      -i '$input_files.query'
+      -f $input_files.input_format
+      -t $plot_options.taxon
+      -p $($ranks.index(str($plot_options.taxon)) + 1)
+      -o '$output_pdf'
+      -a '$output_absolute_bar'
+      -b '$output_relative_bar'
+      -r '$output_richness'
+      -e '$output_absolute_heatmap'
+      -m '$output_relative_heatmap'
+  ]]></command>
+
+  <!-- Specifies which inputs Galaxy should allow users to specify. -->
+  <inputs>
+    <!-- Input Files -->
+    <section
+      name="input_files"
+      title="Input Files"
+      expanded="true"
+    >
+      <param
+        name="input_format"
+        type="select"
+        label="Input file format"
+        help="The layout of the input file (default = OTU file + new BLAST)
+          [-f]"
+      >
+        <option
+          value="otu_old"
+        >
+          OTU file + old BLAST
+        </option>
+        <option
+          value="otu_new"
+          selected="true"
+        >
+          OTU file + new BLAST
+        </option>
+        <option
+          value="lca"
+        >
+          OTU file + LCA
+        </option>
+      </param>
+      <param
+        name="query"
+        type="data"
+        format="tabular"
+        label="OTU table"
+        help="An OTU file with BLAST or LCA identifications [-i]"
+      />
+    </section>
+    <!-- Parameters: Plot Options -->
+    <section
+      name="plot_options"
+      title="Plot Options"
+      expanded="true"
+    >
+      <param
+        name="taxon"
+        type="select"
+        label="Taxonomic rank"
+        help="Merge the OTUs up to this rank before plotting
+          (default = Genus) [-t]"
+      >
+        <option
+          value="Kingdom"
+        >
+          Kingdom
+        </option>
+        <option
+          value="Phylum"
+        >
+          Phylum
+        </option>
+        <option
+          value="Class"
+        >
+          Class
+        </option>
+        <option
+          value="Order"
+        >
+          Order
+        </option>
+        <option
+          value="Family"
+        >
+          Family
+        </option>
+        <option
+          value="Genus"
+          selected="true"
+        >
+          Genus
+        </option>
+        <option
+          value="Species"
+        >
+          Species
+        </option>
+      </param>
+    </section>
+  </inputs>
+
+  <!-- Defines what outputs the software will produce. -->
+  <outputs>
+    <data
+      name="output_pdf"
+      format="pdf"
+      label="${tool.name} ${on_string} ${input_files.query.name} (all plots)"
+    />
+    <data
+      name="output_absolute_bar"
+      format="pdf"
+      label="${tool.name} ${on_string} ${input_files.query.name} (absolute bar plot)"
+    />
+    <data
+      name="output_relative_bar"
+      format="pdf"
+      label="${tool.name} ${on_string} ${input_files.query.name} (relative bar plot)"
+    />
+    <data
+      name="output_richness"
+      format="pdf"
+      label="${tool.name} ${on_string} ${input_files.query.name} (richness plot)"
+    />
+    <data
+      name="output_absolute_heatmap"
+      format="pdf"
+      label="${tool.name} ${on_string} ${input_files.query.name} (absolute heatmap)"
+    />
+    <data
+      name="output_relative_heatmap"
+      format="pdf"
+      label="${tool.name} ${on_string} ${input_files.query.name} (relative heatmap)"
+    />
+  </outputs>
+
+  <!-- Includes additional informative text for the user. -->
+  <help>
+    .. class:: infomark
+    See phyloseq documentation: https://joey711.github.io/phyloseq/ for full
+    software details.
+
+    **What it does**
+    Uses the phyloseq R package to merge the OTUs of an OTU table up to the
+    chosen taxonomic rank, and plots:
+
+    - a bar plot of the abundance of every taxon in every sample;
+    - a richness plot with the Observed, Shannon and Simpson
+      alpha-diversity measures;
+    - a heatmap of the abundance of every taxon in every sample.
+
+    The bar plots and heatmaps are made with both the absolute counts and
+    the relative abundances. One PDF file has all plots, and every plot is
+    also a PDF file of its own.
+
+    .. class:: warningmark
+    Sample names cannot start with a "#". All other columns in an OTU table
+    should have a header starting with a "#".
+  </help>
+
+  <!-- Allows for citing the published article or reference of the software
+    being used. -->
+  <citations>
+    <citation type="doi">10.1371/journal.pone.0061217</citation>
+  </citations>
+</tool>

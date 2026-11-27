@@ -1,18 +1,9 @@
 #!/usr/bin/env Rscript
-# Copyright (C) 2025 Jasper Boom. All rights reserved.
-#
-# Proprietary and confidential. Unauthorized use, copying, modification,
-# distribution, reverse engineering, disclosure, or creation of derivative
-# works is strictly prohibited without prior written permission from
-# Jasper Boom.
+# Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md.
 
-# Prequisites:
-# - sudo apt-get install r-base
-# - sudo apt-get install libcurl4-gnutls-dev
-# - sudo apt-get install libssl-dev
-# - source("http://bioconductor.org/biocLite.R")
-# - biocLite("phyloseq")
-# - biocLite("optparse")
+# Prerequisites:
+# - R with the optparse, ggplot2, phyloseq and cluster packages.
+# - phyloseq-analysis.xml names a container that provides them.
 
 library("optparse")
 library("ggplot2")
@@ -22,12 +13,11 @@ library("methods")
 
 # The getFigures function.
 # This function creates the phyloseq plots using the phyloseq OTU object.
-# It accumulates all OTUs up to a user specified taxon level.
+# It accumulates all OTUs up to a user-specified taxon level.
 # It creates a new phyloseq object with relative abundances by dividing all
 # numbers by their total. These two objects are then used to create bar plots,
-# alpha diversity plots and heatmaps. All of these plots are outputted to a
-# pdf file. Additionally, the plots will be outputted to seperate postscript
-# files.
+# alpha diversity plots and heatmaps. All of these plots are written to a PDF
+# file. Additionally, the plots are written to separate PDF files.
 getFigures <- function(objPhyseq, flOutput, strTaxon, intPrune, flAbsoluteBar,
                        flRelativeBar, flRichnessPlot, flAbsoluteHeatmap,
                        flRelativeHeatmap){
@@ -47,24 +37,24 @@ getFigures <- function(objPhyseq, flOutput, strTaxon, intPrune, flAbsoluteBar,
             Rowv=NA, labRow = setTaxa)
     heatmap(otu_table(objRelative), main = "Relative abundance heatmap",
             Rowv=NA, labRow = setTaxa)
-    postscript(flAbsoluteBar)
+    pdf(flAbsoluteBar)
     print(plotAbsoluteBar + ggtitle("Absolute abundance bar plot"))
-    postscript(flRelativeBar)
+    pdf(flRelativeBar)
     print(plotRelativeBar + ggtitle("Relative abundance bar plot"))
-    postscript(flRichnessPlot)
+    pdf(flRichnessPlot)
     print(plotRichness + ggtitle("Alpha diversity plot(s)"))
-    postscript(flAbsoluteHeatmap)
+    pdf(flAbsoluteHeatmap)
     heatmap(otu_table(objPhyseq), main = "Absolute abundance heatmap",
             Rowv=NA, labRow = setTaxa)
-    postscript(flRelativeHeatmap)
+    pdf(flRelativeHeatmap)
     heatmap(otu_table(objRelative), main = "Relative abundance heatmap",
             Rowv=NA, labRow = setTaxa)
 }
 
 # The getTaxaTableLca function.
-# This function creates a matrix from every taxonomy column in a LCA file.
+# This function creates a matrix from every taxonomy column in an LCA file.
 # These 7 matrices are combined into one matrix with 7 columns. The OTU
-# names and taxonomy level names are added to this matrix. And the phyloseq
+# names and taxonomy level names are added to this matrix, and the phyloseq
 # function creates a taxonomy table from that matrix. The new phyloseq taxon
 # object is returned.
 getTaxaTableLca <- function(dfOtuTable, dfOtuTableWithRowNames,
@@ -89,11 +79,11 @@ getTaxaTableLca <- function(dfOtuTable, dfOtuTableWithRowNames,
 }
 
 # The getTaxaTableOtu function.
-# This function loops through the taxonomy column and seperates the taxonomic
-# names based on the slash(/) character per row. Each name is put into a vector
-# based on their position. These positions correlate to their taxonomic level.
-# A new matrix is created with a column for every taxonomic level. This new
-# matrix is then used to create a phyloseq taxonomic table. This table is
+# This function loops through the taxonomy column and separates the taxonomic
+# names based on the slash (/) character per row. Each name is put into a
+# vector based on its position. These positions correlate to their taxonomic
+# level. A new matrix is created with a column for every taxonomic level. This
+# new matrix is then used to create a phyloseq taxonomic table. This table is
 # returned.
 getTaxaTableOtu <- function(strLastColumn, dfOtuTableWithRowNames,
                          dfOtuTableTrimmedBlast){
@@ -120,16 +110,16 @@ getTaxaTableOtu <- function(strLastColumn, dfOtuTableWithRowNames,
 # This function sets a new working directory and loads in the input file.
 # The headers in the input file are selected and the sample file names are
 # isolated. Based on the number of samples, the taxonomy column is isolated.
-# The BLAST identifications are split off and the OTU identifiers are set as row
-# indexes. This altered OTU table is transformed into a matrix and then into a
-# Phyloseq OTU table. The BLAST identifications are send to the getTaxaTableOtu
-# function. The result from that function and the Phyloseq OTU table are
-# combined into a Phyloseq object. This object is send to the getFigures
-# function.
-getPhyloseqTable <- function(strWorking, flInput, flOutput, strFormat, strTaxon,
-                             intPrune, flAbsoluteBar, flRelativeBar,
-							 flRichnessPlot, flAbsoluteHeatmap,
-							 flRelativeHeatmap){
+# The BLAST identifications are split off and the OTU identifiers are set as
+# row indexes. This altered OTU table is transformed into a matrix and then
+# into a Phyloseq OTU table. The BLAST identifications are sent to the
+# getTaxaTableOtu function. The result from that function and the Phyloseq OTU
+# table are combined into a Phyloseq object. This object is sent to the
+# getFigures function.
+getPhyloseqTable <- function(strWorking, flInput, flOutput, strFormat,
+                             strTaxon, intPrune, flAbsoluteBar, flRelativeBar,
+                             flRichnessPlot, flAbsoluteHeatmap,
+                             flRelativeHeatmap){
     setwd(strWorking)
     dfOtuTable = read.csv(flInput, header = TRUE, sep="\t",
                           check.names = FALSE)
@@ -162,7 +152,7 @@ getPhyloseqTable <- function(strWorking, flInput, flOutput, strFormat, strTaxon,
     objPhyseq = phyloseq(dfOtuPhyloseq, dfTaxonomy)
     getFigures(objPhyseq, flOutput, strTaxon, intPrune, flAbsoluteBar,
                flRelativeBar, flRichnessPlot, flAbsoluteHeatmap,
-			   flRelativeHeatmap)
+               flRelativeHeatmap)
 }
 
 # The argvs function.
@@ -178,21 +168,30 @@ parseArgvs <- function(){
     parser <- add_option(parser, c("-o", "--fosOutput"), default = "NONE",
                          help="The location of the output file(s)")
     parser <- add_option(parser, c("-f", "--disFormat"), default = "NONE",
-                         help="The format of the input file(s) [otu_old/otu_new/lca]")
+                         help=paste0("The format of the input file(s) ",
+                                     "[otu_old/otu_new/lca]"))
     parser <- add_option(parser, c("-t", "--disTaxon"), default = "NONE",
-                         help="The taxon level for graphic output [Kingdom/Phylum/Class/Order/Family/Genus/Species]")
+                         help=paste0("The taxon level for graphic output ",
+                                     "[Kingdom/Phylum/Class/Order/Family/",
+                                     "Genus/Species]"))
     parser <- add_option(parser, c("-p", "--disPrune"), default = "NONE",
-                         help="The taxon level number for graphic output [1/2/3/4/5/6/7]")
+                         help=paste0("The taxon level number for graphic ",
+                                     "output [1/2/3/4/5/6/7]"))
     parser <- add_option(parser, c("-a", "--fosAbsoluteBar"), default = "NONE",
-                         help="The location of the absolute bar output file(s)")
+                         help=paste0("The location of the absolute bar ",
+                                     "output file(s)"))
     parser <- add_option(parser, c("-b", "--fosRelativeBar"), default = "NONE",
-                         help="The location of the relative bar output file(s)")
+                         help=paste0("The location of the relative bar ",
+                                     "output file(s)"))
     parser <- add_option(parser, c("-r", "--fosRichness"), default = "NONE",
-                         help="The location of the richness plot output file(s)")
+                         help=paste0("The location of the richness plot ",
+                                     "output file(s)"))
     parser <- add_option(parser, c("-e", "--fosAbsoluteMap"), default = "NONE",
-                         help="The location of the absolute heatmap output file(s)")
+                         help=paste0("The location of the absolute heatmap ",
+                                     "output file(s)"))
     parser <- add_option(parser, c("-m", "--fosRelativeMap"), default = "NONE",
-                         help="The location of the relative heatmap output file(s)")
+                         help=paste0("The location of the relative heatmap ",
+                                     "output file(s)"))
     return(parser)
 }
 
@@ -200,10 +199,10 @@ parseArgvs <- function(){
 main <- function(){
     argvs = parse_args(parseArgvs())
     if ( argvs$version ){
-        print("getInformation.R [0.1.0]")
+        print("phyloseq-analysis.r [0.1.0]")
         quit()
     }
-    if ( argvs$fisInput != "NONE" & argvs$fosOutput != "NONE" & 
+    if ( argvs$fisInput != "NONE" & argvs$fosOutput != "NONE" &
          argvs$fisWorking != "NONE" & argvs$disFormat != "NONE" &
          argvs$disTaxon != "NONE" & argvs$disPrune != "NONE" &
          argvs$fosAbsoluteBar != "NONE" & argvs$fosRelativeBar != "NONE" &

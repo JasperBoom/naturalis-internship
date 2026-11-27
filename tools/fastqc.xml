@@ -1,0 +1,228 @@
+<tool
+  id="fastqc"
+  name="FastQC"
+  version="0.12.1"
+  profile="25.0"
+>
+<!-- Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md. -->
+
+  <!-- General description of the tool. -->
+  <description>
+    Quality control checks on raw sequence data.
+  </description>
+
+  <!-- Creator and maintainer of this tool XML file. -->
+  <creator>
+    <person
+      givenName="Jasper"
+      familyName="Boom"
+      jobTitle="Bioinformatics Engineer"
+      email="contact@boom.frl"
+    />
+    <organization
+      url="https://www.naturalis.nl"
+      name="Naturalis Biodiversity Center"
+    />
+  </creator>
+
+  <!-- EDAM (EMBRACE Data and Methods) is a standardised ontology of
+    bioinformatics operations, data types, formats, and topics used to
+    categorise the tool by its scientific domain or topic using standardised
+    identifiers from the EDAM ontology
+    https://bioportal.bioontology.org/ontologies/EDAM/?p=classes. -->
+  <edam_topics>
+    <!-- Informatics -->
+    <edam_topic>topic_0605</edam_topic>
+    <!-- Bioinformatics -->
+    <edam_topic>topic_0091</edam_topic>
+    <!-- Sequence analysis -->
+    <edam_topic>topic_0080</edam_topic>
+    <!-- Sequencing -->
+    <edam_topic>topic_3168</edam_topic>
+  </edam_topics>
+
+  <!-- Instead of describing what the tool is about, it describes what the
+    tool does. -->
+  <edam_operations>
+    <!-- Validation -->
+    <edam_operation>operation_2428</edam_operation>
+    <!-- Sequencing quality control -->
+    <edam_operation>operation_3218</edam_operation>
+  </edam_operations>
+
+  <!-- Tells Galaxy what software or environment the tool needs to run.
+    Also allows defining defaults for resources that are used if the user
+    doesn't touch anything. -->
+  <requirements>
+    <container type="docker">
+      quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0
+    </container>
+  </requirements>
+
+  <!-- Specifies how Galaxy should handle standard input/output and exit
+    codes. -->
+  <stdio>
+    <exit_code
+      range="1:"
+      level="fatal"
+      description="FastQC returned non zero exit code"
+    />
+    <exit_code
+      range=":-1"
+      level="fatal"
+      description="FastQC returned non zero exit code"
+    />
+    <regex
+      match="There is insufficient memory for the Java Runtime Environment"
+      source="stdout"
+      level="fatal_oom"
+      description="Out of memory error occurred"
+    />
+  </stdio>
+
+  <!-- Specifies how Galaxy should determine the version of your tool at
+    runtime. -->
+  <version_command>
+    fastqc --version
+  </version_command>
+
+  <!-- Specifies how Galaxy should invoke the tool’s executable, passing
+    its required input parameter values (the command line specification
+    links the parameters supplied in the form with the actual tool
+    executable). -->
+  <command detect_errors="aggressive" interpreter="bash"><![CDATA[
+    #import re
+    #if $input_files.single_or_collection.input_single_or_collection == "single"
+      #set $input_name = re.sub('[^\w\-\s]', '_', str($input_files.single_or_collection.query.element_identifier))
+      #set $input_ext = $input_files.single_or_collection.query.ext
+
+      #if $input_ext.endswith('.gz')
+        #set $local_input_file = $input_name + '.gz'
+      #elif $input_ext.endswith('.bz2')
+        #set $local_input_file = $input_name + '.bz2'
+      #else
+        #set $local_input_file = $input_name
+      #end if
+
+      #if 'bam' in $input_ext
+        #set $format = 'bam'
+      #elif 'sam' in $input_ext
+        #set $format = 'sam'
+      #else
+        #set $format = 'fastq'
+      #end if
+
+      ln -s '$input_files.single_or_collection.query' '$local_input_file' &&
+    #elif $input_files.single_or_collection.input_single_or_collection == "collection"
+      ## FastQC reports on one file, so join the collection into one file
+      ## named after the collection.
+      #set $local_input_file = re.sub('[^\w\-\s]', '_', str($input_files.single_or_collection.query.name))
+      #set $format = 'fastq'
+
+      cat
+      #for $file in $input_files.single_or_collection.query
+        '$file'
+      #end for
+        > '$local_input_file' &&
+    #end if
+
+    mkdir -p fastqc-output &&
+    fastqc
+      --outdir fastqc-output
+      --threads \${GALAXY_SLOTS:-2}
+      --dir \${TEMP:-\$_GALAXY_JOB_TMP_DIR}
+      --quiet
+      --extract
+      -f $format
+      '$local_input_file' &&
+    cp fastqc-output/*/fastqc_data.txt '$text_file' &&
+    cp fastqc-output/*.html '$html_file'
+  ]]></command>
+
+  <!-- Specifies which inputs Galaxy should allow users to specify. -->
+  <inputs>
+    <!-- Input Files -->
+    <section
+      name="input_files"
+      title="Input Files"
+      expanded="true"
+    >
+      <conditional name="single_or_collection">
+        <param
+          name="input_single_or_collection"
+          type="select"
+          label="Input single file or collection"
+          help="Choose whether to check a single file or one combined report
+            for every file of a collection (default = single)"
+        >
+          <option
+            value="single"
+            selected="true"
+          >
+            single read file
+          </option>
+          <option
+            value="collection"
+          >
+            collection of FASTQ files
+          </option>
+        </param>
+        <when
+          value="single"
+        >
+          <param
+            name="query"
+            type="data"
+            format="fastq,fastq.gz,fastq.bz2,bam,sam"
+            label="Raw read data"
+            help="Raw read data used as input for the FastQC analysis"
+          />
+        </when>
+        <when
+          value="collection"
+        >
+          <param
+            name="query"
+            type="data_collection"
+            collection_type="list"
+            format="fastq"
+            label="FASTQ files"
+            help="A list collection of FASTQ files, joined into one file
+              before the FastQC analysis"
+          />
+        </when>
+      </conditional>
+    </section>
+  </inputs>
+
+  <!-- Defines what outputs the software will produce. -->
+  <outputs>
+    <data
+      name="html_file"
+      format="html"
+      label="${tool.name} ${on_string} ${input_files.single_or_collection.query.name} (HTML)"
+    />
+    <data
+      name="text_file"
+      format="txt"
+      label="${tool.name} ${on_string} ${input_files.single_or_collection.query.name} (data)"
+    />
+  </outputs>
+
+  <!-- Includes additional informative text for the user. -->
+  <help>
+    .. class:: infomark
+    See FastQC documentation:
+    https://github.com/s-andrews/FastQC/blob/master/README.md for full
+    software details.
+
+    **What it does**
+    Runs quality control checks on raw sequence data. The HTML report has
+    summary graphs and tables. The data file has the raw results.
+
+    A single file can be FASTQ (optionally gzip or bzip2 compressed), SAM or
+    BAM. For a list collection of FASTQ files, the tool joins all reads into
+    one file first and makes one combined report. To get one report for
+    every file instead, select the files one by one in batch mode.
+  </help>
+</tool>

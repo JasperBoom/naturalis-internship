@@ -1,7 +1,8 @@
-<img src="./img/naturalis.jpg" alt="Naturalis logo" width="300">
+# Naturalis Internship
+<img src="./img/naturalis-internship.png" alt="Naturalis Internship logo"
+     width="300">
 
-# NATURALIS-INTERNSHIP
-This repository contains tools, wrappers, and documentation created during my
+This repository contains the Galaxy tools and documentation created during my
 internship at Naturalis Biodiversity Center in Leiden, The Netherlands.
 
 The internship ran from February 2018 to December 2018 and focused on
@@ -20,11 +21,19 @@ Center (LUMC), in the context of research related to hay fever and pollen.
 It was an enjoyable and valuable experience in which I learned a great deal,
 both technically and professionally.
 
-```text
-Copyright (C) 2025 Jasper Boom. All rights reserved.
+## Table Of Contents
+- [CHANGELOG.md](CHANGELOG.md)
+- [LICENSE.md](LICENSE.md)
+- [TODO.md](TODO.md)
+- docs/
+  - [README.md](docs/README.md)
+  - [DESCRIPTION.md](docs/DESCRIPTION.md)
+  - [INSTALL.md](docs/INSTALL.md)
+- img/
+  - [README.md](img/README.md)
+- tools/
+  - [README.md](tools/README.md)
 
-Proprietary and confidential. Unauthorized use, copying, modification,
-distribution, reverse engineering, disclosure, or creation of derivative
-works is strictly prohibited without prior written permission from
-Jasper Boom.
-```
+--------------------
+
+Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md.

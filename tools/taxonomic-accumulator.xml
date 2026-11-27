@@ -1,0 +1,231 @@
+<tool
+  id="taxonomic-accumulator"
+  name="Taxonomic Accumulator"
+  version="0.1.0"
+  profile="25.0"
+>
+<!-- Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md. -->
+
+  <!-- General description of the tool. -->
+  <description>
+    Count the identifications for every taxonomic rank.
+  </description>
+
+  <!-- Creator and maintainer of this tool XML file. -->
+  <creator>
+    <person
+      givenName="Jasper"
+      familyName="Boom"
+      jobTitle="Bioinformatics Engineer"
+      email="contact@boom.frl"
+    />
+    <organization
+      url="https://www.naturalis.nl"
+      name="Naturalis Biodiversity Center"
+    />
+  </creator>
+
+  <!-- EDAM (EMBRACE Data and Methods) is a standardised ontology of
+    bioinformatics operations, data types, formats, and topics used to
+    categorise the tool by its scientific domain or topic using standardised
+    identifiers from the EDAM ontology
+    https://bioportal.bioontology.org/ontologies/EDAM/?p=classes. -->
+  <edam_topics>
+    <!-- Informatics -->
+    <edam_topic>topic_0605</edam_topic>
+    <!-- Bioinformatics -->
+    <edam_topic>topic_0091</edam_topic>
+    <!-- Taxonomy -->
+    <edam_topic>topic_0637</edam_topic>
+    <!-- Biodiversity -->
+    <edam_topic>topic_3050</edam_topic>
+    <!-- Metagenomics -->
+    <edam_topic>topic_3174</edam_topic>
+  </edam_topics>
+
+  <!-- Instead of describing what the tool is about, it describes what the
+    tool does. -->
+  <edam_operations>
+    <!-- Species frequency estimation -->
+    <edam_operation>operation_3221</edam_operation>
+    <!-- Aggregation -->
+    <edam_operation>operation_3436</edam_operation>
+  </edam_operations>
+
+  <!-- Tells Galaxy what software or environment the tool needs to run.
+    Also allows defining defaults for resources that are used if the user
+    doesn't touch anything. -->
+  <requirements>
+    <!-- Not built yet: request python=3.12.2,pandas=2.2.0,
+      xlsxwriter=3.1.9,curl=8.5.0 from BioContainers (see TODO.md). -->
+    <container type="docker">
+      quay.io/biocontainers/mulled-v2-4e0a6330dcd5895f3ed842eea1bfaba85346b351:0e31604b1ca2110a1bc751d55e3fb879a80a1ba5-0
+    </container>
+  </requirements>
+
+  <!-- Specifies how Galaxy should determine the version of your tool at
+    runtime. -->
+  <version_command>
+    python3 $__tool_directory__/taxonomic-accumulator.py -v
+  </version_command>
+
+  <!-- Specifies how Galaxy should invoke the tool’s executable, passing
+    its required input parameter values (the command line specification
+    links the parameters supplied in the form with the actual tool
+    executable). -->
+  <command detect_errors="aggressive" interpreter="bash"><![CDATA[
+    #import re
+    set -euo pipefail &&
+
+    #if $input_files.single_or_collection.input_single_or_collection == "single"
+      python3 $__tool_directory__/taxonomic-accumulator.py
+        -i '$input_files.single_or_collection.query'
+        -f $input_files.single_or_collection.input_format
+        -o accumulated.xlsx
+    #elif $input_files.single_or_collection.input_single_or_collection == "collection"
+      ## Every BLAST file becomes a column, named after its (sanitised)
+      ## collection element identifier.
+      mkdir -p blast-files &&
+      #set $seen = set()
+      #for $file in $input_files.single_or_collection.query
+        #set $base_id = re.sub('[^A-Za-z0-9._-]', '_', str($file.element_identifier))
+        #set $safe_id = $base_id
+        #set $suffix = 1
+        #while $safe_id in $seen
+          #set $suffix = $suffix + 1
+          #set $safe_id = $base_id + '_' + str($suffix)
+        #end while
+        #silent $seen.add($safe_id)
+        ln -s '$file' 'blast-files/${safe_id}.tabular' &&
+      #end for
+      python3 $__tool_directory__/taxonomic-accumulator.py
+        -t blast-files/
+        -f zip
+        -o accumulated.xlsx
+    #end if
+  ]]></command>
+
+  <!-- Specifies which inputs Galaxy should allow users to specify. -->
+  <inputs>
+    <!-- Input Files -->
+    <section
+      name="input_files"
+      title="Input Files"
+      expanded="true"
+    >
+      <conditional name="single_or_collection">
+        <param
+          name="input_single_or_collection"
+          type="select"
+          label="Input single file or collection"
+          help="Choose whether to count a single BLAST, OTU or LCA file, or
+            every BLAST file of a collection (default = single)"
+        >
+          <option
+            value="single"
+            selected="true"
+          >
+            single BLAST, OTU or LCA file
+          </option>
+          <option
+            value="collection"
+          >
+            collection of BLAST files
+          </option>
+        </param>
+        <when
+          value="single"
+        >
+          <param
+            name="input_format"
+            type="select"
+            label="Input file format"
+            help="The layout of the input file (default = BLAST file) [-f]"
+          >
+            <option
+              value="blast"
+              selected="true"
+            >
+              BLAST file
+            </option>
+            <option
+              value="otu_old"
+            >
+              OTU file + old BLAST
+            </option>
+            <option
+              value="otu_new"
+            >
+              OTU file + new BLAST
+            </option>
+            <option
+              value="lca"
+            >
+              OTU file + LCA
+            </option>
+          </param>
+          <param
+            name="query"
+            type="data"
+            format="tabular"
+            label="Identifications"
+            help="A BLAST, OTU or LCA file [-i]"
+          />
+        </when>
+        <when
+          value="collection"
+        >
+          <param
+            name="query"
+            type="data_collection"
+            collection_type="list"
+            format="tabular"
+            label="BLAST files"
+            help="A list collection of BLAST files. Every file becomes a
+              column in the output [-t]"
+          />
+        </when>
+      </conditional>
+    </section>
+  </inputs>
+
+  <!-- Defines what outputs the software will produce. -->
+  <outputs>
+    <data
+      name="output"
+      format="xlsx"
+      from_work_dir="accumulated.xlsx"
+      label="${tool.name} ${on_string} ${input_files.single_or_collection.query.name} (accumulated)"
+    />
+  </outputs>
+
+  <!-- Includes additional informative text for the user. -->
+  <help>
+    .. class:: infomark
+    See pandas documentation: https://pandas.pydata.org/docs/ for full
+    software details.
+
+    **What it does**
+    Counts how often every identification occurs at every taxonomic rank,
+    for every file or sample in the input. The output is an Excel file with
+    one sheet for every rank, from kingdom to species.
+
+    The input is a single BLAST file, an OTU file with old or new BLAST
+    output, an OTU file with LCA output, or a list collection of BLAST
+    files. Each file in a collection becomes a column, named after its
+    element identifier followed by ".tabular". Characters other than
+    letters, digits, dots, underscores and hyphens become underscores.
+    Numeric suffixes distinguish names that would otherwise collide.
+
+    .. class:: warningmark
+    BLAST files need a "#Taxonomy" column. Sample names cannot start with a
+    "#". All other columns in an OTU table should have a header starting
+    with a "#".
+  </help>
+
+  <!-- Allows for citing the published article or reference of the software
+    being used. -->
+  <citations>
+    <citation type="doi">10.5281/zenodo.3509134</citation>
+  </citations>
+</tool>

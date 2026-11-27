@@ -1,0 +1,221 @@
+<tool
+  id="cutadapt"
+  name="CutAdapt"
+  version="5.2"
+  profile="25.0"
+>
+<!-- Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md. -->
+
+  <!-- General description of the tool. -->
+  <description>
+    Trim and discard reads and read sections.
+  </description>
+
+  <!-- Creator and maintainer of this tool XML file. -->
+  <creator>
+    <person
+      givenName="Jasper"
+      familyName="Boom"
+      jobTitle="Bioinformatics Engineer"
+      email="contact@boom.frl"
+    />
+    <organization
+      url="https://www.naturalis.nl"
+      name="Naturalis Biodiversity Center"
+    />
+  </creator>
+
+  <!-- EDAM (EMBRACE Data and Methods) is a standardised ontology of
+    bioinformatics operations, data types, formats, and topics used to
+    categorise the tool by its scientific domain or topic using standardised
+    identifiers from the EDAM ontology
+    https://bioportal.bioontology.org/ontologies/EDAM/?p=classes. -->
+  <edam_topics>
+    <!-- Informatics -->
+    <edam_topic>topic_0605</edam_topic>
+    <!-- Bioinformatics -->
+    <edam_topic>topic_0091</edam_topic>
+    <!-- Sequence analysis -->
+    <edam_topic>topic_0080</edam_topic>
+    <!-- Sequencing -->
+    <edam_topic>topic_3168</edam_topic>
+  </edam_topics>
+
+  <!-- Instead of describing what the tool is about, it describes what the
+    tool does. -->
+  <edam_operations>
+    <!-- Sequencing quality control -->
+    <edam_operation>operation_3218</edam_operation>
+    <!-- Sequence trimming -->
+    <edam_operation>operation_3192</edam_operation>
+    <!-- Read pre-processing -->
+    <edam_operation>operation_3219</edam_operation>
+  </edam_operations>
+
+  <!-- Tells Galaxy what software or environment the tool needs to run.
+    Also allows defining defaults for resources that are used if the user
+    doesn't touch anything. -->
+  <requirements>
+    <container type="docker">
+      quay.io/biocontainers/cutadapt:5.2--py313h8c92656_1
+    </container>
+  </requirements>
+
+  <!-- Specifies how Galaxy should determine the version of your tool at
+    runtime. -->
+  <version_command>
+    cutadapt --version
+  </version_command>
+
+  <!-- Specifies how Galaxy should invoke the tool’s executable, passing
+    its required input parameter values (the command line specification
+    links the parameters supplied in the form with the actual tool
+    executable). -->
+  <command detect_errors="aggressive" interpreter="bash"><![CDATA[
+    ## Cutadapt chooses the output writer by file name, not by Galaxy
+    ## datatype.
+    ln -s '$input_files.query' 'input.fastq' &&
+
+    cutadapt
+      --cores \${GALAXY_SLOTS:-1}
+      #if $read_modification_options.cut_five_prime
+        --cut $read_modification_options.cut_five_prime
+      #end if
+      #if $read_modification_options.cut_three_prime
+        --cut -$read_modification_options.cut_three_prime
+      #end if
+      #if $read_modification_options.length
+        --length $read_modification_options.length
+      #end if
+      #if $filter_options.minimum_length
+        --minimum-length $filter_options.minimum_length
+      #end if
+      #if $filter_options.maximum_length
+        --maximum-length $filter_options.maximum_length
+      #end if
+      #if $filter_options.max_n
+        --max-n $filter_options.max_n
+      #end if
+      --output 'trimmed.fastq'
+      'input.fastq'
+  ]]></command>
+
+  <!-- Specifies which inputs Galaxy should allow users to specify. -->
+  <inputs>
+    <!-- Input Files -->
+    <section
+      name="input_files"
+      title="Input Files"
+      expanded="true"
+    >
+      <param
+        name="query"
+        type="data"
+        format="fastq"
+        label="FASTQ file"
+        help="Reads to trim. Select a list collection to trim every file in
+          it"
+      />
+    </section>
+    <!-- Parameters: Read Modification Options -->
+    <section
+      name="read_modification_options"
+      title="Read Modification Options"
+      expanded="true"
+    >
+      <param
+        name="cut_five_prime"
+        type="integer"
+        min="1"
+        label="Trim bases at the 5' end"
+        help="Remove this number of bases from the start of every read
+          [--cut]"
+        optional="true"
+      />
+      <param
+        name="cut_three_prime"
+        type="integer"
+        min="1"
+        label="Trim bases at the 3' end"
+        help="Remove this number of bases from the end of every read
+          [--cut -N]"
+        optional="true"
+      />
+      <param
+        name="length"
+        type="integer"
+        min="1"
+        label="Shorten reads to LENGTH"
+        help="Shorten every read to this length by removing bases from the
+          3' end, after the trimming above [--length]"
+        optional="true"
+      />
+    </section>
+    <!-- Parameters: Filter Options -->
+    <section
+      name="filter_options"
+      title="Filter Options"
+      expanded="true"
+    >
+      <param
+        name="minimum_length"
+        type="integer"
+        min="1"
+        label="Minimum length"
+        help="Discard reads shorter than this length after trimming
+          [--minimum-length]"
+        optional="true"
+      />
+      <param
+        name="maximum_length"
+        type="integer"
+        min="1"
+        label="Maximum length"
+        help="Discard reads longer than this length after trimming
+          [--maximum-length]"
+        optional="true"
+      />
+      <param
+        name="max_n"
+        type="text"
+        label="Maximum N's"
+        help="Discard reads with more than COUNT 'N' bases. If COUNT is a
+          number between 0 and 1, it is interpreted as a fraction of the read
+          length [--max-n]"
+        optional="true"
+      />
+    </section>
+  </inputs>
+
+  <!-- Defines what outputs the software will produce. -->
+  <outputs>
+    <data
+      name="output"
+      format_source="input_files|query"
+      from_work_dir="trimmed.fastq"
+      label="${tool.name} ${on_string} ${input_files.query.name} (trimmed reads)"
+    />
+  </outputs>
+
+  <!-- Includes additional informative text for the user. -->
+  <help>
+    .. class:: infomark
+    See CutAdapt documentation:
+    https://cutadapt.readthedocs.io/en/stable/guide.html for full software
+    details.
+
+    **What it does**
+    Trims a fixed number of bases from the 5' and 3' ends of every read,
+    shortens reads to a set length, and discards reads that are too short,
+    too long or have too many N bases. Leave an option empty to skip it.
+
+    Select a list collection to trim every file in it. Galaxy runs the tool
+    once for every file and returns a list of trimmed files.
+  </help>
+
+  <!-- Allows for citing the published article or reference of the software
+    being used. -->
+  <citations>
+    <citation type="doi">10.14806/ej.17.1.200</citation>
+  </citations>
+</tool>
