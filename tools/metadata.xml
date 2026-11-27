@@ -1,0 +1,220 @@
+<tool
+  id="metadata"
+  name="Metadata"
+  version="0.1.0"
+  profile="25.0"
+>
+<!-- Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md. -->
+
+  <!-- General description of the tool. -->
+  <description>
+    Collect the occurrence status or pictures of identified species.
+  </description>
+
+  <!-- Creator and maintainer of this tool XML file. -->
+  <creator>
+    <person
+      givenName="Jasper"
+      familyName="Boom"
+      jobTitle="Bioinformatics Engineer"
+      email="contact@boom.frl"
+    />
+    <organization
+      url="https://www.naturalis.nl"
+      name="Naturalis Biodiversity Center"
+    />
+  </creator>
+
+  <!-- EDAM (EMBRACE Data and Methods) is a standardised ontology of
+    bioinformatics operations, data types, formats, and topics used to
+    categorise the tool by its scientific domain or topic using standardised
+    identifiers from the EDAM ontology
+    https://bioportal.bioontology.org/ontologies/EDAM/?p=classes. -->
+  <edam_topics>
+    <!-- Informatics -->
+    <edam_topic>topic_0605</edam_topic>
+    <!-- Bioinformatics -->
+    <edam_topic>topic_0091</edam_topic>
+    <!-- Biodiversity -->
+    <edam_topic>topic_3050</edam_topic>
+    <!-- Taxonomy -->
+    <edam_topic>topic_0637</edam_topic>
+    <!-- Biological databases -->
+    <edam_topic>topic_3071</edam_topic>
+  </edam_topics>
+
+  <!-- Instead of describing what the tool is about, it describes what the
+    tool does. -->
+  <edam_operations>
+    <!-- Data retrieval -->
+    <edam_operation>operation_2422</edam_operation>
+  </edam_operations>
+
+  <!-- Tells Galaxy what software or environment the tool needs to run.
+    Also allows defining defaults for resources that are used if the user
+    doesn't touch anything. -->
+  <requirements>
+    <!-- Not built yet: request python=3.12.2,pandas=2.2.0,
+      xlsxwriter=3.1.9,curl=8.5.0 from BioContainers (see TODO.md). -->
+    <container type="docker">
+      quay.io/biocontainers/mulled-v2-4e0a6330dcd5895f3ed842eea1bfaba85346b351:0e31604b1ca2110a1bc751d55e3fb879a80a1ba5-0
+    </container>
+  </requirements>
+
+  <!-- Specifies how Galaxy should determine the version of your tool at
+    runtime. -->
+  <version_command>
+    python3 $__tool_directory__/metadata.py -v
+  </version_command>
+
+  <!-- Specifies how Galaxy should invoke the tool’s executable, passing
+    its required input parameter values (the command line specification
+    links the parameters supplied in the form with the actual tool
+    executable). -->
+  <command detect_errors="aggressive" interpreter="bash"><![CDATA[
+    set -euo pipefail &&
+
+    mkdir -p metadata-output &&
+    python3 $__tool_directory__/metadata.py
+      -i '$input_files.query'
+      -o metadata-output/
+      -p $metadata_options.process
+      -f $input_files.input_format
+
+    #if $metadata_options.process == "pictures"
+      &&
+      if ! ls metadata-output/*.jpg > /dev/null 2>&1; then
+        echo 'No pictures were found for these identifications.' >&2;
+        exit 1;
+      fi &&
+      python3 -m zipfile -c '$output_pictures' metadata-output/*.jpg
+    #end if
+  ]]></command>
+
+  <!-- Specifies which inputs Galaxy should allow users to specify. -->
+  <inputs>
+    <!-- Input Files -->
+    <section
+      name="input_files"
+      title="Input Files"
+      expanded="true"
+    >
+      <param
+        name="input_format"
+        type="select"
+        label="Input file format"
+        help="The layout of the input file (default = OTU file + new BLAST)
+          [-f]"
+      >
+        <option
+          value="otu_old"
+        >
+          OTU file + old BLAST
+        </option>
+        <option
+          value="otu_new"
+          selected="true"
+        >
+          OTU file + new BLAST
+        </option>
+        <option
+          value="lca"
+        >
+          OTU file + LCA
+        </option>
+        <option
+          value="accepted"
+        >
+          accepted taxonomic name list
+        </option>
+        <option
+          value="blast"
+        >
+          BLAST file
+        </option>
+      </param>
+      <param
+        name="query"
+        type="data"
+        format="tabular"
+        label="Identifications"
+        help="An OTU, LCA, accepted taxonomic name or BLAST file [-i]"
+      />
+    </section>
+    <!-- Parameters: Metadata Options -->
+    <section
+      name="metadata_options"
+      title="Metadata Options"
+      expanded="true"
+    >
+      <param
+        name="process"
+        type="select"
+        label="Metadata to collect"
+        help="Collect the occurrence status of every species, or a picture of
+          every species (default = occurrence status) [-p]"
+      >
+        <option
+          value="occurrences"
+          selected="true"
+        >
+          occurrence status
+        </option>
+        <option
+          value="pictures"
+        >
+          pictures
+        </option>
+      </param>
+    </section>
+  </inputs>
+
+  <!-- Defines what outputs the software will produce. -->
+  <outputs>
+    <data
+      name="output_occurrences"
+      format="tabular"
+      from_work_dir="metadata-output/flNewOutput.tabular"
+      label="${tool.name} ${on_string} ${input_files.query.name} (occurrence status)"
+    >
+      <filter>metadata_options['process'] == 'occurrences'</filter>
+    </data>
+    <data
+      name="output_pictures"
+      format="zip"
+      label="${tool.name} ${on_string} ${input_files.query.name} (pictures)"
+    >
+      <filter>metadata_options['process'] == 'pictures'</filter>
+    </data>
+  </outputs>
+
+  <!-- Includes additional informative text for the user. -->
+  <help>
+    .. class:: infomark
+    See Naturalis Bioportal API documentation:
+    https://docs.biodiversitydata.nl/en/latest/ for full software details.
+
+    **What it does**
+    Collects metadata for every identified species in an OTU, LCA, accepted
+    taxonomic name or BLAST file. The tool either adds the occurrence status
+    in the Netherlands from the Naturalis API to the input table, or
+    collects a picture of every species from the Naturalis, BOLD and ALA
+    APIs into a zip file.
+
+    Definitions for all occurrence status codes can be found on this page:
+    https://www.nederlandsesoorten.nl/content/occurrence-status
+
+    .. class:: warningmark
+    Sample names cannot start with a "#". All other columns in an OTU table
+    should have a header starting with a "#".
+
+    .. class:: warningmark
+    The tool needs internet access to reach the APIs.
+  </help>
+
+  <!-- Allows for citing the published article or reference of the software
+    being used. -->
+  <citations>
+    <citation type="doi">10.1111/j.1471-8286.2007.01678.x</citation>
+  </citations>
+</tool>

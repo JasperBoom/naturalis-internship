@@ -2,12 +2,8 @@
 # Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md.
 
 # Prerequisites:
-# - sudo apt-get install r-base
-# - sudo apt-get install libcurl4-gnutls-dev
-# - sudo apt-get install libssl-dev
-# - source("http://bioconductor.org/biocLite.R")
-# - biocLite("phyloseq")
-# - biocLite("optparse")
+# - R with the optparse, ggplot2, phyloseq and cluster packages.
+# - phyloseq-analysis.xml names a container that provides them.
 
 library("optparse")
 library("ggplot2")
@@ -21,7 +17,7 @@ library("methods")
 # It creates a new phyloseq object with relative abundances by dividing all
 # numbers by their total. These two objects are then used to create bar plots,
 # alpha diversity plots and heatmaps. All of these plots are written to a PDF
-# file. Additionally, the plots are written to separate PostScript files.
+# file. Additionally, the plots are written to separate PDF files.
 getFigures <- function(objPhyseq, flOutput, strTaxon, intPrune, flAbsoluteBar,
                        flRelativeBar, flRichnessPlot, flAbsoluteHeatmap,
                        flRelativeHeatmap){
@@ -41,16 +37,16 @@ getFigures <- function(objPhyseq, flOutput, strTaxon, intPrune, flAbsoluteBar,
             Rowv=NA, labRow = setTaxa)
     heatmap(otu_table(objRelative), main = "Relative abundance heatmap",
             Rowv=NA, labRow = setTaxa)
-    postscript(flAbsoluteBar)
+    pdf(flAbsoluteBar)
     print(plotAbsoluteBar + ggtitle("Absolute abundance bar plot"))
-    postscript(flRelativeBar)
+    pdf(flRelativeBar)
     print(plotRelativeBar + ggtitle("Relative abundance bar plot"))
-    postscript(flRichnessPlot)
+    pdf(flRichnessPlot)
     print(plotRichness + ggtitle("Alpha diversity plot(s)"))
-    postscript(flAbsoluteHeatmap)
+    pdf(flAbsoluteHeatmap)
     heatmap(otu_table(objPhyseq), main = "Absolute abundance heatmap",
             Rowv=NA, labRow = setTaxa)
-    postscript(flRelativeHeatmap)
+    pdf(flRelativeHeatmap)
     heatmap(otu_table(objRelative), main = "Relative abundance heatmap",
             Rowv=NA, labRow = setTaxa)
 }
@@ -203,7 +199,7 @@ parseArgvs <- function(){
 main <- function(){
     argvs = parse_args(parseArgvs())
     if ( argvs$version ){
-        print("getInformation.R [0.1.0]")
+        print("phyloseq-analysis.r [0.1.0]")
         quit()
     }
     if ( argvs$fisInput != "NONE" & argvs$fosOutput != "NONE" &

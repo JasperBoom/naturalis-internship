@@ -1,11 +1,10 @@
-<!-- Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md. -->
-
 <tool
   id="umi-isolation"
   name="UMI isolation"
   version="0.1.0"
   profile="25.0"
 >
+<!-- Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md. -->
 
   <!-- General description of the tool. -->
   <description>
@@ -39,8 +38,8 @@
     <edam_topic>topic_0091</edam_topic>
     <!-- Genomics -->
     <edam_topic>topic_0622</edam_topic>
-    <!-- Primers -->
-    <edam_topic>topic_0922</edam_topic>
+    <!-- Probes and primers -->
+    <edam_topic>topic_0632</edam_topic>
   </edam_topics>
 
   <!-- Instead of describing what the tool is about, it describes what the
@@ -48,42 +47,27 @@
   <edam_operations>
     <!-- Clustering -->
     <edam_operation>operation_3432</edam_operation>
+    <!-- Sequence clustering -->
+    <edam_operation>operation_0291</edam_operation>
+    <!-- Read binning -->
+    <edam_operation>operation_3798</edam_operation>
   </edam_operations>
 
   <!-- Tells Galaxy what software or environment the tool needs to run.
     Also allows defining defaults for resources that are used if the user
     doesn't touch anything. -->
   <requirements>
-    <requirement
-      type="package"
-      version="3.14.6"
-    >
-      python
-    </requirement>
-    <requirement
-      type="package"
-      version="3.0.5"
-    >
-      pandas
-    </requirement>
-    <requirement
-      type="package"
-      version="3.0"
-    >
-      zip
-    </requirement>
-    <requirement
-      type="package"
-      version="2.31.0"
-    >
-      vsearch
-    </requirement>
+    <!-- Not built yet: request python=3.14,vsearch=2.32.0 from
+      BioContainers (see TODO.md). -->
+    <container type="docker">
+      quay.io/biocontainers/mulled-v2-f4f55679beabfb47f1533f4c7b233b94951e8d7c:8307d988725a78e3b409b7ad4417a5566e8872e1-0
+    </container>
   </requirements>
 
   <!-- Specifies how Galaxy should determine the version of your tool at
     runtime. -->
   <version_command>
-    $__tool_directory__/umi-isolation.py --version
+    python3 $__tool_directory__/umi-isolation.py --version
   </version_command>
 
   <!-- Specifies how Galaxy should invoke the tool’s executable, passing
@@ -93,34 +77,31 @@
   <command detect_errors="aggressive" interpreter="bash"><![CDATA[
     set -euo pipefail &&
 
-    WORK_DIR="$(mktemp -d umi_isolation_work.XXXXXX)"
-    CLUSTER_DIR="$(mktemp -d umi_isolation_cluster.XXXXXX)"
-
+    mkdir -p umi-work umi-cluster &&
     python3 $__tool_directory__/umi-isolation.py
-      -o $output_tabular
-      -z "${WORK_DIR}/"
-      -c "${CLUSTER_DIR}/"
-      -q $output_fasta
+      -o '$output_tabular'
+      -z umi-work/
+      -c umi-cluster/
+      -q '$output_fasta'
       -p $search_approach_options.process
       -f $input_files.input.single
       -l $additional_options.umi_length
       -s $search_method_options.search_method
-      -a $additional_options.forward
-      -b $additional_options.reverse
+      -a '$additional_options.forward'
+      -b '$additional_options.reverse'
       -d $additional_options.identity_score
       -u $additional_options.abundance_score
       #if $input_files.input.single == "fastq"
-        -i $input_files.input.single_fastq
+        -i '$input_files.input.single_fastq'
       #elif $input_files.input.single == "fasta"
-        -i $input_files.input.single_fasta
+        -i '$input_files.input.single_fasta'
       #end if
       &&
 
-    find "${WORK_DIR}/" -name "derep*" -delete &&
-    find "${WORK_DIR}/" -name "sorted*" -delete &&
-    find "${WORK_DIR}/" -name "UMI#*" -print |
-      zip -jqr $output_zip -@ &&
-    rm -rf "${WORK_DIR}" "${CLUSTER_DIR}"
+    ## Keep only the original per-UMI read files for the zip archive.
+    find umi-work -name 'derep*' -delete &&
+    find umi-work -name 'sorted*' -delete &&
+    (cd umi-work && python3 -m zipfile -c '$output_zip' .)
   ]]></command>
 
   <!-- Specifies which inputs Galaxy should allow users to specify. -->
@@ -136,18 +117,18 @@
           name="single"
           type="select"
           label="Input type"
-          help="Select the type of input data you are providing"
+          help="Select the input file format (default = FASTQ) [-f]"
         >
           <option
             value="fastq"
             selected="true"
           >
-            fastq
+            FASTQ
           </option>
           <option
             value="fasta"
           >
-            fasta
+            FASTA
           </option>
         </param>
         <when
@@ -157,7 +138,8 @@
             name="single_fastq"
             type="data"
             format="fastq"
-            label="Fastq file"
+            label="FASTQ file"
+            help="Reads from which to extract UMIs [-i]"
           />
         </when>
         <when
@@ -167,7 +149,8 @@
             name="single_fasta"
             type="data"
             format="fasta"
-            label="Fasta file"
+            label="FASTA file"
+            help="Reads from which to extract UMIs [-i]"
           />
         </when>
       </conditional>
@@ -181,8 +164,9 @@
       <param
         name="process"
         type="select"
-        label="Primer, scaffold(adapter) or first position?"
-        help="The tool will use the following format:
+        label="UMI search approach"
+        help="Search relative to a primer or scaffold (adapter), or from the
+          first position (default = primer) [-p]. Expected read layout:
           [Forward_Scaffold(Adapter)]-[Forward_UMI]-[Forward_Primer]--READ--[Reverse_Primer]-[Reverse_UMI]-[Reverse_Scaffold(Adapter)]"
       >
         <option
@@ -212,13 +196,9 @@
       <param
         name="search_method"
         type="select"
-        label="Search UMIs at 5'-end [umi5], 3'-end [umi3] or at 5'-end and
-          3'-end [umidouble]"
-        help="Searching with umi5 instructs the tool to only search for UMIs
-          at the start of every read, searching with umi3 instructs the tool
-          to only search for UMIs at the end of every read, while umidouble
-          will instruct the tool to collect UMIs on both the start and end of
-          every read"
+        label="UMI search method"
+        help="Search for UMIs at the 5' end (umi5), the 3' end (umi3), or both
+          ends (umidouble) of every read (default = umi5) [-s]"
       >
         <option
           value="umi5"
@@ -249,32 +229,36 @@
         size="50"
         type="text"
         value="NNNNNNNNNNNNNNN"
-        label="The 5'-end search nucleotides (UPPERCASE)"
-        help=""
+        label="5'-end search nucleotides"
+        help="The forward primer or scaffold (adapter) sequence to search for
+          at the start of every read, in uppercase. N matches any nucleotide
+          (default = NNNNNNNNNNNNNNN) [-a]"
       />
       <param
         name="reverse"
         size="50"
         type="text"
         value="NNNNNNNNNNNNNNN"
-        label="The 3'-end search nucleotides (UPPERCASE)"
-        help=""
+        label="3'-end search nucleotides"
+        help="The reverse primer or scaffold (adapter) sequence to search for
+          at the end of every read, in uppercase. N matches any nucleotide
+          (default = NNNNNNNNNNNNNNN) [-b]"
       />
       <param
         name="umi_length"
         type="integer"
         min="0"
-        label="The length of the UMI sequences (INTEGER)"
-        help="Enter an integer that represents the length of a single UMI"
+        label="UMI length"
+        help="The number of bases in a single UMI (default = 0) [-l]"
         value="0"
       />
       <param
         name="abundance_score"
         type="integer"
         min="1"
-        label="The minimum abundance"
-        help="Enter the minimum abundance with which a read needs to be
-          present in order to not be discarded"
+        label="Minimum abundance"
+        help="The minimum number of occurrences of a read required to retain
+          it after dereplication (default = 1) [-u]"
         value="1"
       />
       <param
@@ -282,9 +266,9 @@
         type="float"
         min="0.1"
         max="1"
-        label="The identity percentage"
-        help="The identity percentage with which vsearch will cluster
-          isolated reads within a single UMI fasta file"
+        label="Clustering identity"
+        help="The minimum sequence identity for VSEARCH clustering within a
+          UMI group, as a fraction from 0.1 to 1 (default = 0.97) [-d]"
         value="0.97"
       />
     </section>
@@ -298,13 +282,13 @@
       label="${tool.name} ${on_string} (tabular)"
     />
     <data
-      format="fasta"
       name="output_fasta"
+      format="fasta"
       label="${tool.name} ${on_string} (fasta)"
     />
     <data
-      format="zip"
       name="output_zip"
+      format="zip"
       label="${tool.name} ${on_string} (zip)"
     />
   </outputs>
@@ -312,7 +296,10 @@
   <!-- Includes additional informative text for the user. -->
   <help>
     .. class:: infomark
+    See VSEARCH documentation: https://github.com/torognes/vsearch for full
+    software details.
 
+    **What it does**
     This tool reads a fastq or fasta file, extracts UMIs using the selected
     search settings, groups reads by UMI, and clusters each group with
     vsearch.
@@ -323,13 +310,11 @@
     The fasta file contains the centroid reads, ready for a separate BLAST
     search. The tool does not run BLAST itself.
 
-    The Galaxy XML wrapper creates a zip file containing the original
-    per-UMI read files. It packages these files after clustering, but their
-    contents are from before dereplication, abundance filtering, and
-    clustering.
+    The tool also creates a zip file containing the original per-UMI read
+    files. It packages these files after clustering, but their contents are
+    from before dereplication, abundance filtering, and clustering.
 
     .. class:: warningmark
-
     Every read in a fasta file should have a header starting with >.
     Every read in a fastq file should have a header starting with @.
     Every read in a fasta/fastq file should be on one line. For instance,

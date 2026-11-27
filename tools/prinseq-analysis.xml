@@ -1,0 +1,207 @@
+<tool
+  id="prinseq-analysis"
+  name="PRINSEQ Analysis"
+  version="0.20.4"
+  profile="25.0"
+>
+<!-- Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md. -->
+
+  <!-- General description of the tool. -->
+  <description>
+    Quality control checks on raw sequence data.
+  </description>
+
+  <!-- Creator and maintainer of this tool XML file. -->
+  <creator>
+    <person
+      givenName="Jasper"
+      familyName="Boom"
+      jobTitle="Bioinformatics Engineer"
+      email="contact@boom.frl"
+    />
+    <organization
+      url="https://www.naturalis.nl"
+      name="Naturalis Biodiversity Center"
+    />
+  </creator>
+
+  <!-- EDAM (EMBRACE Data and Methods) is a standardised ontology of
+    bioinformatics operations, data types, formats, and topics used to
+    categorise the tool by its scientific domain or topic using standardised
+    identifiers from the EDAM ontology
+    https://bioportal.bioontology.org/ontologies/EDAM/?p=classes. -->
+  <edam_topics>
+    <!-- Informatics -->
+    <edam_topic>topic_0605</edam_topic>
+    <!-- Bioinformatics -->
+    <edam_topic>topic_0091</edam_topic>
+    <!-- Sequence analysis -->
+    <edam_topic>topic_0080</edam_topic>
+    <!-- Sequencing -->
+    <edam_topic>topic_3168</edam_topic>
+    <!-- Data visualisation -->
+    <edam_topic>topic_0092</edam_topic>
+  </edam_topics>
+
+  <!-- Instead of describing what the tool is about, it describes what the
+    tool does. -->
+  <edam_operations>
+    <!-- Validation -->
+    <edam_operation>operation_2428</edam_operation>
+    <!-- Sequencing quality control -->
+    <edam_operation>operation_3218</edam_operation>
+    <!-- Sequence composition calculation -->
+    <edam_operation>operation_0236</edam_operation>
+    <!-- Visualisation -->
+    <edam_operation>operation_0337</edam_operation>
+  </edam_operations>
+
+  <!-- Tells Galaxy what software or environment the tool needs to run.
+    Also allows defining defaults for resources that are used if the user
+    doesn't touch anything. -->
+  <requirements>
+    <!-- Not built yet: request prinseq=0.20.4,perl-cairo=1.109,
+      perl-json=4.11 from BioContainers (see TODO.md). -->
+    <container type="docker">
+      quay.io/biocontainers/mulled-v2-67eaa7dc6c1d7fdde10ef76ab7120a79a5efc1f6:f7303847e810eeb0d212c1b25ae9a7d7978c7207-0
+    </container>
+  </requirements>
+
+  <!-- Specifies how Galaxy should determine the version of your tool at
+    runtime. -->
+  <version_command>
+    prinseq-lite.pl -version
+  </version_command>
+
+  <!-- Specifies how Galaxy should invoke the tool’s executable, passing
+    its required input parameter values (the command line specification
+    links the parameters supplied in the form with the actual tool
+    executable). -->
+  <command detect_errors="aggressive" interpreter="bash"><![CDATA[
+    #if $input_files.single_or_collection.input_single_or_collection == "single"
+      #if $input_files.single_or_collection.query.ext.startswith('fasta')
+        #set $format = 'fasta'
+      #else
+        #set $format = 'fastq'
+      #end if
+      ln -s '$input_files.single_or_collection.query' 'input.$format' &&
+    #elif $input_files.single_or_collection.input_single_or_collection == "collection"
+      ## PRINSEQ reports on one file, so join the collection into one file.
+      #set $formats = []
+      #for $file in $input_files.single_or_collection.query
+        #if $file.ext.startswith('fasta')
+          #silent $formats.append('fasta')
+        #else
+          #silent $formats.append('fastq')
+        #end if
+      #end for
+      #if 'fasta' in $formats and 'fastq' in $formats
+        echo 'The collection mixes FASTQ and FASTA files. Use one format.' >&2;
+        exit 1;
+      #end if
+      #set $format = $formats[0]
+      cat
+      #for $file in $input_files.single_or_collection.query
+        '$file'
+      #end for
+        > 'input.$format' &&
+    #end if
+
+    prinseq-lite.pl
+      -$format 'input.$format'
+      -out_good null
+      -out_bad null
+      -graph_data graph-data.txt &&
+    prinseq-graphs-noPCA.pl
+      -i graph-data.txt
+      -html_all
+      -o report
+  ]]></command>
+
+  <!-- Specifies which inputs Galaxy should allow users to specify. -->
+  <inputs>
+    <!-- Input Files -->
+    <section
+      name="input_files"
+      title="Input Files"
+      expanded="true"
+    >
+      <conditional name="single_or_collection">
+        <param
+          name="input_single_or_collection"
+          type="select"
+          label="Input single file or collection"
+          help="Choose whether to check a single file or one combined report
+            for every file of a collection (default = single)"
+        >
+          <option
+            value="single"
+            selected="true"
+          >
+            single FASTQ or FASTA file
+          </option>
+          <option
+            value="collection"
+          >
+            collection of FASTQ or FASTA files
+          </option>
+        </param>
+        <when
+          value="single"
+        >
+          <param
+            name="query"
+            type="data"
+            format="fastq,fasta"
+            label="FASTQ or FASTA file"
+            help="Reads to check"
+          />
+        </when>
+        <when
+          value="collection"
+        >
+          <param
+            name="query"
+            type="data_collection"
+            collection_type="list"
+            format="fastq,fasta"
+            label="FASTQ or FASTA files"
+            help="A list collection of reads, joined into one file before the
+              analysis. Use only FASTQ files or only FASTA files"
+          />
+        </when>
+      </conditional>
+    </section>
+  </inputs>
+
+  <!-- Defines what outputs the software will produce. -->
+  <outputs>
+    <data
+      name="output"
+      format="html"
+      from_work_dir="report.html"
+      label="${tool.name} ${on_string} ${input_files.single_or_collection.query.name} (HTML)"
+    />
+  </outputs>
+
+  <!-- Includes additional informative text for the user. -->
+  <help>
+    .. class:: infomark
+    See PRINSEQ documentation: https://prinseq.sourceforge.net/manual.html
+    for full software details.
+
+    **What it does**
+    Runs quality control checks on FASTQ or FASTA reads, and writes an HTML
+    report with summary graphs and tables.
+
+    For a list collection, the tool joins all files into one first and makes
+    one combined report. To get one report for every file instead, select
+    the files one by one in batch mode.
+  </help>
+
+  <!-- Allows for citing the published article or reference of the software
+    being used. -->
+  <citations>
+    <citation type="doi">10.1093/bioinformatics/btr026</citation>
+  </citations>
+</tool>

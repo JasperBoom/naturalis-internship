@@ -2,7 +2,7 @@
 <img src="./img/naturalis-internship.png" alt="Naturalis Internship logo"
      width="300">
 
-This repository contains tools, wrappers, and documentation created during my
+This repository contains the Galaxy tools and documentation created during my
 internship at Naturalis Biodiversity Center in Leiden, The Netherlands.
 
 The internship ran from February 2018 to December 2018 and focused on
@@ -33,10 +33,6 @@ both technically and professionally.
   - [README.md](img/README.md)
 - tools/
   - [README.md](tools/README.md)
-- wrappers/
-  - [README.md](wrappers/README.md)
-- xml/
-  - [README.md](xml/README.md)
 
 --------------------
 
