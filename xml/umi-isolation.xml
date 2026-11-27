@@ -1,19 +1,16 @@
+<!-- Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md. -->
+
 <tool
   id="umi-isolation"
   name="UMI isolation"
   version="0.1.0"
   profile="25.0"
 >
-<!-- Copyright (C) 2025 Jasper Boom. All rights reserved.
-  Proprietary and confidential. Unauthorized use, copying, modification,
-  distribution, reverse engineering, disclosure, or creation of derivative
-  works is strictly prohibited without prior written permission from
-  Jasper Boom. -->
 
   <!-- General description of the tool. -->
   <description>
-    Use a python script to cluster all umis and output a tabular file, a blast
-    file and a zip file.
+    Extract UMIs, cluster their associated reads, and output a tabular file,
+    a fasta file for BLAST and a zip archive.
   </description>
 
   <!-- Creator and maintainer of this tool XML file. -->
@@ -22,7 +19,7 @@
       givenName="Jasper"
       familyName="Boom"
       jobTitle="Bioinformatics Engineer"
-      email="jasper@jboom.org"
+      email="contact@boom.frl"
     />
     <organization
       url="https://www.naturalis.nl"
@@ -30,9 +27,9 @@
     />
   </creator>
 
-  <!-- EDAM (EMBRACE Data and Methods) is a standardized ontology of
+  <!-- EDAM (EMBRACE Data and Methods) is a standardised ontology of
     bioinformatics operations, data types, formats, and topics used to
-    categorize the tool by its scientific domain or topic using standardized
+    categorise the tool by its scientific domain or topic using standardised
     identifiers from the EDAM ontology
     https://bioportal.bioontology.org/ontologies/EDAM/?p=classes. -->
   <edam_topics>
@@ -185,7 +182,8 @@
         name="process"
         type="select"
         label="Primer, scaffold(adapter) or first position?"
-        help="The tool will use the following format: [Forward_Scaffold(Adapter)]-[Forward_UMI]-[Forward_Primer]--READ--[Reverse_Primer]-[Reverse_UMI]-[Reverse_Scaffold(Adapter)]"
+        help="The tool will use the following format:
+          [Forward_Scaffold(Adapter)]-[Forward_UMI]-[Forward_Primer]--READ--[Reverse_Primer]-[Reverse_UMI]-[Reverse_Scaffold(Adapter)]"
       >
         <option
           value="primer"
@@ -214,8 +212,13 @@
       <param
         name="search_method"
         type="select"
-        label="Search umis at 5'-end [umi5], 3'-end [umi3] or at 5'-end and 3'-end [umidouble]"
-        help="Searching with umi5 instructs the tool to only search for umis at the start of every read, searching with umi3 instructs the tool to only search for umis at the end of every read, while umidouble will instruct the tool to collect umis on both the start and end of every read"
+        label="Search UMIs at 5'-end [umi5], 3'-end [umi3] or at 5'-end and
+          3'-end [umidouble]"
+        help="Searching with umi5 instructs the tool to only search for UMIs
+          at the start of every read, searching with umi3 instructs the tool
+          to only search for UMIs at the end of every read, while umidouble
+          will instruct the tool to collect UMIs on both the start and end of
+          every read"
       >
         <option
           value="umi5"
@@ -233,7 +236,7 @@
         >
           both end UMIs
         </option>
-        </param>
+      </param>
     </section>
     <!-- Parameters: Additional Options -->
     <section
@@ -261,8 +264,8 @@
         name="umi_length"
         type="integer"
         min="0"
-        label="The length of the umi sequences (INTEGER)"
-        help="Enter a integer that represents the length of a single umi"
+        label="The length of the UMI sequences (INTEGER)"
+        help="Enter an integer that represents the length of a single UMI"
         value="0"
       />
       <param
@@ -270,7 +273,8 @@
         type="integer"
         min="1"
         label="The minimum abundance"
-        help="Enter the minimum abundance with which a read needs to be present in order to not be discarded"
+        help="Enter the minimum abundance with which a read needs to be
+          present in order to not be discarded"
         value="1"
       />
       <param
@@ -279,7 +283,8 @@
         min="0.1"
         max="1"
         label="The identity percentage"
-        help="The identity percentage with which vsearch will cluster isolated reads within a single umi fasta file"
+        help="The identity percentage with which vsearch will cluster
+          isolated reads within a single UMI fasta file"
         value="0.97"
       />
     </section>
@@ -307,28 +312,28 @@
   <!-- Includes additional informative text for the user. -->
   <help>
     .. class:: infomark
-    This tool uses the output from Primer3 generic/check_primers or Primer3-py,
-    look there in order to find out how to generate output to use as input
-    for this tool.
 
-    Use a python script to accumulate all umis and output a tabular file,
-    a blast file and a zip file.
+    This tool reads a fastq or fasta file, extracts UMIs using the selected
+    search settings, groups reads by UMI, and clusters each group with
+    vsearch.
 
-    The tabular file will contain all unique umi nucleotides, a count of
-    the number of reads that are associated with that umi and a unique
-    identifier for every umi.
+    The tabular file contains the UMI identifier, UMI sequence, read count,
+    and centroid read for each retained cluster.
 
-    The blast file can be used to identify all umi clusters.
+    The fasta file contains the centroid reads, ready for a separate BLAST
+    search. The tool does not run BLAST itself.
 
-    The zip file will contain fasta files for every unique umi and contain
-    reads associated with that umi, this zip file is created before vsearch
-    is used for a final check.
+    The Galaxy XML wrapper creates a zip file containing the original
+    per-UMI read files. It packages these files after clustering, but their
+    contents are from before dereplication, abundance filtering, and
+    clustering.
 
     .. class:: warningmark
+
     Every read in a fasta file should have a header starting with >.
     Every read in a fastq file should have a header starting with @.
-    Every read in a fasta/fastq file should be on one line. For instance
-    they can not be "human readable" and have a "\\n" after every 80
+    Every read in a fasta/fastq file should be on one line. For instance,
+    they cannot be "human readable" and have a "\\n" after every 80
     characters.
   </help>
 

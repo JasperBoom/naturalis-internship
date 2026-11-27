@@ -1,14 +1,11 @@
+<!-- Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md. -->
+
 <tool id="getFastqToFasta" name="Fastq To Fasta Converter:" version="0.1.0">
-<!-- Copyright (C) 2025 Jasper Boom. All rights reserved.
-  Proprietary and confidential. Unauthorized use, copying, modification,
-  distribution, reverse engineering, disclosure, or creation of derivative
-  works is strictly prohibited without prior written permission from
-  Jasper Boom. -->
     <description>
-        Use a bash script to convert fastQ files to fastA files.
+        Use a Bash script to convert fastQ files to fastA files.
     </description>
-    <!-- Call the getFastqToFasta script, set input parameters according to user
-         choices. -->
+    <!-- Call the getFastqToFasta script, set input parameters according to
+         user choices. -->
     <command interpreter="bash">
         getFastqToFasta.sh -f ${fisInput.rbInput}
         #if $fisInput.rbInput == "fastq"
@@ -25,12 +22,12 @@
                 <option value="fastq" selected="true">FastQ file</option>
                 <option value="zip">Zip file</option>
             </param>
-            <!-- Catch the single input file -->
+            <!-- Catch the single input file. -->
             <when value="fastq">
                 <param name="fisFastq" type="data" format="fastq"
                        label="FastQ file."/>
             </when>
-            <!-- Catch multiple input files -->
+            <!-- Catch multiple input files. -->
             <when value="zip">
                 <param name="fisZip" type="data" format="zip"
                        label="Zip file."/>

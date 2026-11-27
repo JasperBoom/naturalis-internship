@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
-# Copyright (C) 2025 Jasper Boom. All rights reserved.
-#
-# Proprietary and confidential. Unauthorized use, copying, modification,
-# distribution, reverse engineering, disclosure, or creation of derivative
-# works is strictly prohibited without prior written permission from
-# Jasper Boom.
+# Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md.
 
-# Prequisites:
+# Prerequisites:
 # - sudo apt-get install python3
 # - sudo apt-get install python3-pip
 # - sudo pip3 install cutadapt
@@ -18,10 +13,11 @@ runCutAdapt() {
 }
 
 # The prepareCutAdapt function.
-# This function creates a command string based on user input. The command string
-# is formatted for CutAdapt. When a trimming option has been set to a number
-# higher than 0, the option is included in the command string. Every option
-# has a check build in for when the command string has not been initialised yet.
+# This function creates a command string based on user input. The command
+# string is formatted for CutAdapt. When a trimming option has been set to a
+# number higher than 0, the option is included in the command string. Every
+# option has a check built in for when the command string has not been
+# initialised yet.
 prepareCutAdapt() {
     strProcess=""
     if [ "${disAmbiguous}" -gt 1 ]
@@ -107,7 +103,8 @@ getZipFile() {
     mkdir -p "${strDirectory}_temp/fileStorage"
     cp ${fisInput} ${strDirectory}_temp
     strZipName=$(find ${strDirectory}_temp -name "*.dat" -printf "%f\n")
-    unzip -q ${strDirectory}_temp/${strZipName} -d ${strDirectory}_temp/fileStorage
+    unzip -q ${strDirectory}_temp/${strZipName} \
+          -d ${strDirectory}_temp/fileStorage
     getZipOutput
 }
 
@@ -157,7 +154,7 @@ while getopts ":i:o:f:w:r:l:b:a:n:vh" opt; do
         w)
             disForward=${OPTARG}
             ;;
-        r)  
+        r)
             disReverse=${OPTARG}
             ;;
         l)
@@ -166,7 +163,7 @@ while getopts ":i:o:f:w:r:l:b:a:n:vh" opt; do
         b)
             disBelow=${OPTARG}
             ;;
-        a)  
+        a)
             disAbove=${OPTARG}
             ;;
         n)
@@ -192,7 +189,7 @@ while getopts ":i:o:f:w:r:l:b:a:n:vh" opt; do
             echo "                       and exit"
             echo " -i                    The location of the input file(s)"
             echo " -o                    The location of the output file(s)"
-            echo " -f                    The format of the input" 
+            echo " -f                    The format of the input"
             echo "                       file(s) [single/zip]"
             echo " -w                    Trim reads at the 5'-end"
             echo " -r                    Trim reads at the 3'-end"

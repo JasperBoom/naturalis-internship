@@ -1,19 +1,14 @@
 #!/usr/bin/env bash
-# Copyright (C) 2025 Jasper Boom. All rights reserved.
-#
-# Proprietary and confidential. Unauthorized use, copying, modification,
-# distribution, reverse engineering, disclosure, or creation of derivative
-# works is strictly prohibited without prior written permission from
-# Jasper Boom.
+# Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md.
 
-# Prequisites:
-# - Conda environment python >= 3.7
+# Prerequisites:
+# - Conda environment with Python >= 3.7
 # - conda install -c anaconda pandas
 
 # The getFormatFlow function.
 # This function creates a temporary storage directory in the output directory.
 # It then calls the getMetaData.py script with the correct input values.
-# After the script is finished, output is send to the expected location and
+# After the script is finished, output is sent to the expected location and
 # the temporary storage directory is deleted.
 getFormatFlow() {
     strDirectory=${fosOutput::-4}
@@ -56,14 +51,14 @@ while getopts ":i:o:p:f:vh" opt; do
             ;;
         v)
             echo ""
-            echo "runMetaData.sh [0.1.0]"
+            echo "getMetaData.sh [0.1.0]"
             echo ""
 
             exit
             ;;
         h)
             echo ""
-            echo "Usage: runMetaData.sh [-h] [-v] [-i INPUT] [-o OUTPUT]"
+            echo "Usage: getMetaData.sh [-h] [-v] [-i INPUT] [-o OUTPUT]"
             echo "                      [-p PROCESS] [-f FORMAT]"
             echo ""
             echo "Optional arguments:"
@@ -75,10 +70,11 @@ while getopts ":i:o:p:f:vh" opt; do
             echo " -p                    The metadata process"
             echo "                       type [occurrences/pictures]"
             echo " -f                    The format of the input"
-            echo "                       file(s) [otu_old/otu_new/lca/accepted/blast]"
+            echo "                       file(s) [otu_old/otu_new/lca/"
+            echo "                       accepted/blast]"
             echo ""
-            echo "The MetaData tool will utilize the Naturalis, BOLD and ALA"
-            echo "api's to collect meta data such as occurrence status and"
+            echo "The MetaData tool will utilise the Naturalis, BOLD and ALA"
+            echo "APIs to collect metadata such as occurrence status and"
             echo "images based on BLAST identifications or accepted taxonomic"
             echo "names."
             echo ""
@@ -86,8 +82,8 @@ while getopts ":i:o:p:f:vh" opt; do
             echo "on this page:"
             echo "https://www.nederlandsesoorten.nl/content/occurrence-status"
             echo ""
-            echo "Sample names can not start with a '#'."
-            echo "All columns in a OTU table should have a header starting"
+            echo "Sample names cannot start with a '#'."
+            echo "All columns in an OTU table should have a header starting"
             echo "with '#'."
             echo ""
             echo "Source(s):"
@@ -95,7 +91,7 @@ while getopts ":i:o:p:f:vh" opt; do
             echo "   http://docs.biodiversitydata.nl/en/latest/introduction/"
             echo " - Nederlands Soortenregister website at"
             echo "   https://www.nederlandsesoorten.nl/"
-            echo " - Ratnasingham S, Hebert PDN, BOLD: The Barcode of Life" 
+            echo " - Ratnasingham S, Hebert PDN, BOLD: The Barcode of Life"
             echo "   Data System."
             echo "   Molecular Ecology Notes. 2007; 7(3)."
             echo "   doi: 10.1111/j.1471-8286.2007.01678.x"

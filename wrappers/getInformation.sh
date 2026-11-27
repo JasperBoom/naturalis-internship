@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
-# Copyright (C) 2025 Jasper Boom. All rights reserved.
-#
-# Proprietary and confidential. Unauthorized use, copying, modification,
-# distribution, reverse engineering, disclosure, or creation of derivative
-# works is strictly prohibited without prior written permission from
-# Jasper Boom.
+# Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md.
 
-# Prequisites:
+# Prerequisites:
 # - sudo apt-get install r-base
 # - sudo apt-get install libcurl4-gnutls-dev
 # - sudo apt-get install libssl-dev
@@ -15,7 +10,7 @@
 # - biocLite("optparse")
 
 # The getTaxonNumber function.
-# This function sets a integer based on the chosen taxon level.
+# This function sets an integer based on the chosen taxon level.
 getTaxonNumber() {
     if [ "${disTaxon}" == "Kingdom" ]
     then
@@ -50,7 +45,7 @@ getTaxonNumber() {
 # The getFormatFlow function.
 # This function creates a temporary storage directory in the output directory.
 # It then calls the getInformation.R script with the correct input values.
-# After the script is finished, output is send to the expected location and
+# After the script is finished, output is sent to the expected location and
 # the temporary storage directory is deleted.
 getFormatFlow() {
     getTaxonNumber
@@ -109,7 +104,7 @@ while getopts ":i:o:f:t:a:b:r:e:m:vh" opt; do
             ;;
         h)
             echo ""
-            echo "Usage: getInformation.sh [-h] [-v][-i INPUT] [-o OUTPUT]"
+            echo "Usage: getInformation.sh [-h] [-v] [-i INPUT] [-o OUTPUT]"
             echo "                         [-f FORMAT] [-t TAXON]"
             echo "                         [-a ABSOLUTEBAR] [-b RELATIVEBAR]"
             echo "                         [-r RICHNESS] [-e ABSOLUTEMAP]"
@@ -137,8 +132,8 @@ while getopts ":i:o:f:t:a:b:r:e:m:vh" opt; do
             echo " -m                    The location of the relative heatmap"
             echo "                       output file(s)"
             echo ""
-            echo "The Statistical Analysis tool will utilize the Phyloseq R"
-            echo "package to create multiple plots based on a OTU table."
+            echo "The Statistical Analysis tool will utilise the Phyloseq R"
+            echo "package to create multiple plots based on an OTU table."
             echo ""
             echo "These plots are:"
             echo " - A bar plot: a plot to quickly and easily show informative"
@@ -146,15 +141,15 @@ while getopts ":i:o:f:t:a:b:r:e:m:vh" opt; do
             echo "   between samples in an experiment."
             echo " - A richness plot: a number of alpha-diversity metrics"
             echo "   (Observed, Shannon and Simpson)"
-            echo " - A heatmap plot: a heat map is a false color image with a"
+            echo " - A heatmap plot: a heat map is a false colour image with a"
             echo "   dendrogram added to the top."
             echo ""
             echo "All of these plots will be generated using both the absolute"
-            echo "numbers in a OTU table as well as relative numbers for a OTU"
-            echo "table."
+            echo "numbers in an OTU table as well as relative numbers for an"
+            echo "OTU table."
             echo ""
-            echo "Sample names can not start with a '#'."
-            echo "All columns in a OTU table should have a header starting"
+            echo "Sample names cannot start with a '#'."
+            echo "All columns in an OTU table should have a header starting"
             echo "with '#'."
             echo ""
             echo "Source(s):"

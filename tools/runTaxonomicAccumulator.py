@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-# Copyright (C) 2025 Jasper Boom. All rights reserved.
-#
-# Proprietary and confidential. Unauthorized use, copying, modification,
-# distribution, reverse engineering, disclosure, or creation of derivative
-# works is strictly prohibited without prior written permission from
-# Jasper Boom.
+# Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md.
 
-# Prequisites:
-# - Conda environment python >= 3.7
-# - conda install -c anaconda pandas
-# - conda install -c anaconda xlsxwriter
-# - conda install -c anaconda xlrd
+"""
+Count the identifications for every taxonomic rank in a BLAST file, an OTU
+file or a zip file with BLAST files, and write the totals to a .xlsx file.
+
+Prerequisites:
+- Conda environment with Python >= 3.7.
+- conda install -c anaconda pandas
+- conda install -c anaconda xlsxwriter
+- conda install -c anaconda xlrd
+"""
 
 # Imports
 import argparse
@@ -19,12 +19,13 @@ import numpy as np
 import pandas as pd
 
 
-# The getListTaxonDics function.
-# This function creates 7 lists containing a number of emptry dictionaries
-# equal to the number of files used in the creation of the OTU file or the
-# number of BLAST files contained in the input zip file. These lists are then
-# returned by the function.
 def getListTaxonDics(intFiles):
+    """
+    This function creates 7 lists containing a number of empty dictionaries
+    equal to the number of files used in the creation of the OTU file or the
+    number of BLAST files contained in the input zip file. These lists are
+    then returned by the function.
+    """
     lstKingdom = [{} for intNumberOfDics in range(intFiles)]
     lstPhylum = [{} for intNumberOfDics in range(intFiles)]
     lstClass = [{} for intNumberOfDics in range(intFiles)]
@@ -43,12 +44,14 @@ def getListTaxonDics(intFiles):
     )
 
 
-# The getZipOutput function.
-# This function creates a .xlsx file based on the number of files in the input
-# zip file. A dictionary is created using the names of these files, this will
-# be used to give every column a correct header. It then adds sheets to the
-# .xlsx file for every taxon rank based on the dictionary list lstTaxonDics.
 def getZipOutput(flOutput, lstFileNames, lstTaxonDics, lstTaxonRanks):
+    """
+    This function creates a .xlsx file based on the number of files in the
+    input zip file. A dictionary is created using the names of these files;
+    this will be used to give every column a correct header. It then adds
+    sheets to the .xlsx file for every taxon rank based on the dictionary
+    list lstTaxonDics.
+    """
     fosExcelWriter = pd.ExcelWriter(flOutput, engine="xlsxwriter")
     dicIndex = {}
     for intNumber in range(len(lstFileNames)):
@@ -63,13 +66,14 @@ def getZipOutput(flOutput, lstFileNames, lstTaxonDics, lstTaxonRanks):
     fosExcelWriter.save()
 
 
-# The getAccumulationZip function.
-# This function creates a list containing all file names extracted from the
-# input zip file. It then creates a list with empty dictionaries based on the
-# number of files. Every file is opened, the "Taxonomy" column is looped
-# through and used to count based on taxon ranks. The getZipOutput function
-# is called.
 def getAccumulationZip(dirTemporary, flOutput, lstTaxonRanks):
+    """
+    This function creates a list containing all file names extracted from
+    the input zip file. It then creates a list with empty dictionaries based
+    on the number of files. Every file is opened, and the "Taxonomy" column
+    is looped through and used to count based on taxon ranks. The
+    getZipOutput function is called.
+    """
     lstFileNames = []
     for strFile in os.listdir(dirTemporary):
         if strFile.endswith(".tabular"):
@@ -103,11 +107,12 @@ def getAccumulationZip(dirTemporary, flOutput, lstTaxonRanks):
     getZipOutput(flOutput, lstFileNames, lstTaxonDics, lstTaxonRanks)
 
 
-# The getOtuOutputTemporary function.
-# This function creates dataframes for the taxonomy ranks it recieves. It also
-# renames the empty index for every dataframe. The newly created dataframe is
-# returned.
 def getOtuOutputTemporary(lstTaxonDic, dicIndex, lstUnknownRow, strFormat):
+    """
+    This function creates dataframes for the taxonomy ranks it receives. It
+    also renames the empty index for every dataframe. The newly created
+    dataframe is returned.
+    """
     dfTemporary = pd.DataFrame(lstTaxonDic)
     if strFormat == "otu_old" or strFormat == "otu_new":
         dfTemporary["No hit"] = lstUnknownRow
@@ -124,22 +129,24 @@ def getOtuOutputTemporary(lstTaxonDic, dicIndex, lstUnknownRow, strFormat):
     return dfTemporary
 
 
-# The getOtuOutput function.
-# This function creates a .xlsx file based on the counting done in the
-# getAccumulationOtu function. It formats in such a way that it can handle
-# the multiple samples that could have been used. If the format of the OTU
-# table is with standard BLAST identifications it also isolates the row which
-# contains a count of unidentified OTU's, this row will be used to add that
-# count to every sheet. If the format is with a LCA process file, the no hit
-# row is automatically added through the dictionaries.
-# The first sheet created is the kingdom sheet, when that has been created the
-# getOtuOutputTemporary function is called to create dataframes for the
-# remaining taxonomy ranks. These dataframes are written to the same file as
-# the kingdom dataframe was. The getOtuOutputTemporary handles those remaining
-# dataframes.
 def getOtuOutput(
     flOutput, lstTaxonDics, lstHeaders, intFiles, lstTaxonRanks, strFormat
 ):
+    """
+    This function creates a .xlsx file based on the counting done in the
+    getAccumulationOtu function. It formats the file in such a way that it
+    can handle the multiple samples that could have been used. If the OTU
+    table uses standard BLAST identifications, it also isolates the row
+    which contains a count of unidentified OTUs; this row will be used to
+    add that count to every sheet. If the format is with an LCA process
+    file, the no hit row is automatically added through the dictionaries.
+
+    The first sheet created is the kingdom sheet. When that has been
+    created, the getOtuOutputTemporary function is called to create
+    dataframes for the remaining taxonomy ranks. These dataframes are
+    written to the same file as the kingdom dataframe. The
+    getOtuOutputTemporary function handles those remaining dataframes.
+    """
     dfKingdom = pd.DataFrame(lstTaxonDics[0])
     dicIndex = {}
     for intNumber in range(intFiles):
@@ -170,19 +177,20 @@ def getOtuOutput(
     fosExcelWriter.save()
 
 
-# The getAccumulationOtu function.
-# This function opens the input file and creates a list containing all file
-# names used to create the OTU table. It then creates a list containing a
-# number of empty dictionaries. This number is equal to the number of files
-# used in the creation of the OTU table. The function then loops through the
-# "Taxonomy" column(s) for every file in the OTU table. Depending on the format
-# of the OTU table, either with standard BLAST identifications or a LCA process
-# file, the taxonomy is retrieved. It will use the read count in every OTU for
-# for every file for every taxon rank to accumulate. The function then calls
-# the getOtuOutput function.
 def getAccumulationOtu(
     flInput, flOutput, lstTaxonRanks, intColumnLength, strFormat
 ):
+    """
+    This function opens the input file and creates a list containing all
+    file names used to create the OTU table. It then creates a list
+    containing a number of empty dictionaries. This number is equal to the
+    number of files used in the creation of the OTU table. The function then
+    loops through the "Taxonomy" column(s) for every file in the OTU table.
+    Depending on the format of the OTU table, either with standard BLAST
+    identifications or an LCA process file, the taxonomy is retrieved. It
+    uses the read count in every OTU, for every file and every taxon rank,
+    to accumulate. The function then calls the getOtuOutput function.
+    """
     tblReadInput = pd.read_table(flInput)
     intFiles = 0
     lstHeaders = []
@@ -238,12 +246,13 @@ def getAccumulationOtu(
     )
 
 
-# The getBlastOutput function.
-# This function creates a .xlsx file based on the counting done in the
-# getAccumulationBlast function. Every taxonomy rank gets its own sheet in
-# the .xlsx file and gets the corresponding dictionary from lstTaxonDics as
-# input.
 def getBlastOutput(flOutput, lstTaxonDics, lstTaxonRanks):
+    """
+    This function creates a .xlsx file based on the counting done in the
+    getAccumulationBlast function. Every taxonomy rank gets its own sheet in
+    the .xlsx file and gets the corresponding dictionary from lstTaxonDics
+    as input.
+    """
     fosExcelWriter = pd.ExcelWriter(flOutput, engine="xlsxwriter")
     for intTaxonPosition in range(7):
         dfTemporary = pd.DataFrame.from_dict(
@@ -256,15 +265,16 @@ def getBlastOutput(flOutput, lstTaxonDics, lstTaxonRanks):
     fosExcelWriter.save()
 
 
-# The getAccumulationBlast function.
-# This function opens the input file and creates a list containing 7 empty
-# dictionaries. The number 7 equals the number of taxon ranks. It then loops
-# through the "Taxonomy" column. Every row in this column is divided into a
-# list based on the slash(/) character. Each name in this list is then added to
-# their corresponding dictionary or, if it is already present in that
-# dictionary, added to the count of that name. The function then calls the
-# getBlastOutput function.
 def getAccumulationBlast(flInput, flOutput, lstTaxonRanks):
+    """
+    This function opens the input file and creates a list containing 7 empty
+    dictionaries. The number 7 equals the number of taxon ranks. It then
+    loops through the "Taxonomy" column. Every row in this column is divided
+    into a list based on the slash (/) character. Each name in this list is
+    then added to its corresponding dictionary or, if it is already present
+    in that dictionary, added to the count of that name. The function then
+    calls the getBlastOutput function.
+    """
     tblReadInput = pd.read_table(flInput)
     lstTaxonDics = [{} for intTaxonCount in range(7)]
     for strRow in tblReadInput["#Taxonomy"]:
@@ -288,10 +298,12 @@ def getAccumulationBlast(flInput, flOutput, lstTaxonRanks):
     getBlastOutput(flOutput, lstTaxonDics, lstTaxonRanks)
 
 
-# The argvs function.
 def parseArgvs():
+    """
+    Parse command-line arguments.
+    """
     parser = argparse.ArgumentParser(
-        description="Use a python script to accumulate all identifications\
+        description="Use a Python script to accumulate all identifications\
                      based on taxonomy."
     )
     parser.add_argument("-v", action="version", version="%(prog)s [0.1.0]")
@@ -324,8 +336,10 @@ def parseArgvs():
     return argvs
 
 
-# The main function.
 def main():
+    """
+    Run the script with the parsed command-line arguments.
+    """
     argvs = parseArgvs()
     lstTaxonRanks = [
         "Kingdom",

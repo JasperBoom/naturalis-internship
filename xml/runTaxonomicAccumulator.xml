@@ -1,12 +1,9 @@
-<tool id="runTaxonomicAccumulator" name="Taxonomic Accumulator:" 
+<!-- Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md. -->
+
+<tool id="runTaxonomicAccumulator" name="Taxonomic Accumulator:"
       version="0.1.0">
-<!-- Copyright (C) 2025 Jasper Boom. All rights reserved.
-  Proprietary and confidential. Unauthorized use, copying, modification,
-  distribution, reverse engineering, disclosure, or creation of derivative
-  works is strictly prohibited without prior written permission from
-  Jasper Boom. -->
     <description>
-        Use a python script to accumulate all identifications based on
+        Use a Python script to accumulate all identifications based on
         taxonomy.
     </description>
     <!-- Call the runTaxonomicAccumulator script, set input parameters
@@ -36,27 +33,27 @@
                 <option value="zip">Zip file</option>
                 <option value="lca">OTU file + LCA</option>
             </param>
-            <!-- Catch the single input file -->
+            <!-- Catch the single input file. -->
             <when value="otu_old">
                 <param name="fisOtuOld" type="data" format="tabular"
                        label="OTU file + old BLAST."/>
             </when>
-            <!-- Catch the single input file -->
+            <!-- Catch the single input file. -->
             <when value="otu_new">
                 <param name="fisOtuNew" type="data" format="tabular"
                        label="OTU file + new BLAST."/>
             </when>
-            <!-- Catch the single input file -->
+            <!-- Catch the single input file. -->
             <when value="blast">
                 <param name="fisBlast" type="data" format="tabular"
                        label="BLAST file."/>
             </when>
-            <!-- Catch multiple input files -->
+            <!-- Catch multiple input files. -->
             <when value="zip">
                 <param name="fisZip" type="data" format="zip"
                        label="Zip file."/>
             </when>
-            <!-- Catch the single input file -->
+            <!-- Catch the single input file. -->
             <when value="lca">
                 <param name="fisLca" type="data" format="tabular"
                        label="OTU file + LCA."/>
@@ -79,13 +76,13 @@
 
         .. class:: warningmark
 
-        The tool will handle either a BLAST file, OTU file with old BLAST
-        output, OTU file with new BLAST output, a zip file containing multiple
-        BLAST files or a OTU file with LCA processing added to it.
+        The tool will handle either a BLAST file, an OTU file with old BLAST
+        output, an OTU file with new BLAST output, a zip file containing
+        multiple BLAST files or an OTU file with LCA processing added to it.
 
         .. class:: warningmark
 
-        Sample names can not start with a "#".
-        All columns in a OTU table should have a header starting with "#".
+        Sample names cannot start with a "#".
+        All columns in an OTU table should have a header starting with "#".
     </help>
 </tool>

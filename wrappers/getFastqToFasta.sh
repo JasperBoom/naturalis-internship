@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
-# Copyright (C) 2025 Jasper Boom. All rights reserved.
-#
-# Proprietary and confidential. Unauthorized use, copying, modification,
-# distribution, reverse engineering, disclosure, or creation of derivative
-# works is strictly prohibited without prior written permission from
-# Jasper Boom.
+# Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md.
 
 # The getZipOutput function.
 # This function loops through all fastQ files extracted from the input file.
-# It isolates the unqiue name of every fastQ file into strFastqFileName.
+# It isolates the unique name of every fastQ file into strFastqFileName.
 # Every fastQ file is converted into a fastA file using sed. The unique name
 # is used to add the new fastA file to a new zip file. If this zip file already
 # exists, the fastA file is added to it, if it does not yet exist, the function
@@ -50,7 +45,7 @@ getZipFile() {
 # This function initiates the correct function chain depending on the file
 # format. When transforming a single fastQ file to fastA, the conversion is
 # done instantly using sed. When transforming a zip file, the function
-# getZipFile is called. After conversions are done, output is send to the 
+# getZipFile is called. After conversions are done, output is sent to the
 # expected location and the temporary storage directory is deleted.
 getFormatFlow() {
     if [ "${disFormat}" = "fastq" ]
@@ -99,7 +94,7 @@ while getopts ":i:o:f:vh" opt; do
             echo "                       and exit"
             echo " -i                    The location of the input file(s)"
             echo " -o                    The location of the output file(s)"
-            echo " -f                    The format of the input" 
+            echo " -f                    The format of the input"
             echo "                       file(s) [fastq/zip]"
             echo ""
             echo "The FastqToFasta tool will convert one or multiple [zip]"

@@ -1,19 +1,18 @@
+<!-- Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md. -->
+
 <tool id="getReadCount" name="Read(s) Per File Counter:" version="0.1.0">
-<!-- Copyright (C) 2025 Jasper Boom. All rights reserved.
-  Proprietary and confidential. Unauthorized use, copying, modification,
-  distribution, reverse engineering, disclosure, or creation of derivative
-  works is strictly prohibited without prior written permission from
-  Jasper Boom. -->
     <description>
-        Use a bash script to count the reads of fastQ or fastA files.
+        Use a Bash script to count the reads of fastQ or fastA files.
     </description>
     <command interpreter="bash">
         getReadCount.sh -f ${fisInput.rbInput}
         #if $fisInput.rbInput == "single"
             #if $fisInput.fisSingle.rbSingle == "fasta"
-                -i $fisInput.fisSingle.fisFasta -o $fosTxt -e $fisInput.fisSingle.rbSingle
+                -i $fisInput.fisSingle.fisFasta -o $fosTxt
+                -e $fisInput.fisSingle.rbSingle
             #elif $fisInput.fisSingle.rbSingle == "fastq"
-                -i $fisInput.fisSingle.fisFastq -o $fosTxt -e $fisInput.fisSingle.rbSingle
+                -i $fisInput.fisSingle.fisFastq -o $fosTxt
+                -e $fisInput.fisSingle.rbSingle
             #end if
         #elif $fisInput.rbInput == "zip"
             -i $fisInput.fisZip -o $fosTxt -e $fisInput.rbZip
@@ -28,10 +27,10 @@
                 <option value="zip">Zip file</option>
             </param>
             <when value="single">
-                <!-- Catch the single input file -->
+                <!-- Catch the single input file. -->
                 <conditional name="fisSingle">
-                    <param name="rbSingle" type="select" label="FastQ or fastA?"
-                           multiple="false">
+                    <param name="rbSingle" type="select"
+                           label="FastQ or fastA?" multiple="false">
                         <option value="fastq"
                                 selected="true">FastQ file</option>
                         <option value="fasta">FastA file</option>
@@ -46,14 +45,15 @@
                     </when>
                 </conditional>
             </when>
-            <!-- Catch multiple input files -->
+            <!-- Catch multiple input files. -->
             <when value="zip">
                 <param name="rbZip" type="select" label="FastQ or fastA?"
                        multiple="false">
-                    <option value="fastq" selected="true">FastQ files(s)</option>
-                    <option value="fasta">FastA files(s)</option>
+                    <option value="fastq"
+                            selected="true">FastQ file(s)</option>
+                    <option value="fasta">FastA file(s)</option>
                 </param>
-                <param name="fisZip" type="data" format="zip" 
+                <param name="fisZip" type="data" format="zip"
                        label="Zip file"/>
             </when>
         </conditional>

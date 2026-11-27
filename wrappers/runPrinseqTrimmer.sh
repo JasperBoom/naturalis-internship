@@ -1,13 +1,8 @@
 #!/usr/bin/env bash
-# Copyright (C) 2025 Jasper Boom. All rights reserved.
-#
-# Proprietary and confidential. Unauthorized use, copying, modification,
-# distribution, reverse engineering, disclosure, or creation of derivative
-# works is strictly prohibited without prior written permission from
-# Jasper Boom.
+# Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md.
 
-# Prequisites:
-# - sudo cpan JSON 
+# Prerequisites:
+# - sudo cpan JSON
 
 # The runPrinseq function.
 # This function calls the PRINSEQ tool and processes the fastQ file(s).
@@ -16,11 +11,12 @@ runPrinseq() {
                  -out_good ${flOutput} > /dev/null 2>&1
 }
 
-# The prepare function.
-# This function creates a command string based on user input. The command string
-# is formatted for PRINSEQ. When a trimming option has been set to a number
-# higher than 0, the option is included in the command string. Every option
-# has a check build in for when the command string has not been initialised yet.
+# The preparePrinseq function.
+# This function creates a command string based on user input. The command
+# string is formatted for PRINSEQ. When a trimming option has been set to a
+# number higher than 0, the option is included in the command string. Every
+# option has a check built in for when the command string has not been
+# initialised yet.
 preparePrinseq() {
     strProcess=""
     if [ "${disBelowMean}" -gt 0 ]
@@ -139,7 +135,8 @@ getZipFile() {
     mkdir -p "${strDirectory}_temp/fileStorage"
     cp ${fisInput} ${strDirectory}_temp
     strZipName=$(find ${strDirectory}_temp -name "*.dat" -printf "%f\n")
-    unzip -q ${strDirectory}_temp/${strZipName} -d ${strDirectory}_temp/fileStorage
+    unzip -q ${strDirectory}_temp/${strZipName} \
+          -d ${strDirectory}_temp/fileStorage
     getZipOutput
 }
 
@@ -191,7 +188,7 @@ while getopts ":i:o:f:w:r:l:b:a:g:c:q:u:vh" opt; do
         w)
             disForward=${OPTARG}
             ;;
-        r)  
+        r)
             disReverse=${OPTARG}
             ;;
         l)
@@ -200,7 +197,7 @@ while getopts ":i:o:f:w:r:l:b:a:g:c:q:u:vh" opt; do
         b)
             disBelow=${OPTARG}
             ;;
-        a)  
+        a)
             disAbove=${OPTARG}
             ;;
         g)
@@ -236,7 +233,7 @@ while getopts ":i:o:f:w:r:l:b:a:g:c:q:u:vh" opt; do
             echo "                       and exit"
             echo " -i                    The location of the input file(s)"
             echo " -o                    The location of the output file(s)"
-            echo " -f                    The format of the input" 
+            echo " -f                    The format of the input"
             echo "                       file(s) [single/zip]"
             echo " -w                    Trim reads at the 5'-end"
             echo " -r                    Trim reads at the 3'-end"
@@ -244,8 +241,10 @@ while getopts ":i:o:f:w:r:l:b:a:g:c:q:u:vh" opt; do
             echo "                       length"
             echo " -b                    Discard reads below certain length"
             echo " -a                    Discard reads above certain length"
-            echo " -g                    Discard reads below certain GC content"
-            echo " -c                    Discard reads above certain GC content"
+            echo " -g                    Discard reads below certain GC"
+            echo "                       content"
+            echo " -c                    Discard reads above certain GC"
+            echo "                       content"
             echo " -q                    Discard reads below certain mean"
             echo "                       quality score"
             echo " -u                    Discard reads above certain mean"
@@ -260,7 +259,7 @@ while getopts ":i:o:f:w:r:l:b:a:g:c:q:u:vh" opt; do
             prinseq-lite -version
             echo ""
             echo "Source(s):"
-            echo " - Schmieder R, Edwards R, Quality control and preprocessing" 
+            echo " - Schmieder R, Edwards R, Quality control and preprocessing"
             echo "   of metagenomic datasets."
             echo "   Bioinformatics. 2011; 27(6): 863-864."
             echo "   doi: 10.1093/bioinformatics/btr026"

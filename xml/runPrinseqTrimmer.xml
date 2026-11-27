@@ -1,9 +1,6 @@
+<!-- Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md. -->
+
 <tool id="runPrinseq" name="PRINSEQ Sequence Trimmer:" version="0.20.4">
-<!-- Copyright (C) 2025 Jasper Boom. All rights reserved.
-  Proprietary and confidential. Unauthorized use, copying, modification,
-  distribution, reverse engineering, disclosure, or creation of derivative
-  works is strictly prohibited without prior written permission from
-  Jasper Boom. -->
     <description>
         Use PRINSEQ to trim and discard reads and read sections.
     </description>
@@ -28,12 +25,12 @@
                 <option value="single" selected="true">FastQ file</option>
                 <option value="zip">Zip file</option>
             </param>
-            <!-- Catch the single input file -->
+            <!-- Catch the single input file. -->
             <when value="single">
                 <param name="fisFastq" type="data" format="fastq"
                        label="FastQ file."/>
             </when>
-            <!-- Catch multiple input files -->
+            <!-- Catch multiple input files. -->
             <when value="zip">
                 <param name="fisZip" type="data" format="zip"
                        label="Zip file."/>

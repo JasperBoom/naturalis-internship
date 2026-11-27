@@ -1,4 +1,4 @@
-# NATURALIS-INTERNSHIP INSTALL
+# Naturalis Internship docs INSTALL
 The server used for Galaxy during the internship was a basic machine with
 Galaxy installed directly on the host machine. Conda was not yet used for
 everything, so a large part of the tools relied on the host machine having the
@@ -25,14 +25,9 @@ apt-get install default-jre # Java
 cpan JSON # JSON
 ```
 
-Make sure both PRINSEQ and FastQC are added to the systems PATH (CutAdapt
+Make sure both PRINSEQ and FastQC are added to the system's PATH (CutAdapt
 should take care of that automatically).
 
-```text
-Copyright (C) 2025 Jasper Boom. All rights reserved.
+--------------------
 
-Proprietary and confidential. Unauthorized use, copying, modification,
-distribution, reverse engineering, disclosure, or creation of derivative
-works is strictly prohibited without prior written permission from
-Jasper Boom.
-```
+Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md.

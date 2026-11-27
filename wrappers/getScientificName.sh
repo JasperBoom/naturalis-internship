@@ -1,19 +1,14 @@
 #!/usr/bin/env bash
-# Copyright (C) 2025 Jasper Boom. All rights reserved.
-#
-# Proprietary and confidential. Unauthorized use, copying, modification,
-# distribution, reverse engineering, disclosure, or creation of derivative
-# works is strictly prohibited without prior written permission from
-# Jasper Boom.
+# Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md.
 
-# Prequisites:
-# - Conda environment python >= 3.7
+# Prerequisites:
+# - Conda environment with Python >= 3.7
 # - conda install -c anaconda pandas
 
 # The getFormatFlow function.
 # This function creates a temporary storage directory in the output directory.
 # It then calls the getScientificName.py script with the correct input values.
-# After the script is finished, output is send to the expected location and
+# After the script is finished, output is sent to the expected location and
 # the temporary storage directory is deleted.
 getFormatFlow() {
     strDirectory=${fosOutput::-4}
@@ -67,16 +62,16 @@ while getopts ":i:o:s:f:vh" opt; do
             echo " -f                    The format of the input"
             echo "                       file(s) [otu_old/otu_new/lca/blast]"
             echo ""
-            echo "The AcceptedTaxonomicName tool will utilize either the"
-            echo "Global Names api or the Taxonomic Name Resolution Service api"
-            echo "to collect accepted taxonomic names based on BLAST"
+            echo "The AcceptedTaxonomicName tool will utilise either the"
+            echo "Global Names API or the Taxonomic Name Resolution Service"
+            echo "API to collect accepted taxonomic names based on BLAST"
             echo "identifications."
             echo ""
             echo "Global Names is for every kingdom."
             echo "TNRS is for plants only."
             echo ""
-            echo "Sample names can not start with a '#'."
-            echo "All columns in a OTU table should have a header starting"
+            echo "Sample names cannot start with a '#'."
+            echo "All columns in an OTU table should have a header starting"
             echo "with '#'."
             echo ""
             echo "Source(s):"

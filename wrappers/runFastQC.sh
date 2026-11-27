@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
-# Copyright (C) 2025 Jasper Boom. All rights reserved.
-#
-# Proprietary and confidential. Unauthorized use, copying, modification,
-# distribution, reverse engineering, disclosure, or creation of derivative
-# works is strictly prohibited without prior written permission from
-# Jasper Boom.
+# Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md.
 
-# Prequisites:
+# Prerequisites:
 # - sudo apt-get install default-jre
 # - Add "sanitize_all_html: false" to galaxy.yml
 
@@ -23,7 +18,7 @@ runFastQC() {
 
 # The getZipSummary function.
 # This function loops through all fastq files extracted from the input file.
-# It takes all lines from every file and copies these into flZipSummary.fastq. 
+# It takes all lines from every file and copies these into flZipSummary.fastq.
 # After the summary file has been created, the correct input variable is named
 # and the runFastQC function is called.
 getZipSummary() {

@@ -1,12 +1,9 @@
-<tool id="getMetaData" name="Harvest Meta Data:" version="0.1.0">
-<!-- Copyright (C) 2025 Jasper Boom. All rights reserved.
-  Proprietary and confidential. Unauthorized use, copying, modification,
-  distribution, reverse engineering, disclosure, or creation of derivative
-  works is strictly prohibited without prior written permission from
-  Jasper Boom. -->
+<!-- Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md. -->
+
+<tool id="getMetaData" name="Harvest Metadata:" version="0.1.0">
     <description>
-        Use a python script to utilize the Naturalis, BOLD and ALA api's to
-        collect meta data.
+        Use a Python script to utilise the Naturalis, BOLD and ALA APIs to
+        collect metadata.
     </description>
     <!-- Call the getMetaData script, set input parameters according to user
          choices. -->
@@ -32,9 +29,10 @@
     <inputs>
         <!-- Catch the input process. -->
         <conditional name="fisProcess">
-            <param name="rbProcess" type="select" label="Occurrence or pictures?"
-                   multiple="false">
-                <option value="occurrences" selected="true">Occurrence status</option>
+            <param name="rbProcess" type="select"
+                   label="Occurrence or pictures?" multiple="false">
+                <option value="occurrences"
+                        selected="true">Occurrence status</option>
                 <option value="pictures">Picture collection</option>
             </param>
         </conditional>
@@ -43,32 +41,33 @@
             <param name="rbInput" type="select" label="OTU, BLAST or LCA?"
                    multiple="false">
                 <option value="otu_old">OTU file + old BLAST</option>
-                <option value="otu_new" selected="true">OTU file + new BLAST</option>
+                <option value="otu_new"
+                        selected="true">OTU file + new BLAST</option>
                 <option value="lca">OTU file + LCA</option>
                 <option value="accepted">Accepted taxonomic name list</option>
                 <option value="blast">BLAST file</option>
             </param>
-            <!-- Catch the single input file -->
+            <!-- Catch the single input file. -->
             <when value="otu_old">
                 <param name="fisOtuOld" type="data" format="tabular"
                        label="OTU file + old BLAST."/>
             </when>
-            <!-- Catch the single input file -->
+            <!-- Catch the single input file. -->
             <when value="otu_new">
                 <param name="fisOtuNew" type="data" format="tabular"
                        label="OTU file + new BLAST."/>
             </when>
-            <!-- Catch the single input file -->
+            <!-- Catch the single input file. -->
             <when value="lca">
                 <param name="fisLca" type="data" format="tabular"
-                       label="OTU file + lca."/>
+                       label="OTU file + LCA."/>
             </when>
-            <!-- Catch the single input file -->
+            <!-- Catch the single input file. -->
             <when value="accepted">
                 <param name="fisAccepted" type="data" format="tabular"
                        label="Accepted taxonomic name list."/>
             </when>
-            <!-- Catch the single input file -->
+            <!-- Catch the single input file. -->
             <when value="blast">
                 <param name="fisBlast" type="data" format="tabular"
                        label="BLAST file."/>
@@ -89,8 +88,8 @@
     <help>
         .. class:: infomark
 
-        The MetaData tool will utilize the Naturalis, BOLD and ALA api's to
-        collect meta data such as occurrence status and images based on BLAST
+        The MetaData tool will utilise the Naturalis, BOLD and ALA APIs to
+        collect metadata such as occurrence status and images based on BLAST
         identifications or accepted taxonomic names.
 
         .. class:: warningmark
@@ -100,7 +99,7 @@
 
         .. class:: warningmark
 
-        Sample names can not start with a "#".
-        All columns in a OTU table should have a header starting with "#".
+        Sample names cannot start with a "#".
+        All columns in an OTU table should have a header starting with "#".
     </help>
 </tool>

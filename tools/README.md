@@ -1,4 +1,4 @@
-# NATURALIS-INTERNSHIP tools
+# Naturalis Internship tools
 This folder contains the core executable scripts used by the Naturalis
 internship Galaxy tooling. These are the underlying processing utilities that
 are called by wrappers and Galaxy XML definitions to perform data extraction,
@@ -19,11 +19,6 @@ outside this repository after the internship period. Development later stopped,
 and the tool was brought back into this repository so all related internship
 tooling remains available in one place for reference and continuity.
 
-```text
-Copyright (C) 2025 Jasper Boom. All rights reserved.
+--------------------
 
-Proprietary and confidential. Unauthorized use, copying, modification,
-distribution, reverse engineering, disclosure, or creation of derivative
-works is strictly prohibited without prior written permission from
-Jasper Boom.
-```
+Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md.

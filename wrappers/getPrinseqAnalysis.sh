@@ -1,20 +1,15 @@
 #!/usr/bin/env bash
-# Copyright (C) 2025 Jasper Boom. All rights reserved.
-#
-# Proprietary and confidential. Unauthorized use, copying, modification,
-# distribution, reverse engineering, disclosure, or creation of derivative
-# works is strictly prohibited without prior written permission from
-# Jasper Boom.
+# Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md.
 
-# Prequisites:
+# Prerequisites:
 # - sudo cpan JSON
-# - Add "sanitize_all_html: false" to galaxy.yml 
+# - Add "sanitize_all_html: false" to galaxy.yml
 
 # The runPrinseq function.
 # This function calls the prinseq-lite tool in order to generate the data
-# needed to create a html and graph file. The output of this tool is the input
-# of the prinseq-graphs-noPCA tool, which generates the html file. The
-# html file is send to the expected output location and the temporary storage
+# needed to create an HTML and graph file. The output of this tool is the
+# input of the prinseq-graphs-noPCA tool, which generates the HTML file. The
+# HTML file is sent to the expected output location and the temporary storage
 # directory is deleted.
 runPrinseq() {
     prinseq-lite -${disExtension} ${flInput} -out_bad null -out_good null \
@@ -29,8 +24,8 @@ runPrinseq() {
 # The getZipSummary function.
 # This function loops through all fastQ/fastA files extracted from the input
 # file. It takes all lines from every file and copies these into
-# flZipSummary.fastq/fasta. After the summary file has been created, the correct
-# input variable is named and the runPrinseq function is called.
+# flZipSummary.fastq/fasta. After the summary file has been created, the
+# correct input variable is named and the runPrinseq function is called.
 getZipSummary() {
     for strFile in ${strDirectory}_temp/*.${disExtension};
     do
@@ -56,8 +51,8 @@ getZipFile() {
 # The getFormatFlow function.
 # This function creates a temporary storage directory in the output directory.
 # It then initiates the correct function chain depending on the file format.
-# When processing a single fastQ/fastA file, the correct input variable is named
-# and the runPrinseq function is called. When processing a zip file, the
+# When processing a single fastQ/fastA file, the correct input variable is
+# named and the runPrinseq function is called. When processing a zip file, the
 # getZipFile function is called.
 getFormatFlow() {
     strDirectory=${fosOutput::-4}
@@ -89,7 +84,7 @@ while getopts ":i:o:f:e:vh" opt; do
         f)
             disFormat=${OPTARG}
             ;;
-        e)  
+        e)
             disExtension=${OPTARG}
             ;;
         v)
@@ -111,7 +106,7 @@ while getopts ":i:o:f:e:vh" opt; do
             echo "                       and exit"
             echo " -i                    The location of the input file(s)"
             echo " -o                    The location of the output file(s)"
-            echo " -f                    The format of the input" 
+            echo " -f                    The format of the input"
             echo "                       file(s) [single/zip]"
             echo " -e                    The extension of the input"
             echo "                       file(s) [fastq/fasta]"
@@ -127,7 +122,7 @@ while getopts ":i:o:f:e:vh" opt; do
             prinseq-lite -version
             echo ""
             echo "Source(s):"
-            echo " - Schmieder R, Edwards R, Quality control and preprocessing" 
+            echo " - Schmieder R, Edwards R, Quality control and preprocessing"
             echo "   of metagenomic datasets."
             echo "   Bioinformatics. 2011; 27(6): 863-864."
             echo "   doi: 10.1093/bioinformatics/btr026"
