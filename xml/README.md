@@ -1,4 +1,4 @@
-# NATURALIS-INTERNSHIP xml
+# Naturalis Internship xml
 This folder contains Galaxy tool wrapper XML files created during the 2018
 Naturalis internship period. The wrappers define how individual tools are
 exposed in Galaxy, including input parameters, outputs, command execution,
@@ -15,18 +15,13 @@ This code reflects student-level, learning-focused development from 2018. As
 such, design and implementation choices should be read in that historical
 context: the primary goal at the time was practical learning and
 experimentation with Galaxy tool wrapping, not production-grade
-standardization.
+standardisation.
 
 Special note on UMI isolation: the UMI isolation tool was developed further
 outside this repository for a period. Development later stopped, and the tool
 was brought back into this repository to keep related internship
 tooling consolidated in one place for archival and reference purposes.
 
-```text
-Copyright (C) 2025 Jasper Boom. All rights reserved.
+--------------------
 
-Proprietary and confidential. Unauthorized use, copying, modification,
-distribution, reverse engineering, disclosure, or creation of derivative
-works is strictly prohibited without prior written permission from
-Jasper Boom.
-```
+Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md.

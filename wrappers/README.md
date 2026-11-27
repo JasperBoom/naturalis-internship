@@ -1,4 +1,4 @@
-# NATURALIS-INTERNSHIP wrappers
+# Naturalis Internship wrappers
 This folder contains shell wrapper scripts used by the Galaxy tools from the
 Naturalis internship project. These wrappers are responsible for invoking
 command-line tools, passing input and output paths, and preparing execution
@@ -18,14 +18,9 @@ Special note on UMI isolation: the UMI isolation tool was developed further
 outside this repository for a period. Development later stopped, and the tool
 was brought back into this repository to keep all related internship tooling
 consolidated in one place for reference and archival continuity. That is why
-there is no UMI isolation wrapper script in this folder, as it got superseded
-by just the python script and the XML wrapper in the xml folder.
+there is no UMI isolation wrapper script in this folder: it was superseded by
+the Python script in the tools folder and the XML wrapper in the xml folder.
 
-```text
-Copyright (C) 2025 Jasper Boom. All rights reserved.
+--------------------
 
-Proprietary and confidential. Unauthorized use, copying, modification,
-distribution, reverse engineering, disclosure, or creation of derivative
-works is strictly prohibited without prior written permission from
-Jasper Boom.
-```
+Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md.

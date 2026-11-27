@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
-# Copyright (C) 2025 Jasper Boom. All rights reserved.
-#
-# Proprietary and confidential. Unauthorized use, copying, modification,
-# distribution, reverse engineering, disclosure, or creation of derivative
-# works is strictly prohibited without prior written permission from
-# Jasper Boom.
+# Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md.
 
 # The getZipOutput function.
 # This function loops through all files extracted from the input file. It
@@ -43,11 +38,11 @@ getZipFile() {
 
 # The getFormatFlow function.
 # This function initiates the correct function chain depending on the file
-# format. And sets the integer used for calculating the read count. This integer
-# depends on what extension the input file(s) are. When working with a single
-# file, the calculations are done immediately. When working with a zip file,
-# the function getZipFile is called. After calculations are done the temporary 
-# storage directory is deleted.
+# format, and sets the integer used for calculating the read count. This
+# integer depends on the extension of the input file(s). When working with a
+# single file, the calculations are done immediately. When working with a zip
+# file, the function getZipFile is called. After the calculations are done,
+# the temporary storage directory is deleted.
 getFormatFlow() {
     if [ "${disType}" = "fasta" ]
     then
@@ -112,12 +107,12 @@ while getopts ":i:o:f:e:vh" opt; do
             echo "                       and exit"
             echo " -i                    The location of the input file(s)"
             echo " -o                    The location of the output file(s)"
-            echo " -f                    The format of the input" 
+            echo " -f                    The format of the input"
             echo "                       file(s) [single/zip]"
             echo " -e                    The extension of the input"
-            echo "                       files(s) [fastq/fasta]"
+            echo "                       file(s) [fastq/fasta]"
             echo ""
-            echo "The ReadCount tool will count the number of reads in a file" 
+            echo "The ReadCount tool will count the number of reads in a file"
             echo "or multiple [zip] files and output these numbers to a text"
             echo "file."
             echo ""

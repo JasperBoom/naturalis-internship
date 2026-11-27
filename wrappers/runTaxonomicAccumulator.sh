@@ -1,13 +1,8 @@
 #!/usr/bin/env bash
-# Copyright (C) 2025 Jasper Boom. All rights reserved.
-#
-# Proprietary and confidential. Unauthorized use, copying, modification,
-# distribution, reverse engineering, disclosure, or creation of derivative
-# works is strictly prohibited without prior written permission from
-# Jasper Boom.
+# Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md.
 
-# Prequisites:
-# - Conda environment python >= 3.7
+# Prerequisites:
+# - Conda environment with Python >= 3.7
 # - conda install -c anaconda pandas
 # - conda install -c anaconda xlsxwriter
 # - conda install -c anaconda xlrd
@@ -17,7 +12,7 @@
 # input file is searched for, based on its .dat extension. This search
 # will output the name of the input file which is used to unzip it into the
 # temporary zip directory. The runTaxonomicAccumulator.py script is called,
-# the output is send to the expected location and the temporary storage
+# the output is sent to the expected location and the temporary storage
 # directory is deleted.
 getZipOutput() {
     cp ${fisInput} ${strDirectory}_temp
@@ -32,7 +27,7 @@ getZipOutput() {
 # The getFormatFlow function.
 # This function creates a temporary storage directory in the output directory.
 # It then initiates the correct function chain depending on the file format.
-# Afther the accumulation processes are done, the output is send to the
+# After the accumulation processes are done, the output is sent to the
 # expected location and the temporary storage directory is deleted.
 getFormatFlow() {
     strDirectory=${fosOutput::-4}
@@ -93,13 +88,13 @@ while getopts ":i:o:f:vh" opt; do
             echo "the identifications for every taxonomic level, for every"
             echo "file used as input."
             echo ""
-            echo "The tool will handle either a BLAST file, OTU file with old"
-            echo "BLAST output, OTU file with new BLAST output, a zip file"
-            echo "containing multiple BLAST files or a OTU file with LCA"
+            echo "The tool will handle either a BLAST file, an OTU file with"
+            echo "old BLAST output, an OTU file with new BLAST output, a zip"
+            echo "file containing multiple BLAST files or an OTU file with LCA"
             echo "processing added to it."
             echo ""
-            echo "Sample names can not start with a '#'."
-            echo "All columns in a OTU table should have a header starting"
+            echo "Sample names cannot start with a '#'."
+            echo "All columns in an OTU table should have a header starting"
             echo "with '#'."
             echo ""
 

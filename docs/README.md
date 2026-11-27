@@ -1,15 +1,15 @@
-# NATURALIS-INTERNSHIP docs
-These tools were made for the Naturalis Galaxy instance with a main focus on
-metabarcoding analysis. Either an existing software package is used or new
-scripts were written for desired functionalities. Some inputs for these tools
-are Naturalis Galaxy specific and depend on various other software packages
-used by Naturalis.
+# Naturalis Internship docs
+These tools were made for the Naturalis Galaxy instance, mainly for
+metabarcoding analysis. They use existing software packages or custom scripts
+to provide the required functionality. Some input formats are specific to
+Naturalis Galaxy and depend on other software packages used by Naturalis.
 
-```text
-Copyright (C) 2025 Jasper Boom. All rights reserved.
+## Documentation Overview
+- [Description](DESCRIPTION.md)
+  - A short description of every tool, including the accepted input formats.
+- [Install](INSTALL.md)
+  - The software that was installed on the Galaxy server to run the tools.
 
-Proprietary and confidential. Unauthorized use, copying, modification,
-distribution, reverse engineering, disclosure, or creation of derivative
-works is strictly prohibited without prior written permission from
-Jasper Boom.
-```
+--------------------
+
+Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md.

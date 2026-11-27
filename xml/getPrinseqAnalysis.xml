@@ -1,14 +1,11 @@
-<tool id="getPrinseqAnalysis" name="PRINSEQ Sequence Analyzer:" 
+<!-- Copyright 2025-2026 Jasper Boom. All rights reserved. See LICENSE.md. -->
+
+<tool id="getPrinseqAnalysis" name="PRINSEQ Sequence Analyser:"
       version="0.11.7">
-<!-- Copyright (C) 2025 Jasper Boom. All rights reserved.
-  Proprietary and confidential. Unauthorized use, copying, modification,
-  distribution, reverse engineering, disclosure, or creation of derivative
-  works is strictly prohibited without prior written permission from
-  Jasper Boom. -->
     <description>
         Use PRINSEQ to do quality control checks on raw sequence data.
     </description>
-    <!-- Call the getPrinseqAnalysis script, set input parameters according 
+    <!-- Call the getPrinseqAnalysis script, set input parameters according
          to user choices. -->
     <command interpreter="bash">
         getPrinseqAnalysis.sh -f ${fisInput.rbInput} -o ${fosOutput}
@@ -33,12 +30,12 @@
                 <option value="zip">Zip file</option>
             </param>
             <when value="single">
-                <!-- Catch the single input file -->
+                <!-- Catch the single input file. -->
                 <conditional name="fisSingleInput">
-                    <param name="rbSingle" type="select" 
+                    <param name="rbSingle" type="select"
                            label="FastQ or fastA file." multiple="false">
-                        <option value="fastq" selected="true">FastQ file
-                        </option>
+                        <option value="fastq"
+                                selected="true">FastQ file</option>
                         <option value="fasta">FastA file</option>
                     </param>
                     <when value="fastq">
@@ -51,14 +48,16 @@
                     </when>
                 </conditional>
             </when>
-            <!-- Catch multiple input files -->
+            <!-- Catch multiple input files. -->
             <when value="zip">
-                <param name="rbZip" type="select" label="FastQ or fastA file(s)."
-                       multiple="false">
-                    <option value="fastq" selected="true">FastQ file(s)</option>
+                <param name="rbZip" type="select"
+                       label="FastQ or fastA file(s)." multiple="false">
+                    <option value="fastq"
+                            selected="true">FastQ file(s)</option>
                     <option value="fasta">FastA file(s)</option>
                 </param>
-                <param name="fisZip" type="data" format="zip" label="Zip file."/>
+                <param name="fisZip" type="data" format="zip"
+                       label="Zip file."/>
             </when>
         </conditional>
     </inputs>
